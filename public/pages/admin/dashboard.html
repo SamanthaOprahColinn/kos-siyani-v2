@@ -65,7 +65,8 @@
     </header>
 
     <main class="content page-enter">
-      <div class="grid-4 mb-6">
+
+      <div class="admin-stats">
         <div class="stat-card">
           <div class="stat-icon stat-icon-pink"><i class="ph ph-door"></i></div>
           <div>
@@ -89,11 +90,17 @@
         </div>
       </div>
 
-      <div class="admin-grid-layout mt-6">
+      <div class="admin-grid-layout">
+
         <div class="table-wrapper">
-          <div class="p-4 flex items-center justify-between" style="border-bottom: 1px solid var(--glass-border);">
-            <h3 class="font-display font-bold text-dark">Daftar Penghuni (Real-time)</h3>
-            <button class="btn btn-ghost btn-sm" onclick="fetchPenghuni()"><i class="ph ph-arrows-clockwise"></i> Segarkan</button>
+          <div class="table-top">
+            <div>
+              <div class="table-top-title">Daftar Penghuni</div>
+              <div class="table-top-sub">Data real-time dari database</div>
+            </div>
+            <button class="btn btn-ghost btn-sm" onclick="fetchPenghuni()">
+              <i class="ph ph-arrows-clockwise"></i> Segarkan
+            </button>
           </div>
           <table>
             <thead>
@@ -106,17 +113,32 @@
             </thead>
             <tbody id="tenantTableBody">
               <tr>
-                <td colspan="4" style="text-align: center; padding: 20px;">Memuat data dari server...</td>
+                <td colspan="4">
+                  <div class="table-empty">
+                    <i class="ph ph-users"></i>
+                    <div class="table-empty-title">Belum ada penghuni</div>
+                    <div class="table-empty-sub">Data akan muncul setelah penghuni didaftarkan</div>
+                  </div>
+                </td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <div class="card">
-          <h3 class="font-display font-bold text-dark mb-4">Aksi Cepat</h3>
-          <div class="flex flex-col gap-3">
-            <button class="btn btn-primary w-full" style="justify-content: flex-start;" onclick="openAddTenantModal('')">
-              <i class="ph ph-user-plus"></i> Registrasi Penghuni Baru
+        <div class="table-wrapper quick-action-card">
+          <div class="card-section-title">Aksi Cepat</div>
+          <div class="quick-action-list">
+            <button class="quick-action-btn qab-green" onclick="openAddTenantModal('')">
+              <div class="qab-icon"><i class="ph ph-user-plus"></i></div>
+              Registrasi Penghuni Baru
+            </button>
+            <button class="quick-action-btn qab-pink" onclick="alert('Segera hadir')">
+              <div class="qab-icon"><i class="ph ph-receipt"></i></div>
+              Buat Tagihan
+            </button>
+            <button class="quick-action-btn qab-cream" onclick="alert('Segera hadir')">
+              <div class="qab-icon"><i class="ph ph-door-open"></i></div>
+              Tambah Kamar
             </button>
           </div>
         </div>
