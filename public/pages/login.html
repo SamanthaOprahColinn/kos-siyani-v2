@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Login — Kos Siyani</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css"/>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap');
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+:root{
+  --pink-100:#ffd6e7;--pink-200:#ffaac9;--pink-400:#f4659a;
+  --pink-500:#e83c7f;--pink-600:#c92c6a;--pink-700:#a01f53;
+  --green-100:#d8f9b8;--green-200:#b4ef80;--green-500:#5ec41c;--green-600:#48a613;
+  --cream-100:#f7f0d8;
+  --n400:#a0a0a0;--n500:#7a7a7a;--n600:#5a5a5a;--n700:#3a3a3a;--n800:#222;--n900:#111;
+  --fd:'Nunito',sans-serif;--fb:'Plus Jakarta Sans',sans-serif;
+}
+
+body{
+  font-family:var(--fb);
+  min-height:100vh;
+  background:#fef1f6;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  position:relative;
+}
+
+.bg{position:fixed;inset:0;z-index:0;overflow:hidden;}
+.blob{position:absolute;border-radius:50%;filter:blur(70px);opacity:.55;animation:drift 14s ease-in-out infinite alternate;}
+.blob-1{width:520px;height:520px;background:radial-gradient(circle,#ffaac9,#e83c7f);top:-120px;left:-120px;animation-duration:16s;}
+.blob-2{width:420px;height:420px;background:radial-gradient(circle,#b4ef80,#5ec41c);bottom:-100px;right:-80px;animation-duration:13s;animation-delay:-4s;}
+.blob-3{width:300px;height:300px;background:radial-gradient(circle,#ffd6e7,#f4659a);bottom:10%;left:15%;animation-duration:18s;animation-delay:-7s;opacity:.35;}
+.blob-4{width:220px;height:220px;background:radial-gradient(circle,#d8f9b8,#b4ef80);top:15%;right:10%;animation-duration:11s;animation-delay:-2s;opacity:.40;}
+@keyframes drift{0%{transform:translate(0,0) scale(1);}50%{transform:translate(30px,20px) scale(1.06);}100%{transform:translate(-20px,35px) scale(.96);}}
+
+.grain{position:fixed;inset:0;z-index:1;opacity:.04;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:180px;}
+
+.page{position:relative;z-index:2;width:100%;min-height:100vh;display:grid;grid-template-columns:1fr 440px 1fr;align-items:center;padding:32px 24px;}
+
+/* LEFT DECO */
+.deco{grid-column:1;display:flex;flex-direction:column;gap:20px;padding-left:48px;animation:fade-up .8s cubic-bezier(.22,1,.36,1) both;}
+.deco-pill{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.45);backdrop-filter:blur(12px);border:1.5px solid rgba(255,255,255,.65);border-radius:999px;padding:8px 16px;font-family:var(--fd);font-size:13px;font-weight:700;color:var(--n700);width:fit-content;}
+.deco-pill i{color:var(--pink-500);font-size:15px;}
+.deco-heading{font-family:var(--fd);font-size:38px;font-weight:900;color:var(--n900);line-height:1.15;max-width:280px;}
+.deco-heading span{color:var(--pink-500);}
+.deco-sub{font-size:14px;color:var(--n500);line-height:1.7;max-width:260px;}
+.deco-stats{display:flex;flex-direction:column;gap:10px;margin-top:8px;}
+.deco-stat{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.40);backdrop-filter:blur(10px);border:1.5px solid rgba(255,255,255,.60);border-radius:14px;padding:11px 14px;transition:transform .2s ease;}
+.deco-stat:hover{transform:translateX(4px);}
+.deco-stat-icon{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.dip{background:var(--pink-100);color:var(--pink-600);}
+.dig{background:var(--green-100);color:var(--green-600);}
+.dico{background:var(--cream-100);color:var(--n600);}
+.deco-stat-val{font-family:var(--fd);font-size:18px;font-weight:800;color:var(--n900);line-height:1;}
+.deco-stat-lbl{font-size:11px;color:var(--n400);font-weight:500;}
+
+/* CARD */
+.card{grid-column:2;background:rgba(255,255,255,.52);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border:1.5px solid rgba(255,255,255,.70);border-radius:28px;padding:40px 38px;box-shadow:0 20px 60px rgba(232,60,127,.14),0 4px 20px rgba(0,0,0,.06);animation:card-in .7s cubic-bezier(.22,1,.36,1) .1s both;}
+@keyframes card-in{from{opacity:0;transform:translateY(28px) scale(.97);}to{opacity:1;transform:translateY(0) scale(1);}}
+
+.logo-wrap{display:flex;align-items:center;gap:11px;margin-bottom:30px;}
+.logo-box{width:44px;height:44px;border-radius:13px;background:linear-gradient(135deg,var(--pink-400),var(--pink-600));display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-weight:900;font-size:17px;color:#fff;box-shadow:0 4px 16px rgba(232,60,127,.38);flex-shrink:0;}
+.logo-text{font-family:var(--fd);font-size:18px;font-weight:900;color:var(--n900);line-height:1.1;}
+.logo-sub{font-size:11px;color:var(--n400);font-weight:500;}
+
+.card-title{font-family:var(--fd);font-size:24px;font-weight:900;color:var(--n900);margin-bottom:4px;}
+.card-sub{font-size:13px;color:var(--n500);margin-bottom:28px;line-height:1.5;}
+
+.role-toggle{display:grid;grid-template-columns:1fr 1fr;background:rgba(255,255,255,.40);border:1.5px solid rgba(255,255,255,.60);border-radius:14px;padding:4px;margin-bottom:24px;gap:4px;}
+.role-btn{padding:9px;font-family:var(--fd);font-size:12.5px;font-weight:700;border-radius:10px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .22s cubic-bezier(.34,1.56,.64,1);color:var(--n500);background:transparent;}
+.role-btn i{font-size:14px;}
+.role-btn.active{background:var(--pink-500);color:#fff;box-shadow:0 4px 14px rgba(232,60,127,.32);}
+.role-btn:not(.active):hover{background:rgba(255,255,255,.55);color:var(--n700);}
+
+.form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+.form-label{font-size:12.5px;font-weight:600;color:var(--n600);}
+.input-wrap{position:relative;}
+.input-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--n400);font-size:16px;pointer-events:none;transition:color .15s;}
+.form-input{width:100%;padding:12px 14px 12px 40px;font-family:var(--fb);font-size:13.5px;color:var(--n800);background:rgba(255,255,255,.55);backdrop-filter:blur(8px);border:1.5px solid rgba(255,255,255,.70);border-radius:13px;outline:none;transition:all .18s ease;}
+.form-input::placeholder{color:var(--n400);}
+.form-input:focus{border-color:var(--pink-400);background:rgba(255,255,255,.80);box-shadow:0 0 0 3.5px rgba(232,60,127,.11);}
+.input-wrap:focus-within .input-icon{color:var(--pink-500);}
+.pw-toggle{position:absolute;right:13px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--n400);font-size:17px;padding:2px;transition:color .15s;}
+.pw-toggle:hover{color:var(--pink-500);}
+
+.row-between{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;}
+.check-label{display:flex;align-items:center;gap:7px;cursor:pointer;}
+.check-label input[type=checkbox]{display:none;}
+.check-box{width:17px;height:17px;border-radius:5px;border:1.5px solid rgba(255,255,255,.70);background:rgba(255,255,255,.55);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;}
+.check-label input:checked ~ .check-box{background:var(--pink-500);border-color:var(--pink-500);}
+.check-label input:checked ~ .check-box::after{content:'✓';font-size:10px;color:#fff;font-weight:700;}
+.check-text{font-size:12.5px;color:var(--n600);}
+.forgot{font-size:12.5px;color:var(--pink-500);font-weight:600;text-decoration:none;transition:color .15s;}
+.forgot:hover{color:var(--pink-700);}
+
+.btn-submit{width:100%;padding:14px;font-family:var(--fd);font-size:15px;font-weight:800;color:#fff;background:linear-gradient(135deg,var(--pink-400) 0%,var(--pink-600) 100%);border:none;border-radius:14px;cursor:pointer;box-shadow:0 6px 22px rgba(232,60,127,.36);display:flex;align-items:center;justify-content:center;gap:8px;transition:all .25s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden;}
+.btn-submit::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.18),transparent);border-radius:inherit;}
+.btn-submit:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(232,60,127,.44);}
+.btn-submit:active{transform:scale(.97);}
+.btn-submit i{font-size:18px;}
+
+.error-box{display:none;align-items:center;gap:8px;background:rgba(254,242,242,.85);backdrop-filter:blur(8px);border:1.5px solid rgba(239,68,68,.25);border-radius:11px;padding:10px 13px;margin-bottom:14px;font-size:12.5px;color:#b91c1c;font-weight:500;}
+.error-box i{font-size:15px;flex-shrink:0;}
+.error-box.show{display:flex;animation:shake .4s ease;}
+@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-5px);}75%{transform:translateX(5px);}50%{transform:translateX(5px);}}
+
+.card-footer{margin-top:22px;text-align:center;font-size:12px;color:var(--n400);}
+.card-footer span{color:var(--pink-500);font-weight:600;}
+
+/* RIGHT DECO */
+.deco-right{grid-column:3;display:flex;flex-direction:column;align-items:flex-end;gap:16px;padding-right:48px;animation:fade-up .8s cubic-bezier(.22,1,.36,1) .15s both;}
+.float-card{background:rgba(255,255,255,.45);backdrop-filter:blur(14px);border:1.5px solid rgba(255,255,255,.65);border-radius:18px;padding:14px 18px;box-shadow:0 6px 24px rgba(232,60,127,.10);display:flex;align-items:center;gap:12px;animation:float 5s ease-in-out infinite alternate;}
+.float-card:nth-child(2){animation-delay:-2s;animation-duration:6s;}
+.float-card:nth-child(3){animation-delay:-1s;animation-duration:4.5s;}
+@keyframes float{from{transform:translateY(0);}to{transform:translateY(-10px);}}
+.fc-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.fc-label{font-size:11px;color:var(--n500);margin-bottom:2px;}
+.fc-val{font-family:var(--fd);font-size:15px;font-weight:800;color:var(--n900);}
+.fc-badge{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:999px;font-size:10px;font-weight:700;}
+.fc-green{background:var(--green-100);color:var(--green-700);}
+.fc-pink{background:var(--pink-100);color:var(--pink-700);}
+.fc-warn{background:#fffbeb;color:#b45309;}
+
+@keyframes fade-up{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<div class="bg">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+  <div class="blob blob-4"></div>
+</div>
+<div class="grain"></div>
+
+<div class="page">
+  <div class="deco">
+    <div class="deco-pill"><i class="ph ph-house-line"></i> Manajemen Kos</div>
+    <div class="deco-heading">Selamat datang di <span>Kos Siyani</span></div>
+    <div class="deco-sub">Kelola penghuni, kamar, dan pembayaran kos kamu dalam satu tempat yang rapi.</div>
+    <div class="deco-stats">
+      <div class="deco-stat">
+        <div class="deco-stat-icon dip"><i class="ph ph-house-line"></i></div>
+        <div><div class="deco-stat-val">24</div><div class="deco-stat-lbl">Total Kamar</div></div>
+      </div>
+      <div class="deco-stat">
+        <div class="deco-stat-icon dig"><i class="ph ph-users"></i></div>
+        <div><div class="deco-stat-val">18</div><div class="deco-stat-lbl">Penghuni Aktif</div></div>
+      </div>
+      <div class="deco-stat">
+        <div class="deco-stat-icon dico"><i class="ph ph-receipt"></i></div>
+        <div><div class="deco-stat-val">Rp 12jt</div><div class="deco-stat-lbl">Pemasukan Bulan Ini</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="logo-wrap">
+      <div class="logo-box">KS</div>
+      <div>
+        <div class="logo-text">Kos Siyani</div>
+        <div class="logo-sub">Admin Panel v2</div>
+      </div>
+    </div>
+    <div class="card-title">Masuk ke Akun</div>
+    <div class="card-sub">Masukkan kredensial kamu untuk melanjutkan.</div>
+    <div class="role-toggle">
+      <button class="role-btn active" id="roleOwner" onclick="setRole('owner')">
+        <i class="ph ph-shield-check"></i> Owner / Admin
+      </button>
+      <button class="role-btn" id="rolePenghuni" onclick="setRole('penghuni')">
+        <i class="ph ph-user"></i> Penghuni
+      </button>
+    </div>
+    <div class="error-box" id="errorBox">
+      <i class="ph ph-warning-circle"></i>
+      <span id="errorMsg">Email atau password salah.</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Email</label>
+      <div class="input-wrap">
+        <i class="ph ph-envelope input-icon"></i>
+        <input class="form-input" id="emailInput" type="email" placeholder="nama@email.com"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <div class="input-wrap">
+        <i class="ph ph-lock input-icon"></i>
+        <input class="form-input" id="pwInput" type="password" placeholder="••••••••"/>
+        <button class="pw-toggle" onclick="togglePw()"><i class="ph ph-eye" id="pwIcon"></i></button>
+      </div>
+    </div>
+    <div class="row-between">
+      <label class="check-label">
+        <input type="checkbox" id="rememberMe"/>
+        <div class="check-box"></div>
+        <span class="check-text">Ingat saya</span>
+      </label>
+      <a href="#" class="forgot">Lupa password?</a>
+    </div>
+    <button class="btn-submit" id="loginBtn" onclick="handleLogin()">
+      <i class="ph ph-sign-in"></i> Masuk Sekarang
+    </button>
+    <div class="card-footer">Butuh bantuan? Hubungi <span>admin@kossiyani.id</span></div>
+  </div>
+
+  <div class="deco-right">
+    <div class="float-card">
+      <div class="fc-icon dip"><i class="ph ph-check-circle"></i></div>
+      <div>
+        <div class="fc-label">Status Pembayaran</div>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div class="fc-val">Lunas</div>
+          <span class="fc-badge fc-green"><i class="ph ph-check"></i> Tepat waktu</span>
+        </div>
+      </div>
+    </div>
+    <div class="float-card">
+      <div class="fc-icon dig"><i class="ph ph-door-open"></i></div>
+      <div>
+        <div class="fc-label">Kamar Tersedia</div>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div class="fc-val">6 Kamar</div>
+          <span class="fc-badge fc-pink"><i class="ph ph-arrow-up"></i> Kosong</span>
+        </div>
+      </div>
+    </div>
+    <div class="float-card">
+      <div class="fc-icon" style="background:#fffbeb;color:#b45309;"><i class="ph ph-clock"></i></div>
+      <div>
+        <div class="fc-label">Tagihan Jatuh Tempo</div>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div class="fc-val">3 Tagihan</div>
+          <span class="fc-badge fc-warn"><i class="ph ph-warning"></i> Segera</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function setRole(r){
+  document.getElementById('roleOwner').classList.toggle('active',r==='owner');
+  document.getElementById('rolePenghuni').classList.toggle('active',r==='penghuni');
+  document.getElementById('emailInput').placeholder=r==='owner'?'nama@email.com':'penghuni@email.com';
+}
+function togglePw(){
+  const inp=document.getElementById('pwInput'),ico=document.getElementById('pwIcon');
+  if(inp.type==='password'){inp.type='text';ico.className='ph ph-eye-slash';}
+  else{inp.type='password';ico.className='ph ph-eye';}
+}
+function handleLogin(){
+  const email=document.getElementById('emailInput').value.trim();
+  const pw=document.getElementById('pwInput').value;
+  const box=document.getElementById('errorBox');
+  const msg=document.getElementById('errorMsg');
+  box.classList.remove('show');
+  if(!email){msg.textContent='Email tidak boleh kosong.';box.classList.add('show');return;}
+  if(!pw){msg.textContent='Password tidak boleh kosong.';box.classList.add('show');return;}
+  const btn=document.getElementById('loginBtn');
+  btn.innerHTML='<div style="width:18px;height:18px;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;"></div> Memproses...';
+  btn.style.pointerEvents='none';
+  // Ganti bagian ini dengan: fetch('/api/auth/login', { method:'POST', body:JSON.stringify({email,password:pw}) })
+  setTimeout(()=>{
+    btn.innerHTML='<i class="ph ph-sign-in"></i> Masuk Sekarang';
+    btn.style.pointerEvents='';
+    msg.textContent='Email atau password salah. Coba lagi.';
+    box.classList.add('show');
+  },1500);
+}
+</script>
+</body>
+</html>
