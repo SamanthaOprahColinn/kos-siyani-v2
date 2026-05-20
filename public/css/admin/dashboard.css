@@ -1,0 +1,25 @@
+/* public/css/admin/dashboard.css */
+
+.admin-grid-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px; /* Tabel fleksibel, Aksi Cepat lebar tetap 320px */
+  gap: 30px;
+  align-items: start;
+}
+
+.table-wrapper {
+  padding: 24px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 28px;
+}
+
+@media (max-width: 1024px) {
+  .admin-grid-layout {
+    grid-template-columns: 1fr;
+  }
+}

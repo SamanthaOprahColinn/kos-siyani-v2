@@ -1,0 +1,35 @@
+/* public/css/pemilik/dashboard.css */
+
+.input-wrap { 
+  position: relative; 
+  width: 100%; 
+}
+
+.pw-toggle {
+  position: absolute;
+  right: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--n400);
+  font-size: 18px;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s;
+}
+
+.pw-toggle:hover { 
+  color: var(--pink-500); 
+}
+
+.form-input.has-toggle { 
+  padding-right: 40px; 
+}
+
+.pemilik-highlight-row {
+  border-left: 4px solid var(--pink-500);
+}
