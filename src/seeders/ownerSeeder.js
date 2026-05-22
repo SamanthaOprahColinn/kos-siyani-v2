@@ -6,53 +6,57 @@ import connectDB from '../config/database.js';
 
 dotenv.config();
 
-const seedOwner = async () => {
+const seedAccounts = async () => {
   try {
-    // Connect to database
+    // Koneksi ke database
     await connectDB();
 
+    // OWNER
     const defaultOwnerEmail = process.env.DEFAULT_OWNER_EMAIL || 'pemilik@kosiyani.com';
     const defaultOwnerPassword = process.env.DEFAULT_OWNER_PASSWORD || 'Admin@123456';
     const defaultOwnerName = process.env.DEFAULT_OWNER_NAME || 'Pemilik Kos Siyani';
 
-    // Check if owner already exists
-    const existingOwner = await User.findOne({
-      email: defaultOwnerEmail.toLowerCase(),
-    });
+    const existingOwner = await User.findOne({ email: defaultOwnerEmail.toLowerCase() });
 
-    if (existingOwner) {
-      console.log('✓ Owner account sudah ada');
-      console.log(`  Email: ${existingOwner.email}`);
-      console.log(`  Role: ${existingOwner.role}`);
-      console.log(`  Created at: ${existingOwner.createdAt}`);
-      process.exit(0);
+    if (!existingOwner) {
+      const owner = await User.create({
+        nama_lengkap: defaultOwnerName,
+        email: defaultOwnerEmail.toLowerCase(),
+        password: defaultOwnerPassword,
+        role: 'pemilik',
+        isActive: true,
+      });
+      console.log(`✓ Akun Pemilik berhasil dibuat! (${owner.email})`);
+    } else {
+      console.log(`✓ Akun Pemilik sudah tersedia (${existingOwner.email})`);
     }
 
-    // Create owner account
-    const owner = await User.create({
-      nama_lengkap: defaultOwnerName,
-      email: defaultOwnerEmail.toLowerCase(),
-      password: defaultOwnerPassword,
-      role: 'pemilik',
-      isActive: true,
-    });
+    // ADMIN
+    const defaultAdminEmail = process.env.DEFAULT_ADMIN_EMAIL || 'admin@kosiyani.com';
+    const defaultAdminPassword = process.env.DEFAULT_ADMIN_PASSWORD || 'Admin@123456';
+    const defaultAdminName = process.env.DEFAULT_ADMIN_NAME || 'Admin Kos Siyani';
 
-    console.log('✓ Owner account berhasil dibuat!');
-    console.log(`  ID: ${owner._id}`);
-    console.log(`  Nama: ${owner.nama_lengkap}`);
-    console.log(`  Email: ${owner.email}`);
-    console.log(`  Role: ${owner.role}`);
-    console.log(`  Created at: ${owner.createdAt}`);
-    console.log('\n⚠️  Jangan lupa ubah password default di production!');
+    const existingAdmin = await User.findOne({ email: defaultAdminEmail.toLowerCase() });
 
+    if (!existingAdmin) {
+      const admin = await User.create({
+        nama_lengkap: defaultAdminName,
+        email: defaultAdminEmail.toLowerCase(),
+        password: defaultAdminPassword,
+        role: 'admin',
+        isActive: true,
+      });
+      console.log(`✓ Akun Admin bawaan berhasil dibuat! (${admin.email})`);
+    } else {
+      console.log(`✓ Akun Admin bawaan sudah tersedia (${existingAdmin.email})`);
+    }
+
+    console.log('\n⚠️  Proses seeding selesai. Jalankan aplikasi menggunakan npm run dev');
     process.exit(0);
   } catch (error) {
-    console.error('✗ Error seeding owner account:', error.message);
-    if (error.name === 'MongoServerError' && error.code === 11000) {
-      console.error('✗ Email sudah terdaftar');
-    }
+    console.error('✗ Error saat menjalankan seeding akun:', error.message);
     process.exit(1);
   }
 };
 
-seedOwner();
+seedAccounts();

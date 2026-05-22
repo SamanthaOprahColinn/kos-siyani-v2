@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Login — Kos Siyani</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css"/>
+<link rel="stylesheet" href="../css/login.css"/>
+</head>
+<body>
+
+<div class="bg">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+  <div class="blob blob-4"></div>
+</div>
+<div class="grain"></div>
+
+<div class="page">
+  <div class="deco">
+    <div class="deco-pill"><i class="ph ph-house-line"></i> Manajemen Kos</div>
+    <div class="deco-heading">Selamat datang di <span>Kos Siyani</span></div>
+    <div class="deco-sub">Kelola penghuni, kamar, dan pembayaran kos kamu secara digital dalam satu pintu.</div>
+    <div class="deco-stats">
+      <div class="deco-stat">
+        <div class="deco-stat-icon dip"><i class="ph ph-house-line"></i></div>
+        <div><div class="deco-stat-val" id="statLoginKamar">...</div><div class="deco-stat-lbl">Kamar Tersedia</div></div>
+      </div>
+      <div class="deco-stat">
+        <div class="deco-stat-icon dig"><i class="ph ph-users"></i></div>
+        <div><div class="deco-stat-val" id="statLoginPenghuni">...</div><div class="deco-stat-lbl">Penghuni Aktif</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="logo-wrap">
+      <div class="logo-box">KS</div>
+      <div>
+        <div class="logo-text">Kos Siyani</div>
+        <div class="logo-sub">Admin Panel v2</div>
+      </div>
+    </div>
+    <div class="card-title">Masuk ke Akun</div>
+    <div class="card-sub">Masukkan kredensial kamu untuk melanjutkan.</div>
+    <div class="role-toggle">
+      <button class="role-btn active" id="roleOwner" onclick="setRole('owner')">
+        <i class="ph ph-shield-check"></i> Owner / Admin
+      </button>
+      <button class="role-btn" id="rolePenghuni" onclick="setRole('penghuni')">
+        <i class="ph ph-user"></i> Penghuni
+      </button>
+    </div>
+    
+    <div class="error-box" id="errorBox">
+      <i class="ph ph-warning-circle"></i>
+      <span id="errorMsg">Email atau password salah.</span>
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label">Email</label>
+      <div class="input-wrap">
+        <i class="ph ph-envelope input-icon"></i>
+        <input class="form-input" id="emailInput" type="email" placeholder="nama@email.com"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <div class="input-wrap">
+        <i class="ph ph-lock input-icon"></i>
+        <input class="form-input has-toggle" id="pwInput" type="password" placeholder="••••••••"/>
+        <button class="pw-toggle" type="button" onclick="togglePw()"><i class="ph ph-eye" id="pwIcon"></i></button>
+      </div>
+    </div>
+    <div class="row-between">
+      <label class="check-label">
+        <input type="checkbox" id="rememberMe"/>
+        <div class="check-box"></div>
+        <span class="check-text">Ingat saya</span>
+      </label>
+      <a href="#" class="forgot">Lupa password?</a>
+    </div>
+    <button class="btn-submit" id="loginBtn" onclick="handleLogin()">
+      <i class="ph ph-sign-in"></i> Masuk Sekarang
+    </button>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  fetchPublicStats();
+});
+
+function fetchPublicStats() {
+  const elKamar = document.getElementById('statLoginKamar');
+  const elPenghuni = document.getElementById('statLoginPenghuni');
+
+  fetch('http://localhost:5000/api/kamar/stats/summary')
+    .then(res => res.json())
+    .then(data => {
+      if (data.success && data.data) {
+        elKamar.textContent = data.data.tersedia || '0';
+      } else {
+        elKamar.textContent = '-';
+      }
+    })
+    .catch(() => { elKamar.textContent = '-'; });
+
+  fetch('http://localhost:5000/api/penghuni/stats/summary')
+    .then(res => res.json())
+    .then(data => {
+      if (data.success && data.data) {
+        elPenghuni.textContent = data.data.aktif || '0';
+      } else {
+        elPenghuni.textContent = '-';
+      }
+    })
+    .catch(() => { elPenghuni.textContent = '-'; });
+}
+
+function setRole(r){
+  document.getElementById('roleOwner').classList.toggle('active', r === 'owner');
+  document.getElementById('rolePenghuni').classList.toggle('active', r === 'penghuni');
+  document.getElementById('emailInput').placeholder = (r === 'owner') ? 'nama@email.com' : 'penghuni@email.com';
+}
+
+function togglePw(){
+  const inp = document.getElementById('pwInput');
+  const ico = document.getElementById('pwIcon');
+  if(inp.type === 'password'){
+    inp.type = 'text';
+    ico.className = 'ph ph-eye-slash';
+  } else {
+    inp.type = 'password';
+    ico.className = 'ph ph-eye';
+  }
+}
+
+function handleLogin(){
+  const email = document.getElementById('emailInput').value.trim();
+  const pw = document.getElementById('pwInput').value;
+  const box = document.getElementById('errorBox');
+  const msg = document.getElementById('errorMsg');
+  
+  box.classList.remove('show');
+  
+  if(!email){
+    msg.textContent = 'Email tidak boleh kosong.';
+    box.classList.add('show');
+    return;
+  }
+  
+  if(!pw){
+    msg.textContent = 'Password tidak boleh kosong.';
+    box.classList.add('show');
+    return;
+  }
+  
+  const btn = document.getElementById('loginBtn');
+  btn.innerHTML = '<div style="width:18px;height:18px;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;"></div> Memproses...';
+  btn.style.pointerEvents = 'none';
+
+  // Request ke API Backend
+  fetch('http://localhost:5000/api/auth/login', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ email: email, password: pw })
+  })
+  .then(response => response.json())
+  .then(data => {
+    btn.innerHTML = '<i class="ph ph-sign-in"></i> Masuk Sekarang';
+    btn.style.pointerEvents = '';
+
+    if(data.success) {
+      localStorage.setItem('token', data.data.token);
+      
+      const userRole = data.data.user.role;
+      // REVISI PADA PENGALIHAN PATH BARU: Menghilangkan nama file redundan
+      if (userRole === 'pemilik') {
+        window.location.href = 'pemilik/dashboard.html';
+      } else if (userRole === 'admin') {
+        window.location.href = 'admin/dashboard.html';
+      } else {
+        alert('Akses panel ditolak untuk role penghuni.');
+      }
+    } else {
+      msg.textContent = data.message || 'Email atau password salah.';
+      box.classList.add('show');
+    }
+  })
+  .catch(error => {
+    btn.innerHTML = '<i class="ph ph-sign-in"></i> Masuk Sekarang';
+    btn.style.pointerEvents = '';
+    msg.textContent = 'Terjadi kesalahan koneksi ke server.';
+    box.classList.add('show');
+    console.error('Error:', error);
+  });
+}
+</script>
+</body>
+</html>
