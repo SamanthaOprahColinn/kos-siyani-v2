@@ -8,6 +8,7 @@ import { errorHandler, notFoundHandler } from './middlewares/errorHandler.js';
 
 // Routes
 import authRoutes from './routes/authRoutes.js';
+import penghuniRoutes from './routes/penghuniRoutes.js';
 
 // Load environment variables
 dotenv.config();
@@ -41,6 +42,7 @@ app.get('/api/health', (req, res) => {
 
 // API Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/penghuni', penghuniRoutes);
 
 
 // Documentation endpoint
@@ -55,6 +57,17 @@ app.get('/api', (req, res) => {
         getCurrentUser: 'GET /api/auth/me',
         createAdmin: 'POST /api/auth/create-admin',
         getAllUsers: 'GET /api/auth/users (pemilik only)',
+      },
+      penghuni: {
+        getAll: 'GET /api/penghuni',
+        create: 'POST /api/penghuni',
+        getById: 'GET /api/penghuni/:id',
+        update: 'PATCH /api/penghuni/:id',
+        delete: 'DELETE /api/penghuni/:id',
+        restore: 'PATCH /api/penghuni/:id/restore',
+        changeStatus: 'PATCH /api/penghuni/:id/status',
+        getStats: 'GET /api/penghuni/stats/summary',
+        search: 'GET /api/penghuni/search',
       },
     },
   });
