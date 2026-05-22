@@ -33,6 +33,13 @@ app.use(morgan('dev'));
 app.use(express.static('public'));
 
 // Health check endpoint
+app.get("/", (req, res) => {
+  res.json({
+    success: true,
+    message: "Home"
+  });
+});
+
 app.get('/api/health', (req, res) => {
   res.status(200).json({
     success: true,
