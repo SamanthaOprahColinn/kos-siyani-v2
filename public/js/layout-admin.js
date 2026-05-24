@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // 1. INJEKSI SIDEBAR (ASLI TANPA DIUBAH)
+  // 1. INJEKSI SIDEBAR
   const sidebarContainer = document.getElementById('sidebar-container');
   if (sidebarContainer) {
     sidebarContainer.innerHTML = `
@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         <nav class="sidebar-nav">
           <div class="sidebar-section-title">Utama</div>
-          <a href="#" class="sidebar-link active">
+          <a href="/pages/admin/dashboard.html" class="sidebar-link">
             <i class="ph ph-squares-four sidebar-link-icon"></i>
             <span>Dashboard Admin</span>
           </a>
@@ -41,9 +41,38 @@ document.addEventListener('DOMContentLoaded', () => {
         </nav>
       </aside>
     `;
+
+    // --- FITUR OTOMATIS MENYALAKAN WARNA HIJAU (ACTIVE MENUS) ---
+    const currentPath = window.location.pathname;
+    const sidebarLinks = sidebarContainer.querySelectorAll('.sidebar-link');
+    
+    sidebarLinks.forEach(link => {
+      // Jika isi atribut href pada link sama dengan URL halaman yang sedang dibuka
+      if (link.getAttribute('href') === currentPath) {
+        link.classList.add('active'); // Otomatis beri warna hijau
+      } else {
+        link.classList.remove('active'); // Pastikan menu lain tidak ikut hijau
+      }
+    });
   }
 
-  // 3. INJEKSI FOOTER (ASLI TANPA DIUBAH)
+  // 2. INJEKSI TOPBAR (HANYA UNTUK PROFIL USER POJOK KANAN)
+  const topbarContainer = document.getElementById('topbar-container');
+  if (topbarContainer) {
+    topbarContainer.innerHTML = `
+      <div class="flex items-center gap-3 ml-auto">
+        <div class="text-right">
+          <div class="font-bold text-dark" id="profileName">Memuat...</div>
+          <span class="badge badge-green text-xs" id="profileRole">ADMIN</span>
+        </div>
+        <div class="avatar avatar-md avatar-green avatar-ring">
+          <span id="avatarInitial">-</span>
+        </div>
+      </div>
+    `;
+  }
+
+  // 3. INJEKSI FOOTER
   const footerContainer = document.getElementById('footer-container');
   if (footerContainer) {
     footerContainer.innerHTML = `

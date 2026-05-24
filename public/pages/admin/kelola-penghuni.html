@@ -5,61 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Kelola Penghuni (Admin) — Kos Siyani</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css"/>
-<link rel="stylesheet" href="/css/global.css"/>
-<link rel="stylesheet" href="/css/pemilik/dashboard.css"/> 
+<link rel="stylesheet" href="../../css/global.css"/>
+<link rel="stylesheet" href="../../css/admin/dashboard.css"/> 
 </head>
 <body>
 
 <div class="layout">
-  <aside class="sidebar">
-    <div class="sidebar-brand">
-      <div class="sidebar-brand-logo">KS</div>
-      <div>
-        <div class="sidebar-brand-name">Kos Siyani</div>
-        <div class="sidebar-brand-sub">Admin Panel v2</div>
-      </div>
-    </div>
-    
-    <nav class="sidebar-nav">
-      <div class="sidebar-section-title">Utama</div>
-      <a href="/pages/admin/dashboard.html" class="sidebar-link">
-        <i class="ph ph-squares-four sidebar-link-icon"></i>
-        <span>Dashboard</span>
-      </a>
-      
-      <div class="sidebar-section-title">Manajemen</div>
-      <a href="#" class="sidebar-link" onclick="alert('Modul Kelola Kamar segera hadir')">
-        <i class="ph ph-door-open sidebar-link-icon"></i>
-        <span>Kelola Kamar</span>
-      </a>
-      <a href="/pages/admin/kelola-penghuni.html" class="sidebar-link active">
-        <i class="ph ph-users sidebar-link-icon"></i>
-        <span>Kelola Penghuni</span>
-      </a>
-      <a href="#" class="sidebar-link" onclick="alert('Modul Transaksi segera hadir')">
-        <i class="ph ph-receipt sidebar-link-icon"></i>
-        <span>Transaksi</span>
-      </a>
-      
-      <div class="sidebar-section-title">Akun</div>
-      <a href="#" class="sidebar-link" onclick="handleLogout()">
-        <i class="ph ph-sign-out sidebar-link-icon"></i>
-        <span>Keluar</span>
-      </a>
-    </nav>
-  </aside>
+
+  <div id="sidebar-container"></div>
 
   <div class="main">
     <header class="topbar">
-      <h1 class="topbar-title">Manajemen Penghuni Kos (Operasional)</h1>
-      
-      <div class="flex items-center gap-3">
-        <div class="text-right">
-          <div class="font-bold text-dark" id="profileName">Memuat...</div>
-          <span class="badge badge-success text-xs">ADMIN</span>
-        </div>
-      </div>
-    </header>
+        <h1 class="topbar-title">Manajemen Penghuni Kos</h1>
+        
+        <div id="topbar-container"></div>
+      </header>
 
     <main class="content page-enter">
       <div class="flex items-center justify-between mb-6 gap-4">
@@ -130,6 +90,9 @@
           <label class="form-label">Pilih Kamar</label>
           <select class="form-input" id="pKamar" required>
             <option value="">-- Pilih Kamar --</option>
+            <option value="standar">Standar</option>
+            <option value="Semi-Eksklusif">Semi-Eksklusif</option>
+            <option value="Eksklusif">Eksklusif</option>
           </select>
         </div>
         <div class="form-group">
@@ -145,6 +108,8 @@
     </form>
   </div>
 </div>
+
+<script src="../../js/layout-admin.js"></script>
 
 <script>
 const API_URL = 'http://localhost:5000/api';
@@ -258,16 +223,27 @@ function savePenghuni(event) {
   const token = localStorage.getItem('token');
   const btn = document.getElementById('btnSubmitPenghuni');
 
+  // Ambil nilai dari form
+  const idKamar = document.getElementById('pKamar').value;
+  const teksKamar = document.getElementById('pKamar').options[document.getElementById('pKamar').selectedIndex].text;
+  const nomorKamarSaja = teksKamar.replace(/[^0-9]/g, ''); // Trik mengambil angka kamarnya saja dari teks dropdown
+
+  // Payload yang akan dikirim ke backend
   const payload = {
     nama_lengkap: document.getElementById('pNama').value.trim(),
     no_ktp: document.getElementById('pKtp').value.trim(),
     no_hp: document.getElementById('pHp').value.trim(),
     email: document.getElementById('pEmail').value.trim(),
     alamat_asal: document.getElementById('pAlamat').value.trim(),
-    id_kamar: document.getElementById('pKamar').value,
+    
+    // BACKEND BIASANYA MINTA SALAH SATU DARI INI (tergantung schema kamu):
+    id_kamar: idKamar,         // Mengirim ID unik MongoDB
+    
     tanggal_masuk: document.getElementById('pTanggalMasuk').value,
     catatan: document.getElementById('pCatatan').value.trim()
   };
+
+  console.log("🚀 DATA YANG DIKIRIM FRONTEND:", payload);
 
   btn.style.pointerEvents = 'none';
   btn.textContent = 'Mendaftarkan...';
@@ -280,24 +256,31 @@ function savePenghuni(event) {
     },
     body: JSON.stringify(payload)
   })
-  .then(res => res.json())
-  .then(data => {
+  .then(async (res) => {
+    // Kita tangkap respons mentah dari backend
+    const data = await res.json();
+    console.log("📥 RESPONS DARI BACKEND:", data);
+    return { status: res.status, data };
+  })
+  .then(({ status, data }) => {
     btn.style.pointerEvents = 'auto';
     btn.textContent = 'Simpan & Daftarkan';
 
-    if (data.success) {
-      alert(data.message || 'Penghuni baru berhasil didaftarkan!');
+    if (status === 200 || status === 201 || data.success) {
+      alert('Penghuni baru berhasil didaftarkan!');
       closePenghuniModal();
       fetchPenghuni();
     } else {
-      alert(data.message || 'Gagal mendaftarkan penghuni.');
+      // Menampilkan pesan error yang sebenarnya dari backend ke layar
+      const errorMsg = data.message || JSON.stringify(data.errors) || 'Gagal validasi';
+      alert(`Validasi Gagal: ${errorMsg}`);
     }
   })
   .catch(err => {
     btn.style.pointerEvents = 'auto';
     btn.textContent = 'Simpan & Daftarkan';
-    console.error(err);
-    alert('Terjadi kesalahan jaringan.');
+    console.error("❌ ERROR JARINGAN / KODE:", err);
+    alert('Terjadi kesalahan. Cek Console (F12).');
   });
 }
 
