@@ -4,13 +4,13 @@
 
 /* ── Tokens ── */
 :root {
-  --pink-50:  #fef1f6;
-  --pink-100: #ffd6e7;
-  --pink-200: #ffaac9;
-  --pink-400: #f4659a;
-  --pink-500: #e83c7f;
-  --pink-600: #c92c6a;
-  --pink-700: #a01f53;
+  --pink-50:   #fef1f6;
+  --pink-100:  #ffd6e7;
+  --pink-200:  #ffaac9;
+  --pink-400:  #f4659a;
+  --pink-500:  #e83c7f;
+  --pink-600:  #c92c6a;
+  --pink-700:  #a01f53;
 
   --green-50:  #f2fce8;
   --green-100: #d8f9b8;
@@ -65,7 +65,7 @@ body {
 /* ── Layout ── */
 .layout { display: flex; min-height: 100vh; }
 
-/* ── Sidebar ── */
+/* ── Sidebar (Tetap flex column agar saat diinjeksi lurus ke bawah) ── */
 .sidebar {
   width: var(--sidebar-w);
   min-height: 100vh;
@@ -230,9 +230,9 @@ body {
   font-size: 24px; flex-shrink: 0;
 }
 
-.stat-icon-pink  { background: var(--pink-100);  color: var(--pink-600); }
-.stat-icon-green { background: var(--green-100); color: var(--green-600); }
-.stat-icon-cream { background: var(--cream-100); color: #b48509; }
+.stat-icon-pink   { background: var(--pink-100);  color: var(--pink-600); }
+.stat-icon-green  { background: var(--green-100); color: var(--green-600); }
+.stat-icon-cream  { background: var(--cream-100); color: #b48509; }
 
 .stat-label { font-size: 12.5px; color: var(--n500); font-weight: 600; margin-bottom: 5px; }
 .stat-value { font-family: var(--fd); font-size: 28px; font-weight: 900; color: var(--n900); line-height: 1; }
@@ -305,7 +305,7 @@ tbody tr:hover { background: rgba(232, 60, 127, 0.03); }
 
 .btn-primary {
   background: var(--pink-500); color: #fff;
-  box-shadow: 0 4px 16px rgba(232, 60, 127, 0.30);
+  box-shadow: 0 4px 166px rgba(232, 60, 127, 0.30);
 }
 .btn-primary:hover {
   background: var(--pink-600);
@@ -517,7 +517,7 @@ tbody tr:hover { background: rgba(232, 60, 127, 0.03); }
 .flex           { display: flex; }
 .flex-col       { flex-direction: column; }
 .items-center   { align-items: center; }
-.items-start    { align-items: flex-start; }
+.items-start     { align-items: flex-start; }
 .justify-between{ justify-content: space-between; }
 .justify-center { justify-content: center; }
 .gap-2  { gap: 8px; }
@@ -534,7 +534,7 @@ tbody tr:hover { background: rgba(232, 60, 127, 0.03); }
 .p-4 { padding: 20px; }
 .p-6 { padding: 28px; }
 
-
+/* ── Media Queries (100% Asli Milikmu) ── */
 @media (min-width: 1400px) {
   .content { padding: 32px 48px 56px; }
   .grid-4  { gap: 24px; }
@@ -548,75 +548,55 @@ tbody tr:hover { background: rgba(232, 60, 127, 0.03); }
 
 @media (max-width: 1024px) {
   :root { --sidebar-w: 200px; }
-
   .topbar { padding: 0 24px; }
   .content { padding: 20px 24px 36px; }
-
   .grid-4 { grid-template-columns: repeat(2, 1fr); gap: 16px; }
   .grid-3 { grid-template-columns: 1fr; }
   .grid-2 { grid-template-columns: 1fr; }
-
   .stat-value { font-size: 24px; }
 }
 
 @media (max-width: 768px) {
   :root { --sidebar-w: 64px; }
-
   .sidebar { padding: 24px 10px; align-items: center; }
-
   .sidebar-brand-name,
   .sidebar-brand-sub,
   .sidebar-section-title,
   .sidebar-link span,
   .sidebar-badge { display: none; }
-
   .sidebar-brand { justify-content: center; padding: 0; margin-bottom: 32px; }
   .sidebar-brand-logo { width: 38px; height: 38px; font-size: 14px; }
-
   .sidebar-link {
     justify-content: center;
     padding: 11px;
     border-radius: 12px;
     width: 44px; height: 44px;
   }
-
   .sidebar-link.active::before { display: none; }
   .sidebar-link-icon { font-size: 20px; margin: 0; }
-
   .topbar { padding: 0 18px; }
   .topbar-title { font-size: 17px; }
-
   .content { padding: 16px 18px 32px; }
-
   .grid-4 { grid-template-columns: repeat(2, 1fr); gap: 12px; }
   .grid-2 { grid-template-columns: 1fr; }
-
   .stat-card { padding: 16px 18px; gap: 12px; }
   .stat-icon { width: 42px; height: 42px; font-size: 20px; border-radius: 12px; }
   .stat-value { font-size: 22px; }
   .stat-label { font-size: 11.5px; }
-
   .main-footer { padding: 16px 18px; flex-direction: column; gap: 8px; text-align: center; }
   .footer-links { justify-content: center; }
-
   .modal { padding: 24px 20px; }
 }
 
-/* ── Mobile (< 480px) ── */
 @media (max-width: 480px) {
   .grid-4 { grid-template-columns: 1fr 1fr; gap: 10px; }
-
   .topbar-title { font-size: 15px; }
-
   .stat-card { padding: 14px 15px; gap: 10px; }
   .stat-value { font-size: 20px; }
   .stat-icon  { width: 38px; height: 38px; font-size: 18px; border-radius: 10px; }
-
   .btn { padding: 9px 16px; font-size: 13px; }
   .btn-sm { padding: 6px 12px; font-size: 11.5px; }
-
   table { font-size: 12px; }
   th, td { padding: 12px 12px; }
-
   .modal { border-radius: 20px; padding: 22px 18px; }
 }
