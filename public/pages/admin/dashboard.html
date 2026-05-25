@@ -1,252 +1,185 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Dashboard Admin — Kos Siyani</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css"/>
-<link rel="stylesheet" href="../../css/global.css"/>
-<link rel="stylesheet" href="../../css/admin/dashboard.css"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard Admin — Kos Siyani</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+  <link rel="stylesheet" href="../../css/global.css" />
+  <link rel="stylesheet" href="../../css/admin/dashboard.css" />
 </head>
+
 <body>
 
-<div class="layout">
-  <aside class="sidebar">
-    <div class="sidebar-brand">
-      <div class="sidebar-brand-logo">KS</div>
-      <div>
-        <div class="sidebar-brand-name">Kos Siyani</div>
-        <div class="sidebar-brand-sub">Admin Panel v2</div>
-      </div>
-    </div>
-    
-    <nav class="sidebar-nav">
-      <div class="sidebar-section-title">Utama</div>
-      <a href="#" class="sidebar-link active">
-        <i class="ph ph-squares-four sidebar-link-icon"></i>
-        <span>Dashboard Admin</span>
-      </a>
-      
-      <div class="sidebar-section-title">Operasional</div>
-      <a href="#" class="sidebar-link" onclick="alert('Modul Kelola Kamar segera hadir')">
-        <i class="ph ph-door-open sidebar-link-icon"></i>
-        <span>Kelola Kamar</span>
-      </a>
-      <a href="#" class="sidebar-link" onclick="fetchPenghuni()">
-        <i class="ph ph-users sidebar-link-icon"></i>
-        <span>Kelola Penghuni</span>
-      </a>
-      <a href="#" class="sidebar-link" onclick="alert('Modul Buat Tagihan segera hadir')">
-        <i class="ph ph-receipt sidebar-link-icon"></i>
-        <span>Buat Tagihan</span>
-      </a>
-      
-      <div class="sidebar-section-title">Akun</div>
-      <a href="#" class="sidebar-link" onclick="handleLogout()">
-        <i class="ph ph-sign-out sidebar-link-icon"></i>
-        <span>Keluar</span>
-      </a>
-    </nav>
-  </aside>
+  <div class="layout">
+    <div id="sidebar-container"></div>
 
-  <div class="main">
-    <header class="topbar">
-      <h1 class="topbar-title">Dashboard Operasional Admin</h1>
-      
-      <div class="flex items-center gap-3">
-        <div class="text-right">
-          <div class="font-bold text-dark" id="profileName">Memuat...</div>
-          <span class="badge badge-green text-xs" id="profileRole">ADMIN</span>
-        </div>
-        <div class="avatar avatar-md avatar-green avatar-ring">
-          <span id="avatarInitial">-</span>
-        </div>
-      </div>
-    </header>
+    <div class="main">
+      <header class="topbar">
+        <h1 class="topbar-title">Dashboard Operasional Admin</h1>
+        
+        <div id="topbar-container"></div>
+      </header>
 
-    <main class="content page-enter">
+      <main class="content page-enter">
 
-      <div class="admin-stats">
-        <div class="stat-card">
-          <div class="stat-icon stat-icon-pink"><i class="ph ph-door"></i></div>
-          <div>
-            <div class="stat-label">Kamar Terisi</div>
-            <div class="stat-value" id="statKamarTerisi">-</div>
-          </div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon stat-icon-green"><i class="ph ph-door-open"></i></div>
-          <div>
-            <div class="stat-label">Kamar Kosong</div>
-            <div class="stat-value" id="statKamarKosong">-</div>
-          </div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon stat-icon-cream"><i class="ph ph-users"></i></div>
-          <div>
-            <div class="stat-label">Total Penghuni</div>
-            <div class="stat-value" id="statTotalPenghuni">-</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="admin-grid-layout">
-
-        <div class="table-wrapper">
-          <div class="table-top">
+        <div class="admin-stats">
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-pink"><i class="ph ph-door"></i></div>
             <div>
-              <div class="table-top-title">Daftar Penghuni</div>
-              <div class="table-top-sub">Data real-time dari database</div>
+              <div class="stat-label">Kamar Terisi</div>
+              <div class="stat-value" id="statKamarTerisi">-</div>
             </div>
-            <button class="btn btn-ghost btn-sm" onclick="fetchPenghuni()">
-              <i class="ph ph-arrows-clockwise"></i> Segarkan
-            </button>
           </div>
-          <table>
-            <thead>
-              <tr>
-                <th>Kamar</th>
-                <th>Nama Penghuni</th>
-                <th>Nomor KTP</th>
-                <th>Aksi</th>
-              </tr>
-            </thead>
-            <tbody id="tenantTableBody">
-              <tr>
-                <td colspan="4">
-                  <div class="table-empty">
-                    <i class="ph ph-users"></i>
-                    <div class="table-empty-title">Belum ada penghuni</div>
-                    <div class="table-empty-sub">Data akan muncul setelah penghuni didaftarkan</div>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="table-wrapper quick-action-card">
-          <div class="card-section-title">Aksi Cepat</div>
-          <div class="quick-action-list">
-            <button class="quick-action-btn qab-green" onclick="openAddTenantModal('')">
-              <div class="qab-icon"><i class="ph ph-user-plus"></i></div>
-              Registrasi Penghuni Baru
-            </button>
-            <button class="quick-action-btn qab-pink" onclick="alert('Segera hadir')">
-              <div class="qab-icon"><i class="ph ph-receipt"></i></div>
-              Buat Tagihan
-            </button>
-            <button class="quick-action-btn qab-cream" onclick="alert('Segera hadir')">
-              <div class="qab-icon"><i class="ph ph-door-open"></i></div>
-              Tambah Kamar
-            </button>
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-green"><i class="ph ph-door-open"></i></div>
+            <div>
+              <div class="stat-label">Kamar Kosong</div>
+              <div class="stat-value" id="statKamarKosong">-</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-cream"><i class="ph ph-users"></i></div>
+            <div>
+              <div class="stat-label">Total Penghuni</div>
+              <div class="stat-value" id="statTotalPenghuni">-</div>
+            </div>
           </div>
         </div>
-      </div>
-    </main>
-    
-    <footer class="main-footer">
-      <div class="footer-text">
-        &copy; 2026 <span>Kos Siyani</span>. Hak cipta dilindungi undang-undang.
-      </div>
-      <div class="footer-links">
-        <a href="#">Bantuan Operasional</a>
-        <a href="#">Hubungi Developer</a>
-      </div>
-    </footer>
-  </div>
-</div>
 
-<div class="modal-backdrop" id="tenantModal" style="display: none;">
-  <div class="modal">
-    <div class="modal-header">
-      <h3 class="modal-title">Registrasi Penghuni Baru</h3>
-      <button onclick="closeModal('tenantModal')" style="font-size: 20px;"><i class="ph ph-x"></i></button>
-    </div>
-    <div class="flex flex-col gap-4">
-      <div class="form-group">
-        <label class="form-label">Nama Lengkap <span class="required">*</span></label>
-        <input type="text" class="form-input" id="tenantName" placeholder="Masukkan nama sesuai KTP"/>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Nomor KTP <span class="required">*</span></label>
-        <input type="text" class="form-input" id="tenantKtp" placeholder="16 Digit NIK"/>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Nomor Kamar <span class="required">*</span></label>
-        <input type="text" class="form-input" id="tenantRoom" placeholder="Contoh: 101"/>
-      </div>
-      <button class="btn btn-primary w-full" id="btnSaveTenant" onclick="saveTenant()">Simpan Data Penghuni</button>
+        <div class="admin-grid-layout">
+
+          <div class="table-wrapper">
+            <div class="table-top">
+              <div>
+                <div class="table-top-title">Daftar Penghuni</div>
+                <div class="table-top-sub">Data real-time dari database</div>
+              </div>
+              <button class="btn btn-ghost btn-sm" onclick="fetchPenghuni()">
+                <i class="ph ph-arrows-clockwise"></i> Segarkan
+              </button>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Kamar</th>
+                  <th>Nama Penghuni</th>
+                  <th>Nomor KTP</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="tenantTableBody">
+                <tr>
+                  <td colspan="4">
+                    <div class="table-empty">
+                      <i class="ph ph-users"></i>
+                      <div class="table-empty-title">Belum ada penghuni</div>
+                      <div class="table-empty-sub">Data akan muncul setelah penghuni didaftarkan</div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="table-wrapper quick-action-card">
+            <div class="card-section-title">Aksi Cepat</div>
+            <div class="quick-action-list">
+
+              <button class="quick-action-btn qab-green"
+                onclick="window.location.href='/pages/admin/kelola-penghuni.html'">
+                <div class="qab-icon"><i class="ph ph-user-plus"></i></div>
+                Registrasi Penghuni Baru
+              </button>
+
+              <button class="quick-action-btn qab-pink" onclick="window.location.href='/pages/admin/buat-tagihan.html'">
+                <div class="qab-icon"><i class="ph ph-receipt"></i></div>
+                Buat Tagihan
+              </button>
+
+              <button class="quick-action-btn qab-cream"
+                onclick="window.location.href='/pages/admin/kelola-kamar.html'">
+                <div class="qab-icon"><i class="ph ph-door-open"></i></div>
+                Tambah Kamar
+              </button>
+
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <div id="footer-container"></div>
     </div>
   </div>
-</div>
+  <script src="../../js/layout-admin.js"></script>
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const token = localStorage.getItem('token');
-  if (!token) {
-    window.location.href = '../login.html';
-    return;
-  }
-  
-  fetch('http://localhost:5000/api/auth/me', {
-    method: 'GET',
-    headers: { 'Authorization': `Bearer ${token}` }
-  })
-  .then(res => res.json())
-  .then(data => {
-    if (data.success && data.data) {
-      if (data.data.role === 'pemilik') {
-        window.location.href = '../pemilik/dashboard.html';
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        window.location.href = '../login.html';
         return;
       }
-      document.getElementById('profileName').textContent = data.data.nama_lengkap;
-      document.getElementById('avatarInitial').textContent = data.data.nama_lengkap.charAt(0).toUpperCase();
+
+      fetch('http://localhost:5000/api/auth/me', {
+        method: 'GET',
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success && data.data) {
+            if (data.data.role === 'pemilik') {
+              window.location.href = '../pemilik/dashboard.html';
+              return;
+            }
+            document.getElementById('profileName').textContent = data.data.nama_lengkap;
+            document.getElementById('avatarInitial').textContent = data.data.nama_lengkap.charAt(0).toUpperCase();
+          }
+        })
+        .catch(() => {
+          localStorage.removeItem('token');
+          window.location.href = '../login.html';
+        });
+
+      fetchPenghuni();
+      fetchDashboardStats();
+    });
+
+    function fetchDashboardStats() {
+      const token = localStorage.getItem('token');
+      const headers = { 'Authorization': `Bearer ${token}` };
+
+      fetch('http://localhost:5000/api/kamar/stats/summary', { method: 'GET', headers })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success && data.data) {
+            document.getElementById('statKamarKosong').textContent = data.data.tersedia || '0';
+          }
+        }).catch(() => document.getElementById('statKamarKosong').textContent = 'Error');
     }
-  })
-  .catch(() => {
-    localStorage.removeItem('token');
-    window.location.href = '../login.html';
-  });
 
-  fetchPenghuni();
-  fetchDashboardStats();
-});
+    function fetchPenghuni() {
+      const token = localStorage.getItem('token');
+      const tbody = document.getElementById('tenantTableBody');
 
-function fetchDashboardStats() {
-  const token = localStorage.getItem('token');
-  const headers = { 'Authorization': `Bearer ${token}` };
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px;">Menarik data dari database...</td></tr>';
 
-  fetch('http://localhost:5000/api/kamar/stats/summary', { method: 'GET', headers })
-    .then(res => res.json())
-    .then(data => {
-      if(data.success && data.data) {
-        document.getElementById('statKamarKosong').textContent = data.data.tersedia || '0';
-      }
-    }).catch(() => document.getElementById('statKamarKosong').textContent = 'Error');
-}
+      fetch('http://localhost:5000/api/penghuni', {
+        method: 'GET',
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+        .then(res => res.json())
+        .then(data => {
+          tbody.innerHTML = '';
 
-function fetchPenghuni() {
-  const token = localStorage.getItem('token');
-  const tbody = document.getElementById('tenantTableBody');
-  
-  tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px;">Menarik data dari database...</td></tr>';
+          if (data.success && data.data && data.data.length > 0) {
+            document.getElementById('statTotalPenghuni').textContent = data.data.length;
+            document.getElementById('statKamarTerisi').textContent = data.data.length;
 
-  fetch('http://localhost:5000/api/penghuni', {
-    method: 'GET',
-    headers: { 'Authorization': `Bearer ${token}` }
-  })
-  .then(res => res.json())
-  .then(data => {
-    tbody.innerHTML = ''; 
-    
-    if (data.success && data.data && data.data.length > 0) {
-      document.getElementById('statTotalPenghuni').textContent = data.data.length;
-      document.getElementById('statKamarTerisi').textContent = data.data.length;
-      
-      data.data.forEach(penghuni => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
+            data.data.forEach(penghuni => {
+              const tr = document.createElement('tr');
+              tr.innerHTML = `
           <td class="font-bold">Kamar ${penghuni.nomor_kamar || '-'}</td>
           <td>${penghuni.nama_lengkap || '-'}</td>
           <td>${penghuni.no_ktp || '-'}</td>
@@ -256,86 +189,87 @@ function fetchPenghuni() {
             </button>
           </td>
         `;
-        tbody.appendChild(tr);
-      });
-    } else {
-      document.getElementById('statTotalPenghuni').textContent = '0';
-      document.getElementById('statKamarTerisi').textContent = '0';
-      tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px; color: var(--n500);">Belum ada data penghuni yang terdaftar.</td></tr>';
+              tbody.appendChild(tr);
+            });
+          } else {
+            document.getElementById('statTotalPenghuni').textContent = '0';
+            document.getElementById('statKamarTerisi').textContent = '0';
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px; color: var(--n500);">Belum ada data penghuni yang terdaftar.</td></tr>';
+          }
+        })
+        .catch(err => {
+          console.error('Error memuat penghuni:', err);
+          tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px; color: #dc2626;">Koneksi ke backend gagal. Pastikan API GET /api/penghuni sudah dibuat.</td></tr>';
+        });
     }
-  })
-  .catch(err => {
-    console.error('Error memuat penghuni:', err);
-    tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px; color: #dc2626;">Koneksi ke backend gagal. Pastikan API GET /api/penghuni sudah dibuat.</td></tr>';
-  });
-}
 
-function saveTenant() {
-  const nama_lengkap = document.getElementById('tenantName').value.trim();
-  const no_ktp = document.getElementById('tenantKtp').value.trim();
-  const nomor_kamar = document.getElementById('tenantRoom').value.trim();
-  const token = localStorage.getItem('token');
+    function saveTenant() {
+      const nama_lengkap = document.getElementById('tenantName').value.trim();
+      const no_ktp = document.getElementById('tenantKtp').value.trim();
+      const nomor_kamar = document.getElementById('tenantRoom').value.trim();
+      const token = localStorage.getItem('token');
 
-  if (!nama_lengkap || !no_ktp || !nomor_kamar) {
-    alert('Semua kolom wajib diisi!');
-    return;
-  }
+      if (!nama_lengkap || !no_ktp || !nomor_kamar) {
+        alert('Semua kolom wajib diisi!');
+        return;
+      }
 
-  const btn = document.getElementById('btnSaveTenant');
-  btn.textContent = 'Menyimpan...';
-  btn.style.pointerEvents = 'none';
+      const btn = document.getElementById('btnSaveTenant');
+      btn.textContent = 'Menyimpan...';
+      btn.style.pointerEvents = 'none';
 
-  fetch('http://localhost:5000/api/penghuni', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    },
-    body: JSON.stringify({
-      nama_lengkap: nama_lengkap,
-      no_ktp: no_ktp,
-      nomor_kamar: nomor_kamar
-    })
-  })
-  .then(res => res.json())
-  .then(data => {
-    btn.textContent = 'Simpan Data Penghuni';
-    btn.style.pointerEvents = 'auto';
+      fetch('http://localhost:5000/api/penghuni', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          nama_lengkap: nama_lengkap,
+          no_ktp: no_ktp,
+          nomor_kamar: nomor_kamar
+        })
+      })
+        .then(res => res.json())
+        .then(data => {
+          btn.textContent = 'Simpan Data Penghuni';
+          btn.style.pointerEvents = 'auto';
 
-    if (data.success) {
-      alert('Data penghuni berhasil ditambahkan!');
-      closeModal('tenantModal');
-      document.getElementById('tenantName').value = '';
-      document.getElementById('tenantKtp').value = '';
-      document.getElementById('tenantRoom').value = '';
-      
-      fetchPenghuni();
-      fetchDashboardStats();
-    } else {
-      alert('Gagal menyimpan: ' + (data.message || 'Terjadi kesalahan pada validasi backend'));
+          if (data.success) {
+            alert('Data penghuni berhasil ditambahkan!');
+            closeModal('tenantModal');
+            document.getElementById('tenantName').value = '';
+            document.getElementById('tenantKtp').value = '';
+            document.getElementById('tenantRoom').value = '';
+
+            fetchPenghuni();
+            fetchDashboardStats();
+          } else {
+            alert('Gagal menyimpan: ' + (data.message || 'Terjadi kesalahan pada validasi backend'));
+          }
+        })
+        .catch(err => {
+          btn.textContent = 'Simpan Data Penghuni';
+          btn.style.pointerEvents = 'auto';
+          alert('Gagal terhubung ke server backend. Pastikan API POST /api/penghuni siap.');
+          console.error(err);
+        });
     }
-  })
-  .catch(err => {
-    btn.textContent = 'Simpan Data Penghuni';
-    btn.style.pointerEvents = 'auto';
-    alert('Gagal terhubung ke server backend. Pastikan API POST /api/penghuni siap.');
-    console.error(err);
-  });
-}
 
-function openAddTenantModal(roomNum) {
-  document.getElementById('tenantRoom').value = roomNum || '';
-  document.getElementById('tenantModal').style.display = 'flex';
-}
+    function openAddTenantModal(roomNum) {
+      document.getElementById('tenantRoom').value = roomNum || '';
+      document.getElementById('tenantModal').style.display = 'flex';
+    }
 
-function closeModal(id) {
-  document.getElementById(id).style.display = 'none';
-}
+    function closeModal(id) {
+      document.getElementById(id).style.display = 'none';
+    }
 
-function handleLogout() {
-  localStorage.removeItem('token');
-  window.location.href = '../login.html';
-}
-</script>
+    function handleLogout() {
+      localStorage.removeItem('token');
+      window.location.href = '../login.html';
+    }
+  </script>
 </body>
+
 </html>
