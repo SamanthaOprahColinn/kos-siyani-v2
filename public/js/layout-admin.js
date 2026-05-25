@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
           </a>
 
           <div class="sidebar-section-title">Operasional</div>
-          <a href="#" class="sidebar-link" onclick="alert('Modul Kelola Kamar segera hadir')">
+          <a href="/pages/admin/kelola-kamar.html" class="sidebar-link">
             <i class="ph ph-door-open sidebar-link-icon"></i>
             <span>Kelola Kamar</span>
           </a>
