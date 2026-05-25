@@ -9,6 +9,7 @@ import { errorHandler, notFoundHandler } from './middlewares/errorHandler.js';
 // Routes
 import authRoutes from './routes/authRoutes.js';
 import penghuniRoutes from './routes/penghuniRoutes.js';
+import kamarRoutes from './routes/kamarRoutes.js';          
 
 // Load environment variables
 dotenv.config();
@@ -51,6 +52,7 @@ app.get('/api/health', (req, res) => {
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/penghuni', penghuniRoutes);
+app.use('/api/kamar', kamarRoutes);           
 
 
 // Documentation endpoint
@@ -76,6 +78,17 @@ app.get('/api', (req, res) => {
         changeStatus: 'PATCH /api/penghuni/:id/status',
         getStats: 'GET /api/penghuni/stats/summary',
         search: 'GET /api/penghuni/search',
+      },
+      kamar: {                      // BARU
+        getAll: 'GET /api/kamar',
+        create: 'POST /api/kamar',
+        getById: 'GET /api/kamar/:id',
+        update: 'PATCH /api/kamar/:id',
+        delete: 'DELETE /api/kamar/:id',
+        restore: 'PATCH /api/kamar/:id/restore',
+        changeStatus: 'PATCH /api/kamar/:id/status',
+        getStats: 'GET /api/kamar/stats/summary',
+        search: 'GET /api/kamar/search',
       },
     },
   });
