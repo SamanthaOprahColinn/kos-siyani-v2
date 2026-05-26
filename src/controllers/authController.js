@@ -182,3 +182,41 @@ export const deleteUser = asyncHandler(async (req, res) => {
     'User berhasil dihapus'
   );
 });
+
+/**
+ * PATCH /api/auth/change-password
+ * User ubah password mereka sendiri
+ * 
+ * REQUIRED:
+ * - User harus login (JWT token)
+ * - Body validation via middleware
+ */
+export const changePasswordController = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+  const { password_lama, password_baru, konfirmasi_password } = req.validatedData;
+
+  // Validasi konfirmasi password (backup validation)
+  if (password_baru !== konfirmasi_password) {
+    throw new ApiError(400, 'Konfirmasi password tidak sesuai');
+  }
+
+  // Change password via service
+  const result = await changePassword(userId, password_lama, password_baru);
+
+  // Return success response
+  return successResponse(
+    res,
+    200,
+    {
+      email: result.email,
+      nama_lengkap: result.nama_lengkap,
+      message: 'Password berhasil diubah',
+    },
+    'Password berhasil diubah. Silakan login kembali dengan password baru'
+  );
+});
+
+/**
+ * EXPORT untuk digunakan di routes
+ */
+export const changePassword_endpoint = changePasswordController;

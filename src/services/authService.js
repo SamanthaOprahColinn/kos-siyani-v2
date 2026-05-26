@@ -102,3 +102,56 @@ export const createUser = async (userData) => {
     role: user.role,
   };
 };
+
+/**
+ * CHANGE PASSWORD - User ubah password mereka sendiri
+ * @param {string} userId - User ID yang login
+ * @param {string} passwordLama - Password lama
+ * @param {string} passwordBaru - Password baru
+ */
+export const changePassword = async (userId, passwordLama, passwordBaru) => {
+  // 1. Cari user berdasarkan ID
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new ApiError(404, 'User tidak ditemukan');
+  }
+
+  // 2. Validasi password lama (pastikan benar)
+  const isPasswordMatch = await user.matchPassword(passwordLama);
+
+  if (!isPasswordMatch) {
+    throw new ApiError(401, 'Password lama tidak sesuai');
+  }
+
+  // 3. Validasi password baru tidak sama dengan password lama
+  if (passwordLama === passwordBaru) {
+    throw new ApiError(400, 'Password baru tidak boleh sama dengan password lama');
+  }
+
+  // 4. Update password
+  user.password = passwordBaru;
+  await user.save();
+
+  // 5. Return success (tanpa password di response)
+  return {
+    _id: user._id,
+    email: user.email,
+    nama_lengkap: user.nama_lengkap,
+    role: user.role,
+    message: 'Password berhasil diubah',
+  };
+};
+
+/**
+ * VALIDATE TOKEN & GET USER
+ * Helper function untuk verify user di endpoint change password
+ */
+export const getUserFromToken = async (token) => {
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    return await User.findById(decoded.id);
+  } catch (error) {
+    return null;
+  }
+};

@@ -26,6 +26,23 @@ router.post('/login', validateRequest(loginSchema), login);
 router.get('/me', protect, getCurrentUser);
 
 /**
+ * PATCH /api/auth/change-password ⭐ NEW
+ * User ubah password mereka sendiri (semua role yang login)
+ * 
+ * Body:
+ * {
+ *   "password_lama": "OldPass@123",
+ *   "password_baru": "NewPass@123",
+ *   "konfirmasi_password": "NewPass@123"
+ * }
+ */
+router.patch(
+  '/change-password',
+  validateRequest(changePasswordSchema),
+  changePassword_endpoint
+);
+
+/**
  * Admin & Pemilik routes
  */
 router.post(
