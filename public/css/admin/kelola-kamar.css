@@ -1,0 +1,68 @@
+/* css/admin/kelola-kamar.css */
+
+/* Utilities */
+.text-center {
+    text-align: center;
+}
+
+.p-20 {
+    padding: 20px;
+}
+
+.color-ccc {
+    color: #ccc;
+}
+
+.text-danger {
+    color: #dc3545; /* Merah untuk ikon hapus */
+}
+
+/* Header Area (Pencarian & Tombol) */
+.header-actions {
+    flex: 1;
+    max-width: 400px;
+}
+
+/* Tabel Customization */
+.table-catatan {
+    display: block;
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.btn-icon {
+    font-size: 18px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.btn-icon:hover {
+    transform: scale(1.1);
+}
+
+/* Modal Customization */
+.modal-custom {
+    max-width: 450px;
+}
+
+.modal-close-btn {
+    font-size: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.form-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-bottom: 12px;
+}
+
+.form-hint {
+    color: #666;
+    font-size: 11px;
+}
