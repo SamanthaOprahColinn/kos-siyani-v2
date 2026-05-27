@@ -11,7 +11,8 @@ import {
 } from '../controllers/authController.js';
 import { protect } from '../middlewares/authentication.js';
 import { authorizeRoles } from '../middlewares/authorization.js';
-import { validateRequest, loginSchema, createAdminSchema } from '../validators/authValidator.js';
+import { changePassword_endpoint } from '../controllers/authController.js';
+import { validateRequest, loginSchema, createAdminSchema, changePasswordSchema } from '../validators/authValidator.js';
 
 const router = express.Router();
 
