@@ -1,70 +1,327 @@
-/* css/admin/kelola-penghuni.css */
-
-/* Utilities & Helper Classes */
-.text-center {
-    text-align: center;
+/* ==========================================
+   1. LAYOUT GRID UTAMA
+   ========================================== */
+.admin-grid-layout {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 24px;
+    align-items: start;
+    width: 100%;
 }
 
-.p-20 {
-    padding: 20px;
+.font-bold {
+    font-weight: 700;
+    color: var(--text-cozy, #5d444e);
 }
 
-.color-ccc {
-    color: #ccc;
+/* ==========================================
+   2. BOX / CARD WRAPPER (.table-wrapper)
+   ========================================== */
+.table-wrapper {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 8px 24px rgba(93, 68, 78, 0.05);
+    border: 1px solid rgba(93, 68, 78, 0.05);
+    overflow-x: auto; /* Biar kalau di HP tabelnya bisa di-scroll kesamping, gak pecah */
 }
 
-.text-danger {
-    color: #dc3545;
+.quick-action-card {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
 }
 
-/* layouting & responsive actions */
-.header-actions {
-    flex: 1;
-    max-width: 400px;
+.card-section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-cozy, #5d444e);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
 }
 
-.table-truncate {
-    display: block;
-    max-width: 140px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+/* ==========================================
+   3. TABLE TOPBAR / HEADER KARTU
+   ========================================== */
+.table-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
-.btn-icon {
-    font-size: 18px;
-    background: none;
+.table-top-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-cozy, #5d444e);
+}
+
+.table-top-sub {
+    font-size: 12px;
+    color: #8c737d;
+    margin-top: 2px;
+}
+
+.quick-action-card .table-top-sub {
+    margin-top: -4px;
+    margin-bottom: 20px;
+}
+
+/* ==========================================
+   4. STYLING ELEMEN TABEL (Sangat Penting!)
+   ========================================== */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+th {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #8c737d;
+    padding: 12px 16px;
+    border-bottom: 2px solid rgba(93, 68, 78, 0.08);
+    letter-spacing: 0.5px;
+}
+
+td {
+    padding: 16px;
+    font-size: 14px;
+    color: var(--text-cozy, #5d444e);
+    border-bottom: 1px solid rgba(93, 68, 78, 0.06);
+    vertical-align: middle;
+}
+
+tr:hover td {
+    background: rgba(255, 204, 213, 0.1); /* Efek highlight lembut saat baris di-hover */
+}
+
+/* ==========================================
+   5. TOMBOL & AKSI (BUTTONS)
+   ========================================== */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
     border: none;
     cursor: pointer;
-    transition: transform 0.2s;
+    transition: all 0.2s ease;
 }
 
-.btn-icon:hover {
-    transform: scale(1.1);
+.btn-ghost {
+    background: transparent;
+    color: var(--text-cozy, #5d444e);
+    border: 1px solid rgba(93, 68, 78, 0.15);
 }
 
-/* Modal Form Configuration (Menampung Lebih Banyak Field) */
-.modal-custom {
-    max-width: 600px; /* Diperlebar agar muat 2 kolom dengan rapi */
+.btn-ghost:hover {
+    background: rgba(93, 68, 78, 0.05);
+}
+
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 12px;
+}
+
+.quick-action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    border: none;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.1);
+}
+
+.qab-green {
+    background: #c6f6d5;
+    color: #22543d;
+}
+
+.qab-green:hover {
+    background: #b2f5ea;
+    transform: translateY(-1px);
+}
+
+.action-flex {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+}
+
+/* ==========================================
+   6. STYLING GRUP FORM INPUTAN
+   ========================================== */
+#formPenghuni,
+#formEditPenghuni {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-group label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-cozy, #5d444e);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 11px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(93, 68, 78, 0.15);
+    background: rgba(255, 255, 255, 0.6);
+    font-family: inherit;
+    font-size: 13.5px;
+    color: var(--text-cozy, #5d444e);
+    outline: none;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #ffccd5;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 0 3px rgba(255, 204, 213, 0.4);
+}
+
+.form-group textarea {
+    resize: none;
+}
+
+/* ==========================================
+   7. BADGES STATUS & STATE KOSONG
+   ========================================== */
+.status-dot {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.status-dot.aktif {
+    background: #e6fffa;
+    color: #234e52;
+    border: 1px solid #b2f5ea;
+}
+
+.status-dot.nonaktif {
+    background: #fff5f5;
+    color: #742a2a;
+    border: 1px solid #fed7d7;
+}
+
+.table-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    color: #8c737d;
+    text-align: center;
+    gap: 10px;
+}
+
+.table-empty i {
+    font-size: 40px;
+    color: rgba(93, 68, 78, 0.2);
+}
+
+.table-empty-title {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* ==========================================
+   8. POPUP MODAL (EDIT DATA)
+   ========================================== */
+.modal-backdrop {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(93, 68, 78, 0.4);
+    backdrop-filter: blur(4px);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-box {
+    background: #ffffff;
+    width: 100%;
+    max-width: 480px;
+    padding: 28px;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(93, 68, 78, 0.15);
+    border: 1px solid rgba(93, 68, 78, 0.05);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
 }
 
 .modal-close-btn {
-    font-size: 20px;
     background: none;
     border: none;
+    font-size: 22px;
     cursor: pointer;
+    color: #a0aec0;
+    display: flex;
+    align-items: center;
+    transition: color 0.2s ease;
 }
 
-.form-grid-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 12px;
+.modal-close-btn:hover {
+    color: #f56565;
 }
 
-.form-hint {
-    color: #666;
-    font-size: 11px;
-    margin-top: 2px;
-    display: block;
+/* ==========================================
+   9. RESPONSIVE MEDIA QUERIES
+   ========================================== */
+@media (max-width: 1024px) {
+    .admin-grid-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .table-wrapper {
+        padding: 16px;
+    }
+    .modal-box {
+        max-width: 95%;
+        padding: 20px;
+    }
 }
