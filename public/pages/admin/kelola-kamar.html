@@ -155,6 +155,9 @@
                             const doorIconClass = isTersedia ? 'available' : 'occupied';
                             const doorIcon = isTersedia ? 'ph-door-open' : 'ph-door';
                             
+                            // Perubahan di sini: Mengubah teks 'TIDAK TERSEDIA' menjadi 'TERISI'
+                            const statusText = isTersedia ? 'TERSEDIA' : 'TERISI';
+                            
                             // Handling deskripsi asli kamu
                             const catatanKamar = k.deskripsi ? k.deskripsi : '<span style="color:#bbb; font-style:italic;">Tidak ada catatan</span>';
 
@@ -165,7 +168,7 @@
                             card.innerHTML = `
                                 <div class="room-card-header">
                                     <span class="room-number">Kamar ${k.nomor_kamar}</span>
-                                    <span class="badge-clay ${badgeClass}">${k.status_kamar.toUpperCase()}</span>
+                                    <span class="badge-clay ${badgeClass}">${statusText}</span>
                                 </div>
                                 
                                 <div class="door-container">
@@ -222,37 +225,29 @@
         }
 
         // --- BARU: LOGIKA UNTUK MEMBUKA MODAL EDIT ---
-        // Mengambil data spesifik ke form sebelum diedit
         function openEditModal(id) {
             const token = localStorage.getItem('token');
             
-            // GET data kamar berdasarkan ID
             fetch(`${API_URL}/kamar/${id}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             })
             .then(res => res.json())
             .then(resData => {
-                const k = resData.data; // Asumsi backend balikin { success: true, data: { kamar } }
+                const k = resData.data; 
 
-                // 1. Ubah UI Modal jadi mode Edit
                 document.getElementById('modalTitle').textContent = 'Ubah Detail Kamar ✨';
                 document.getElementById('btnSubmitKamar').textContent = 'Update Data Kamar';
                 
-                // 2. Isi Hidden Input dengan ID Kamar
                 document.getElementById('kamarId').value = k._id;
 
-                // 3. Isi Form dengan data lama (Menyesuaikan field asli kamu)
                 document.getElementById('kNomor').value = k.nomor_kamar;
                 document.getElementById('kLantai').value = k.lantai;
                 document.getElementById('kTipe').value = k.tipe_kamar;
                 document.getElementById('kHarga').value = k.harga_sewa;
                 
-                // Fasilitas di DB array, di form string pisah koma (SESUAI LOGIKA PAYLOAD KAMU)
                 document.getElementById('kFasilitas').value = k.fasilitas ? k.fasilitas.join(', ') : '';
-                
                 document.getElementById('kDeskripsi').value = k.deskripsi || '';
 
-                // 4. Buka Modal
                 document.getElementById('kamarModal').style.display = 'flex';
             })
             .catch(err => {
@@ -267,7 +262,6 @@
             const token = localStorage.getItem('token');
             const btn = document.getElementById('btnSubmitKamar');
             
-            // PERUBAHAN LOGIKA: Cek apakah ini Edit atau Tambah
             const kamarId = document.getElementById('kamarId').value;
             const isEdit = kamarId !== "";
 
@@ -278,25 +272,21 @@
             const fasilitasRaw = document.getElementById('kFasilitas').value;
             const deskripsiRaw = document.getElementById('kDeskripsi').value.trim();
 
-            // Validasi Required (Asli Kamu)
             if (!nomorRaw || !lantaiRaw || !tipeRaw) {
                 alert("Nomor Kamar, Lantai, dan Tipe Kamar wajib diisi!");
                 return;
             }
 
-            // Payload Dasar (Asli Kamu)
             const payload = {
                 nomor_kamar: Number(nomorRaw),
                 lantai: Number(lantaiRaw),
                 tipe_kamar: tipeRaw,
             };
 
-            // Payload Opsional (Asli Kamu)
             if (hargaRaw !== "") {
                 payload.harga_sewa = Number(hargaRaw);
             }
 
-            // Fasilitas Array (Asli Kamu)
             const arrayFasilitas = fasilitasRaw.split(',')
                 .map(f => f.trim())
                 .filter(f => f !== "");
@@ -304,20 +294,16 @@
                 payload.fasilitas = arrayFasilitas;
             }
 
-            // Deskripsi (Asli Kamu)
             if (deskripsiRaw !== "") {
                 payload.deskripsi = deskripsiRaw;
             }
 
-            // LOADING STATE
             btn.style.pointerEvents = 'none';
             btn.textContent = isEdit ? 'Updating...' : 'Menyimpan...';
 
-            // PERUBAHAN LOGIKA: Tentukan URL dan Method API
             const url = isEdit ? `${API_URL}/kamar/${kamarId}` : `${API_URL}/kamar`;
-            const method = isEdit ? 'PATCH' : 'POST'; // Backend biasanya pakai PUT/PATCH buat update
+            const method = isEdit ? 'PATCH' : 'POST'; 
 
-            // Kirim ke Backend
             fetch(url, {
                 method: method,
                 headers: {
@@ -332,15 +318,13 @@
                 })
                 .then(({ status, data }) => {
                     btn.style.pointerEvents = 'auto';
-                    btn.textContent = 'Simpan Kamar'; // Reset text default
+                    btn.textContent = 'Simpan Kamar'; 
 
-                    // Handle Success (Asli Kamu diperluas untuk status 200/Edit)
                     if (status === 201 || status === 200 || data.success) {
                         alert(isEdit ? 'Data kamar berhasil diperbarui! 💖' : 'Kamar baru berhasil ditambahkan! 🎉');
                         closeKamarModal();
                         fetchKamar();
                     } else {
-                        // Error Handling (Asli Kamu)
                         console.error("❌ DETAIL ERROR BACKEND:", data);
                         if (data.errors && Array.isArray(data.errors)) {
                             const listError = data.errors.map(err => `- [Kolom ${err.field}]: ${err.message}`).join('\n');
@@ -378,11 +362,9 @@
 
         // --- UI UTILS (Diperbarui untuk Reset Mode Edit) ---
         function openKamarModal() {
-            // PERUBAHAN UI: Pastikan Title & Button kembali ke mode "Tambah"
             document.getElementById('modalTitle').textContent = 'Tambah Kamar Baru';
             document.getElementById('btnSubmitKamar').textContent = 'Simpan Kamar';
             
-            // PERUBAHAN LOGIKA: Reset Hidden ID agar dianggap data baru (POST)
             document.getElementById('kamarId').value = '';
             
             document.getElementById('formKamar').reset();

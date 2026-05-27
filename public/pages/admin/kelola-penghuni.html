@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css" />
     <link rel="stylesheet" href="../../css/global.css" />
     <link rel="stylesheet" href="../../css/admin/kelola-penghuni.css" />
-
 </head>
 
 <body>
@@ -25,32 +24,63 @@
             <main class="content page-enter">
                 <div class="admin-grid-layout">
 
-                    <div class="table-wrapper">
-                        <div class="table-top">
-                            <div>
-                                <div class="table-top-title">Data Penghuni Aktif</div>
-                                <div class="table-top-sub">Total penghuni terdaftar di database</div>
+                    <div style="display: flex; flex-direction: column; gap: 20px;">
+
+                        <div class="table-wrapper">
+                            <div class="table-top">
+                                <div>
+                                    <div class="table-top-title">Data Penghuni Aktif</div>
+                                    <div class="table-top-sub">Penghuni yang saat ini menyewa kamar</div>
+                                </div>
+                                <button class="btn btn-ghost btn-sm" onclick="fetchPenghuni()">
+                                    <i class="ph ph-arrows-clockwise"></i> Segarkan
+                                </button>
                             </div>
-                            <button class="btn btn-ghost btn-sm" onclick="fetchPenghuni()">
-                                <i class="ph ph-arrows-clockwise"></i> Segarkan
-                            </button>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Kamar</th>
+                                        <th>Nama Lengkap</th>
+                                        <th>Kontak & Email</th>
+                                        <th>Status</th>
+                                        <th style="text-align: center;">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tenantTableBody">
+                                    <tr>
+                                        <td colspan="5" style="text-align: center; padding: 20px;">Menghubungkan ke
+                                            database...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Kamar</th>
-                                    <th>Nama Lengkap</th>
-                                    <th>Kontak & Email</th>
-                                    <th>Status</th>
-                                    <th style="text-align: center;">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tenantTableBody">
-                                <tr>
-                                    <td colspan="5" style="text-align: center; padding: 20px;">Menghubungkan ke database...</td>
-                                </tr>
-                            </tbody>
-                        </table>
+
+                        <div class="table-wrapper">
+                            <div class="table-top">
+                                <div>
+                                    <div class="table-top-title" style="color: #718096;"><i
+                                            class="ph ph-clock-counter-clockwise"></i> Riwayat Penghuni</div>
+                                    <div class="table-top-sub">Penghuni yang sudah keluar (Non-Aktif)</div>
+                                </div>
+                            </div>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Nama Lengkap</th>
+                                        <th>Kontak & Email</th>
+                                        <th>Kamar Terakhir</th>
+                                        <th style="text-align: center;">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="historyTableBody">
+                                    <tr>
+                                        <td colspan="4" style="text-align: center; padding: 20px;">Memuat data
+                                            riwayat...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
                     </div>
 
                     <div class="table-wrapper quick-action-card">
@@ -58,43 +88,36 @@
                         <div class="table-top-sub">Masukkan data sesuai KTP fisik</div>
 
                         <form id="formPenghuni" onsubmit="saveTenant(event)">
-
                             <div class="form-group">
                                 <label>Nama Lengkap (Min 3 Karakter)</label>
                                 <input type="text" id="tenantName" placeholder="Budi Santoso" required minlength="3"
                                     maxlength="100">
                             </div>
-
                             <div class="form-group">
                                 <label>Nomor KTP (Wajib 16 Digit)</label>
-                                <input type="text" id="tenantKtp" placeholder="3273123456789012" required minlength="16"
-                                    maxlength="16">
+                                <input type="number" id="tenantKtp" placeholder="3273123456789012" required
+                                    minlength="16" maxlength="16">
                             </div>
-
                             <div class="form-group">
                                 <label>Nomor HP (10 - 13 Digit)</label>
-                                <input type="text" id="tenantHp" placeholder="081234567890" required minlength="10"
+                                <input type="number" id="tenantHp" placeholder="081234567890" required minlength="10"
                                     maxlength="13">
                             </div>
-
                             <div class="form-group">
                                 <label>Alamat Email</label>
                                 <input type="email" id="tenantEmail" placeholder="budi@email.com" required>
                             </div>
-
                             <div class="form-group">
                                 <label>Pilih Nomor Kamar</label>
                                 <select id="tenantRoom" required>
                                     <option value="">-- Memuat Kamar... --</option>
                                 </select>
                             </div>
-
                             <div class="form-group">
                                 <label>Alamat Asal (Min 10 Karakter)</label>
                                 <textarea id="tenantAddress" placeholder="Jl. Raya Kemerdekaan No. 45, Bandung" required
                                     minlength="10" rows="2"></textarea>
                             </div>
-
                             <button type="submit" id="btnSaveTenant" class="quick-action-btn qab-green">
                                 <i class="ph ph-floppy-disk"></i> Simpan Data Penghuni
                             </button>
@@ -111,45 +134,61 @@
     <div class="modal-backdrop" id="editTenantModal">
         <div class="modal-box">
             <div class="modal-header">
-                <div class="card-section-title" style="margin: 0;"><i class="ph ph-user-gear"></i> Edit Data Penghuni</div>
+                <div class="card-section-title" style="margin: 0;"><i class="ph ph-user-gear"></i> Edit Data Penghuni
+                </div>
                 <button type="button" class="modal-close-btn" onclick="closeEditModal()">
                     <i class="ph ph-x"></i>
                 </button>
             </div>
-
             <form id="formEditPenghuni" onsubmit="updateTenant(event)">
                 <input type="hidden" id="editTenantId">
-
                 <div class="form-group">
                     <label>Nama Lengkap</label>
                     <input type="text" id="editTenantName" required minlength="3" maxlength="100">
                 </div>
-
                 <div class="form-group">
                     <label>Nomor HP</label>
-                    <input type="text" id="editTenantHp" required minlength="10" maxlength="13">
+                    <input type="number" id="editTenantHp" required minlength="10" maxlength="13">
                 </div>
-
                 <div class="form-group">
                     <label>Alamat Email</label>
                     <input type="email" id="editTenantEmail" required>
                 </div>
-
                 <div class="form-group">
                     <label>Alamat Asal</label>
                     <textarea id="editTenantAddress" required minlength="10" rows="2"></textarea>
                 </div>
+                <button type="submit" id="btnUpdateTenant" class="quick-action-btn qab-green"
+                    style="width: 100%; margin-top: 10px;">
+                    <i class="ph ph-check"></i> Simpan Perubahan Data
+                </button>
+            </form>
+        </div>
+    </div>
 
+    <div class="modal-backdrop" id="restoreTenantModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <div class="card-section-title" style="margin: 0;"><i class="ph ph-arrow-u-up-left"></i> Pulihkan
+                    Penghuni</div>
+                <button type="button" class="modal-close-btn" onclick="closeRestoreModal()">
+                    <i class="ph ph-x"></i>
+                </button>
+            </div>
+            <div style="margin-bottom: 15px; font-size: 14px; color: var(--text-muted);">
+                Pilih kamar baru yang tersedia untuk <strong id="restoreTenantNameDisplay"></strong>.
+            </div>
+            <form id="formRestorePenghuni" onsubmit="submitRestoreTenant(event)">
+                <input type="hidden" id="restoreTenantId">
                 <div class="form-group">
-                    <label>Status Penghuni</label>
-                    <select id="editTenantStatus" required>
-                        <option value="aktif">Aktif</option>
-                        <option value="nonaktif">Non-Aktif</option>
+                    <label>Pilih Kamar Baru (Wajib)</label>
+                    <select id="restoreTenantRoom" required>
+                        <option value="">-- Memuat Kamar... --</option>
                     </select>
                 </div>
-
-                <button type="submit" id="btnUpdateTenant" class="quick-action-btn qab-green" style="width: 100%; margin-top: 10px;">
-                    <i class="ph ph-check"></i> Simpan Perubahan Data
+                <button type="submit" id="btnRestoreTenant" class="quick-action-btn qab-green"
+                    style="width: 100%; margin-top: 10px;">
+                    <i class="ph ph-check"></i> Aktifkan & Simpan
                 </button>
             </form>
         </div>
@@ -158,271 +197,309 @@
     <script src="../../js/layout-admin.js"></script>
 
     <script>
+        const API_URL = 'http://localhost:5000/api';
         window.currentPenghuni = [];
+        window.availableRoomsHtml = '<option value="">-- Pilih Nomor Kamar --</option>'; // Cache untuk dropdown kamar
 
         document.addEventListener('DOMContentLoaded', () => {
             const token = localStorage.getItem('token');
             if (!token) { window.location.href = '../login.html'; return; }
 
-            fetch('http://localhost:5000/api/auth/me', {
-                method: 'GET',
+            // Verifikasi User
+            fetch(`${API_URL}/auth/me`, {
                 headers: { 'Authorization': `Bearer ${token}` }
-            })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success && data.data) {
-                        document.getElementById('profileName').textContent = data.data.nama_lengkap;
-                        document.getElementById('avatarInitial').textContent = data.data.nama_lengkap.charAt(0).toUpperCase();
-                    }
-                }).catch(() => {
-                    localStorage.removeItem('token');
-                    window.location.href = '../login.html';
-                });
+            }).then(res => res.json()).then(data => {
+                if (data.success && data.data) {
+                    document.getElementById('profileName').textContent = data.data.nama_lengkap;
+                    document.getElementById('avatarInitial').textContent = data.data.nama_lengkap.charAt(0).toUpperCase();
+                }
+            }).catch(() => {
+                localStorage.removeItem('token');
+                window.location.href = '../login.html';
+            });
 
-            fetchPenghuni();
             fetchKamarPilihan();
+            fetchPenghuni();
         });
 
+        // 1. FETCH DATA KAMAR (Untuk Form Register & Form Restore)
         function fetchKamarPilihan() {
             const token = localStorage.getItem('token');
-            const selectKamar = document.getElementById('tenantRoom');
+            const selectRegister = document.getElementById('tenantRoom');
+            const selectRestore = document.getElementById('restoreTenantRoom');
 
-            selectKamar.innerHTML = '<option value="">-- Memuat Kamar... --</option>';
-
-            fetch('http://localhost:5000/api/kamar?status=tersedia', {
-                method: 'GET',
+            fetch(`${API_URL}/kamar?status=tersedia`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             })
                 .then(res => res.json())
                 .then(resData => {
-                    selectKamar.innerHTML = '<option value="">-- Pilih Nomor Kamar --</option>';
-
                     const kamarList = resData.data?.data || resData.data || [];
+                    let optionsHtml = '<option value="">-- Pilih Nomor Kamar --</option>';
 
                     if (kamarList.length > 0) {
                         kamarList.forEach(k => {
-                            if (k.isDeleted === true) return;
-
-                            const opt = document.createElement('option');
-                            opt.value = k._id;
+                            if (k.isDeleted === true || k.status_kamar === 'tidak tersedia' || k.status_kamar === 'terisi') return;
 
                             const nomor = k.nomor_kamar || k.no_kamar || '??';
-                            const detailHarga = k.harga_sewa ? ` - (Rp ${Number(k.harga_sewa).toLocaleString('id-ID')})` : '';
-
-                            if (k.status_kamar === 'tidak tersedia' || k.status_kamar === 'terisi') {
-                                opt.disabled = true;
-                                opt.textContent = `Kamar ${nomor} ${detailHarga} - [PENUH / TIDAK TERSEDIA]`;
-                            } else {
-                                opt.textContent = `Kamar ${nomor} ${detailHarga} - Tersedia`;
-                            }
-
-                            selectKamar.appendChild(opt);
+                            const harga = k.harga_sewa ? ` - Rp ${Number(k.harga_sewa).toLocaleString('id-ID')}` : '';
+                            optionsHtml += `<option value="${k._id}">Kamar ${nomor}${harga} - Tersedia</option>`;
                         });
                     } else {
-                        selectKamar.innerHTML = '<option value="">Tidak ada kamar kosong yang tersedia</option>';
+                        optionsHtml = '<option value="">Tidak ada kamar kosong yang tersedia</option>';
                     }
+
+                    // Terapkan ke kedua dropdown
+                    window.availableRoomsHtml = optionsHtml;
+                    selectRegister.innerHTML = optionsHtml;
+                    selectRestore.innerHTML = optionsHtml;
                 })
-                .catch(err => {
-                    console.error('Gagal mengambil data kamar:', err);
-                    selectKamar.innerHTML = '<option value="">Gagal memuat daftar kamar</option>';
-                });
+                .catch(err => console.error('Gagal memuat kamar:', err));
         }
 
+        // 2. FETCH PENGHUNI (Dipisah Aktif vs Non-Aktif)
         function fetchPenghuni() {
             const token = localStorage.getItem('token');
-            const tbody = document.getElementById('tenantTableBody');
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">Menarik data dari database...</td></tr>';
+            const tbodyAktif = document.getElementById('tenantTableBody');
+            const tbodyHistory = document.getElementById('historyTableBody');
 
-            fetch('http://localhost:5000/api/penghuni', {
-                method: 'GET',
+            tbodyAktif.innerHTML = '<tr><td colspan="5" style="text-align:center;">Memuat data...</td></tr>';
+            tbodyHistory.innerHTML = '<tr><td colspan="4" style="text-align:center;">Memuat data...</td></tr>';
+
+            fetch(`${API_URL}/penghuni`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             })
                 .then(res => res.json())
                 .then(resData => {
-                    tbody.innerHTML = '';
-                    
-                    // Supaya bisa kelacak kalau masih gagal
-                    console.log("Cek Data Penghuni dari API:", resData);
+                    tbodyAktif.innerHTML = '';
+                    tbodyHistory.innerHTML = '';
 
-                    // Filter array yang dilonggarkan biar datanya muncul!
                     const penghuniList = resData.data?.data || resData.data || (Array.isArray(resData) ? resData : []);
+                    window.currentPenghuni = penghuniList;
 
-                    if (penghuniList.length > 0) {
-                        window.currentPenghuni = penghuniList;
+                    let countAktif = 0;
+                    let countHistory = 0;
 
-                        penghuniList.forEach(p => {
-                            const tr = document.createElement('tr');
-                            
-                            const kamarData = p.id_kamar || p.kamar_id || {};
-                            const nomorKamar = kamarData.nomor_kamar || kamarData.no_kamar || p.nomor_kamar || '??';
-                            
-                            const statusClass = String(p.status_penghuni || 'aktif').toLowerCase() === 'aktif' ? 'aktif' : 'nonaktif';
+                    penghuniList.forEach(p => {
+                        const status = String(p.status_penghuni || 'aktif').toLowerCase();
+                        const isAktif = status === 'aktif';
 
-                            tr.innerHTML = `
+                        const kamarData = p.id_kamar || p.kamar_id || {};
+                        const nomorKamar = kamarData.nomor_kamar || kamarData.no_kamar || p.nomor_kamar || 'Belum ada';
+
+                        if (isAktif) {
+                            countAktif++;
+                            tbodyAktif.insertAdjacentHTML('beforeend', `
+                            <tr>
                                 <td class="font-bold">Kamar ${nomorKamar}</td>
-                                <td style="font-weight: 600; color: var(--text-cozy);">${p.nama_lengkap || '-'}</td>
-                                <td style="color: #8c737d; font-size: 12px;">
+                                <td style="font-weight: 600;">${p.nama_lengkap || '-'}</td>
+                                <td style="font-size: 12px; color: var(--text-muted);">
                                     <div><i class="ph ph-phone"></i> ${p.no_hp || p.nomor_hp || '-'}</div>
                                     <div><i class="ph ph-envelope"></i> ${p.email || '-'}</div>
                                 </td>
-                                <td><span class="status-dot ${statusClass}">${p.status_penghuni || 'Aktif'}</span></td>
+                                <td><span class="status-dot aktif">Aktif</span></td>
                                 <td>
                                     <div class="action-flex">
                                         <button class="btn btn-ghost btn-sm" style="color: #3182ce;" onclick="openEditModal('${p._id}')" title="Edit Data">
                                             <i class="ph ph-pencil-simple"></i>
                                         </button>
-                                        <button class="btn btn-ghost btn-sm" style="color: #e53e3e;" onclick="deleteTenant('${p._id}')" title="Hapus Penghuni">
-                                            <i class="ph ph-trash"></i>
+                                        <button class="btn btn-ghost btn-sm" style="color: #e53e3e;" onclick="checkoutTenant('${p._id}')" title="Keluarkan Penghuni">
+                                            <i class="ph ph-sign-out"></i>
                                         </button>
                                     </div>
                                 </td>
-                            `;
-                            tbody.appendChild(tr);
-                        });
-                    } else {
-                        tbody.innerHTML = '<tr><td colspan="5"><div class="table-empty"><i class="ph ph-users"></i><div class="table-empty-title">Belum ada penghuni terdaftar</div></div></td></tr>';
-                    }
+                            </tr>
+                        `);
+                        } else {
+                            countHistory++;
+                            tbodyHistory.insertAdjacentHTML('beforeend', `
+                            <tr style="opacity: 0.8;">
+                                <td style="font-weight: 600;">${p.nama_lengkap || '-'}</td>
+                                <td style="font-size: 12px; color: var(--text-muted);">
+                                    <div><i class="ph ph-phone"></i> ${p.no_hp || p.nomor_hp || '-'}</div>
+                                </td>
+                                <td>Kamar Terakhir: ${nomorKamar}</td>
+                                <td>
+                                    <button class="btn btn-ghost btn-sm" style="color: #38a169; width:100%; border: 1px solid #38a169;" onclick="openRestoreModal('${p._id}', '${p.nama_lengkap}')" title="Aktifkan Kembali">
+                                        <i class="ph ph-arrow-u-up-left"></i> Pulihkan
+                                    </button>
+                                </td>
+                            </tr>
+                        `);
+                        }
+                    });
+
+                    if (countAktif === 0) tbodyAktif.innerHTML = '<tr><td colspan="5"><div class="table-empty"><div class="table-empty-title">Tidak ada penghuni aktif</div></div></td></tr>';
+                    if (countHistory === 0) tbodyHistory.innerHTML = '<tr><td colspan="4"><div class="table-empty"><div class="table-empty-title">Belum ada riwayat penghuni</div></div></td></tr>';
                 })
-                .catch(err => {
-                    console.error("Error Fetch Penghuni:", err);
-                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: red;">Gagal memuat data. Cek console browser.</td></tr>';
+                .catch(() => {
+                    tbodyAktif.innerHTML = '<tr><td colspan="5" style="text-align: center; color: red;">Gagal memuat data.</td></tr>';
+                    tbodyHistory.innerHTML = '<tr><td colspan="4" style="text-align: center; color: red;">Gagal memuat data.</td></tr>';
                 });
         }
 
+        // 3. TAMBAH PENGHUNI
         function saveTenant(event) {
             event.preventDefault();
-
             const token = localStorage.getItem('token');
+            const roomId = document.getElementById('tenantRoom').value;
+
             const payload = {
                 nama_lengkap: document.getElementById('tenantName').value.trim(),
                 no_ktp: document.getElementById('tenantKtp').value.trim(),
                 no_hp: document.getElementById('tenantHp').value.trim(),
                 email: document.getElementById('tenantEmail').value.trim(),
-                id_kamar: document.getElementById('tenantRoom').value,
-                alamat_asal: document.getElementById('tenantAddress').value.trim()
+                id_kamar: roomId,
+                alamat_asal: document.getElementById('tenantAddress').value.trim(),
+                status_penghuni: 'aktif'
             };
 
             const btn = document.getElementById('btnSaveTenant');
-            btn.innerHTML = 'Menyimpan...';
-            btn.style.pointerEvents = 'none';
+            btn.innerHTML = 'Menyimpan...'; btn.style.pointerEvents = 'none';
 
-            fetch('http://localhost:5000/api/penghuni', {
+            fetch(`${API_URL}/penghuni`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify(payload)
-            })
-                .then(res => res.json())
-                .then(data => {
-                    btn.innerHTML = '<i class="ph ph-floppy-disk"></i> Simpan Data Penghuni';
-                    btn.style.pointerEvents = 'auto';
+            }).then(res => res.json()).then(data => {
+                btn.innerHTML = '<i class="ph ph-floppy-disk"></i> Simpan Data Penghuni'; btn.style.pointerEvents = 'auto';
+                if (data.success) {
+                    // Cegah double-click lokal
+                    const optTerpilih = document.getElementById('tenantRoom').querySelector(`option[value="${roomId}"]`);
+                    if (optTerpilih) { optTerpilih.disabled = true; optTerpilih.textContent += ' [TERISI]'; }
 
-                    if (data.success) {
-                        alert('Data penghuni baru berhasil disimpan!');
-                        document.getElementById('formPenghuni').reset();
-                        fetchPenghuni();
-                        fetchKamarPilihan();
-                    } else {
-                        alert('Gagal Validasi Backend: ' + (data.message || JSON.stringify(data.errors)));
-                    }
-                })
-                .catch(() => {
-                    btn.innerHTML = '<i class="ph ph-floppy-disk"></i> Simpan Data Penghuni';
-                    btn.style.pointerEvents = 'auto';
-                    alert('Terjadi kesalahan koneksi.');
-                });
+                    document.getElementById('formPenghuni').reset();
+                    fetchPenghuni(); fetchKamarPilihan();
+                } else {
+                    alert('Gagal: ' + (data.message || 'Cek kembali data Anda.'));
+                }
+            });
         }
 
+// 4. CHECKOUT (GANTI STATUS JADI 'keluar' SESUAI VALIDASI BACKEND)
+function checkoutTenant(id) {
+    if (!confirm('Apakah Anda yakin ingin mengeluarkan penghuni ini?\nData akan dipindah ke Riwayat dan kamar otomatis berstatus tersedia.')) return;
+
+    const token = localStorage.getItem('token');
+    
+    // Cari data lengkap penghuni dari array lokal
+    const target = window.currentPenghuni.find(p => p._id === id);
+    if (!target) return alert('Data tidak ditemukan!');
+
+    // Ekstrak ID kamar dengan aman
+    let roomId = target.id_kamar;
+    if (roomId && typeof roomId === 'object') roomId = roomId._id;
+    if (!roomId && target.kamar_id) {
+        roomId = typeof target.kamar_id === 'object' ? target.kamar_id._id : target.kamar_id;
+    }
+
+    // Siapkan payload dengan status 'keluar' agar lolos validasi ENUM backend
+    const payload = { 
+        nama_lengkap: target.nama_lengkap,
+        no_ktp: target.no_ktp ? String(target.no_ktp).trim() : '', 
+        no_hp: target.no_hp || target.nomor_hp ? String(target.no_hp || target.nomor_hp).trim() : '',
+        email: target.email || '-',
+        alamat_asal: target.alamat_asal || '-',
+        id_kamar: roomId, 
+        status_penghuni: 'keluar' // <-- Diubah dari 'nonaktif' menjadi 'keluar'
+    };
+
+    fetch(`${API_URL}/penghuni/${id}`, {
+        method: 'PATCH',
+        headers: { 
+            'Content-Type': 'application/json', 
+            'Authorization': `Bearer ${token}` 
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            alert('Penghuni berhasil dikeluarkan & masuk ke riwayat!');
+            fetchPenghuni(); // Refresh tabel aktif & riwayat
+            fetchKamarPilihan(); // Refresh dropdown kamar agar kembali tersedia
+        } else {
+            alert('Gagal mengeluarkan penghuni: ' + (data.message || 'Validasi Gagal'));
+        }
+    })
+    .catch(() => alert('Terjadi masalah koneksi.'));
+}
+        // 5. MODAL EDIT (Aktif Saja)
         function openEditModal(id) {
             const target = window.currentPenghuni.find(p => p._id === id);
-            if (!target) return alert('Data tidak ditemukan!');
-
+            if (!target) return;
             document.getElementById('editTenantId').value = target._id;
             document.getElementById('editTenantName').value = target.nama_lengkap;
             document.getElementById('editTenantHp').value = target.no_hp || target.nomor_hp || '';
             document.getElementById('editTenantEmail').value = target.email || '';
             document.getElementById('editTenantAddress').value = target.alamat_asal || '';
-            document.getElementById('editTenantStatus').value = target.status_penghuni || 'aktif';
-
             document.getElementById('editTenantModal').style.display = 'flex';
         }
-
-        function closeEditModal() {
-            document.getElementById('editTenantModal').style.display = 'none';
-            document.getElementById('formEditPenghuni').reset();
-        }
+        function closeEditModal() { document.getElementById('editTenantModal').style.display = 'none'; }
 
         function updateTenant(event) {
             event.preventDefault();
             const token = localStorage.getItem('token');
             const id = document.getElementById('editTenantId').value;
-
             const payload = {
                 nama_lengkap: document.getElementById('editTenantName').value.trim(),
                 no_hp: document.getElementById('editTenantHp').value.trim(),
                 email: document.getElementById('editTenantEmail').value.trim(),
                 alamat_asal: document.getElementById('editTenantAddress').value.trim(),
-                status_penghuni: document.getElementById('editTenantStatus').value
+            };
+            fetch(`${API_URL}/penghuni/${id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                body: JSON.stringify(payload)
+            }).then(res => res.json()).then(data => {
+                if (data.success) {
+                    closeEditModal(); fetchPenghuni();
+                } else {
+                    alert('Gagal memperbarui: ' + data.message);
+                }
+            });
+        }
+
+        // 6. MODAL RESTORE (Pulihkan Penghuni)
+        function openRestoreModal(id, nama) {
+            document.getElementById('restoreTenantId').value = id;
+            document.getElementById('restoreTenantNameDisplay').textContent = nama;
+            document.getElementById('restoreTenantRoom').innerHTML = window.availableRoomsHtml; // Reset dropdown pakai cache terbaru
+            document.getElementById('restoreTenantModal').style.display = 'flex';
+        }
+        function closeRestoreModal() { document.getElementById('restoreTenantModal').style.display = 'none'; }
+
+        function submitRestoreTenant(event) {
+            event.preventDefault();
+            const token = localStorage.getItem('token');
+            const id = document.getElementById('restoreTenantId').value;
+            const newRoomId = document.getElementById('restoreTenantRoom').value;
+
+            const payload = {
+                status_penghuni: 'aktif',
+                id_kamar: newRoomId
             };
 
-            const btn = document.getElementById('btnUpdateTenant');
-            btn.innerHTML = 'Memperbarui...';
-            btn.style.pointerEvents = 'none';
+            const btn = document.getElementById('btnRestoreTenant');
+            btn.innerHTML = 'Memulihkan...'; btn.style.pointerEvents = 'none';
 
-            fetch(`http://localhost:5000/api/penghuni/${id}`, {
+            fetch(`${API_URL}/penghuni/${id}`, {
                 method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify(payload)
-            })
-                .then(res => res.json())
-                .then(data => {
-                    btn.innerHTML = '<i class="ph ph-check"></i> Simpan Perubahan Data';
-                    btn.style.pointerEvents = 'auto';
-
-                    if (data.success) {
-                        alert('Data penghuni berhasil diperbarui!');
-                        closeEditModal();
-                        fetchPenghuni(); 
-                        fetchKamarPilihan(); 
-                    } else {
-                        alert('Gagal memperbarui data: ' + data.message);
-                    }
-                })
-                .catch(() => {
-                    btn.innerHTML = '<i class="ph ph-check"></i> Simpan Perubahan Data';
-                    btn.style.pointerEvents = 'auto';
-                    alert('Terjadi kesalahan jaringan.');
-                });
+            }).then(res => res.json()).then(data => {
+                btn.innerHTML = '<i class="ph ph-check"></i> Aktifkan & Simpan'; btn.style.pointerEvents = 'auto';
+                if (data.success) {
+                    closeRestoreModal();
+                    fetchPenghuni();
+                    fetchKamarPilihan();
+                } else {
+                    alert('Gagal memulihkan penghuni: ' + data.message);
+                }
+            }).catch(() => {
+                btn.innerHTML = '<i class="ph ph-check"></i> Aktifkan & Simpan'; btn.style.pointerEvents = 'auto';
+            });
         }
 
-        function deleteTenant(id) {
-            if (!confirm('Apakah Anda yakin ingin menghapus data penghuni ini?\nKamar yang bersangkutan otomatis akan kembali berstatus tersedia.')) return;
-
-            const token = localStorage.getItem('token');
-
-            fetch(`http://localhost:5000/api/penghuni/${id}`, {
-                method: 'DELETE',
-                headers: { 'Authorization': `Bearer ${token}` }
-            })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Penghuni sukses dihapus dari database!');
-                        fetchPenghuni(); 
-                        fetchKamarPilihan(); 
-                    } else {
-                        alert('Gagal menghapus penghuni: ' + data.message);
-                    }
-                })
-                .catch(() => {
-                    alert('Terjadi masalah koneksi saat menghapus data.');
-                });
-        }
     </script>
 </body>
 
