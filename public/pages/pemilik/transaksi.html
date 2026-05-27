@@ -1,0 +1,56 @@
+<!-- public\pages\pemilik\transaksi.html -->
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Transaksi — Kos Siyani</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+    <link rel="stylesheet" href="../../css/global.css" />
+    <link rel="stylesheet" href="../../css/pemilik/dashboard.css" />
+</head>
+<body>
+    <div class="layout">
+        <div id="sidebar-container"></div>
+        <div class="main">
+            <header class="topbar">
+                <h1 class="topbar-title">Data Transaksi</h1>
+                <div id="topbar-container"></div>
+            </header>
+
+            <main class="content page-enter">
+                <div class="table-wrapper" style="width: 100%;">
+                    <div class="table-top">
+                        <div>
+                            <div class="table-top-title">Riwayat Transaksi</div>
+                            <div class="table-top-sub">Monitoring pembayaran sewa bulanan</div>
+                        </div>
+                        <button class="btn btn-ghost btn-sm" onclick="fetchTransaksi()">
+                            <i class="ph ph-arrows-clockwise"></i>
+                        </button>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tanggal</th>
+                                <th>Nama Penghuni</th>
+                                <th>No. Kamar</th>
+                                <th>Jumlah</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transaksiTableBody">
+                            <tr><td colspan="5" style="text-align: center; padding: 20px;">Memuat data...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+            <div id="footer-container"></div>
+        </div>
+    </div>
+
+    <script src="../../js/layout-pemilik.js"></script>
+    <script src="../../js/pemilik/transaksi.js"></script>
+</body>
+</html>
