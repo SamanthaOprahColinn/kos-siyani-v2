@@ -73,7 +73,38 @@ export const createAdminSchema = Joi.object({
 }).strict();
 
 /**
- * Middleware untuk validate request body
+ * CHANGE PASSWORD - User ubah password mereka sendiri
+ */
+export const changePasswordSchema = Joi.object({
+  password_lama: Joi.string()
+    .required()
+    .messages({
+      'any.required': 'Password lama wajib diisi',
+      'string.empty': 'Password lama tidak boleh kosong',
+    }),
+
+  password_baru: Joi.string()
+    .min(8)
+    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[a-zA-Z\d@$!%*?&]/)
+    .required()
+    .messages({
+      'string.min': 'Password minimal 8 karakter',
+      'string.pattern.base':
+        'Password harus mengandung: huruf kecil, HURUF BESAR, angka, dan simbol (@$!%*?&)',
+      'any.required': 'Password baru wajib diisi',
+    }),
+
+  konfirmasi_password: Joi.string()
+    .valid(Joi.ref('password_baru'))
+    .required()
+    .messages({
+      'any.only': 'Konfirmasi password harus sama dengan password baru',
+      'any.required': 'Konfirmasi password wajib diisi',
+    }),
+}).unknown(false);
+
+/**
+ * MIDDLEWARE: Validasi request
  */
 export const validateRequest = (schema) => {
   return (req, res, next) => {
@@ -83,7 +114,7 @@ export const validateRequest = (schema) => {
     });
 
     if (error) {
-      const errors = error.details.map((detail) => ({
+      const messages = error.details.map((detail) => ({
         field: detail.path.join('.'),
         message: detail.message,
       }));
@@ -92,7 +123,7 @@ export const validateRequest = (schema) => {
         success: false,
         statusCode: 400,
         message: 'Validasi gagal',
-        errors,
+        errors: messages,
       });
     }
 
