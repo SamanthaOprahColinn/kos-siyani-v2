@@ -1,279 +1,87 @@
+<!-- public\pages\pemilik\kelola-kamar.html -->
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Kelola Kamar — Kos Siyani</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css"/>
-<link rel="stylesheet" href="/css/global.css"/>
-<link rel="stylesheet" href="/css/pemilik/dashboard.css"/> 
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kelola Kamar — Kos Siyani</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+    <link rel="stylesheet" href="../../css/global.css" />
+    <link rel="stylesheet" href="../../css/pemilik/dashboard.css" />
+    <link rel="stylesheet" href="../../css/pemilik/kelola-kamar.css" />
 </head>
 <body>
+    <div class="layout">
+        <div id="sidebar-container"></div>
+        <div class="main">
+            <header class="topbar">
+                <h1 class="topbar-title">Data Kamar Kos</h1>
+                <div id="topbar-container"></div>
+            </header>
 
-<div class="layout">
-  <aside class="sidebar">
-    <div class="sidebar-brand">
-      <div class="sidebar-brand-logo">KS</div>
-      <div>
-        <div class="sidebar-brand-name">Kos Siyani</div>
-        <div class="sidebar-brand-sub">Admin Panel v2</div>
-      </div>
-    </div>
-    
-    <nav class="sidebar-nav">
-      <div class="sidebar-section-title">Utama</div>
-      <a href="/pages/pemilik/dashboard.html" class="sidebar-link">
-        <i class="ph ph-squares-four sidebar-link-icon"></i>
-        <span>Dashboard</span>
-      </a>
-      
-      <div class="sidebar-section-title">Manajemen</div>
-      <a href="/pages/pemilik/kelola-kamar.html" class="sidebar-link active">
-        <i class="ph ph-door-open sidebar-link-icon"></i>
-        <span>Kelola Kamar</span>
-      </a>
-      <a href="/pages/pemilik/kelola-penghuni.html" class="sidebar-link">
-        <i class="ph ph-users sidebar-link-icon"></i>
-        <span>Kelola Penghuni</span>
-      </a>
-      <a href="#" class="sidebar-link" onclick="alert('Modul Transaksi segera hadir')">
-        <i class="ph ph-receipt sidebar-link-icon"></i>
-        <span>Transaksi</span>
-      </a>
-      
-      <div class="sidebar-section-title">Akun</div>
-      <a href="#" class="sidebar-link" onclick="handleLogout()">
-        <i class="ph ph-sign-out sidebar-link-icon"></i>
-        <span>Keluar</span>
-      </a>
-    </nav>
-  </aside>
-
-  <div class="main">
-    <header class="topbar">
-      <h1 class="topbar-title">Manajemen Kamar Kos</h1>
-      <div class="flex items-center gap-3">
-        <div class="text-right">
-          <div class="font-bold text-dark" id="profileName">Memuat...</div>
-          <span class="badge badge-pink text-xs">PEMILIK</span>
+            <main class="content page-enter">
+                <div class="table-wrapper" style="width: 100%;">
+                    <div class="table-top">
+                        <div>
+                            <div class="table-top-title">Daftar Kamar Kos</div>
+                            <div class="table-top-sub">Monitoring status ketersediaan & fasilitas</div>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn btn-primary btn-sm" onclick="openModal()">+ Tambah Kamar</button>
+                            <button class="btn btn-ghost btn-sm" onclick="fetchKamar()"><i class="ph ph-arrows-clockwise"></i></button>
+                        </div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>No. Kamar</th>
+                                <th>Tipe / Lantai</th>
+                                <th>Harga</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="kamarTableBody">
+                            <tr><td colspan="4" style="text-align: center; padding: 20px;">Memuat data...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+            <div id="footer-container"></div>
         </div>
-      </div>
-    </header>
-
-    <main class="content page-enter">
-      <div class="flex items-center justify-between mb-6">
-        <div>
-          <h3 class="text-dark font-display font-bold">Daftar Unit Kamar</h3>
-        </div>
-        <button class="btn btn-primary" onclick="openKamarModal()">
-          <i class="ph ph-plus-circle"></i> Tambah Kamar Baru
-        </button>
-      </div>
-
-      <div class="table-wrapper">
-        <table>
-          <thead>
-            <tr>
-              <th>No. Kamar</th>
-              <th>Tipe Kamar</th>
-              <th>Harga Bulanan</th>
-              <th>Status Unit</th>
-              <th style="text-align: center;">Aksi</th>
-            </tr>
-          </thead>
-          <tbody id="kamarTableBody">
-            <tr>
-              <td colspan="5" style="text-align: center; padding: 20px;">Menghubungkan ke database...</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </main>
-  </div>
-</div>
-
-<div class="modal-backdrop" id="kamarModal" style="display: none;">
-  <div class="modal" style="max-width: 450px;">
-    <div class="modal-header">
-      <h3 class="modal-title">Tambah Kamar Baru</h3>
-      <button onclick="closeKamarModal()" style="font-size: 20px;"><i class="ph ph-x"></i></button>
     </div>
-    <form id="formKamar" onsubmit="saveKamar(event)">
-      <div class="form-group mb-3">
-        <label class="form-label">Nomor Kamar</label>
-        <input type="text" class="form-input" id="kNomor" required placeholder="Contoh: A01, B12, atau 102"/>
-      </div>
-      <div class="form-group mb-3">
-        <label class="form-label">Tipe Kamar</label>
-        <select class="form-input" id="kTipe" required>
-          <option value="">-- Pilih Tipe --</option>
-          <option value="Standard Non-AC">Standard Non-AC</option>
-          <option value="Deluxe AC">Deluxe AC</option>
-          <option value="VIP Suite">VIP Suite</option>
-        </select>
-      </div>
-      <div class="form-group mb-4">
-        <label class="form-label">Harga Sewa Per Bulan (Rp)</label>
-        <input type="number" class="form-input" id="kHarga" required placeholder="Contoh: 1200000"/>
-      </div>
-      <button type="submit" class="btn btn-primary w-full" id="btnSubmitKamar">Simpan Unit Kamar</button>
-    </form>
-  </div>
-</div>
 
-<script>
-const API_URL = 'http://localhost:5000/api';
+    <div id="kamarModal" class="modal-overlay">
+        <div class="modal-content">
+            <h3>Tambah Kamar Baru</h3>
+            <form id="formKamar" onsubmit="addKamar(event)">
+                <input type="number" id="nomor_kamar" placeholder="Nomor Kamar (1-10)" min="1" max="10" required>
+                
+                <select id="lantai" required>
+                    <option value="" disabled selected>Pilih Lantai</option>
+                    <option value="1">Lantai 1</option>
+                    <option value="2">Lantai 2</option>
+                </select>
 
-document.addEventListener('DOMContentLoaded', () => {
-  const token = localStorage.getItem('token');
-  if (!token) {
-    window.location.href = '/pages/login.html';
-    return;
-  }
+                <select id="tipe_kamar" required>
+                    <option value="" disabled selected>Pilih Tipe Kamar</option>
+                    <option value="A">Tipe A</option>
+                    <option value="B">Tipe B</option>
+                    <option value="C">Tipe C</option>
+                </select>
 
-  // Load Profil singkat
-  fetch(`${API_URL}/auth/me`, {
-    headers: { 'Authorization': `Bearer ${token}` }
-  })
-  .then(res => res.json())
-  .then(data => {
-    if (data.success && data.data) {
-      document.getElementById('profileName').textContent = data.data.nama_lengkap;
-    }
-  });
+                <input type="number" id="harga_sewa" placeholder="Harga Sewa (Contoh: 1000000)" required>
+                <input type="text" id="fasilitas" placeholder="Fasilitas (Contoh: AC, Lemari)" required>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-ghost" onclick="closeModal()">Batal</button>
+                    <button type="submit" class="btn btn-primary" id="btnSaveKamar">Simpan Kamar</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-  // Ambil Data Kamar
-  fetchKamar();
-});
-
-// 1. GET DATA KAMAR
-function fetchKamar() {
-  const token = localStorage.getItem('token');
-  const tbody = document.getElementById('kamarTableBody');
-  tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">Mengambil list kamar...</td></tr>';
-
-  fetch(`${API_URL}/kamar`, {
-    headers: { 'Authorization': `Bearer ${token}` }
-  })
-  .then(res => res.json())
-  .then(resData => {
-    tbody.innerHTML = '';
-    const listKamar = resData.data.kamar || resData.data || [];
-
-    if (resData.success && listKamar.length > 0) {
-      listKamar.forEach(k => {
-        const tr = document.createElement('tr');
-        
-        // Atur warna badge status kamar
-        let statusBadge = '';
-        if (k.status_kamar === 'tersedia') {
-          statusBadge = '<span class="badge badge-success">Kosong / Tersedia</span>';
-        } else {
-          statusBadge = '<span class="badge badge-danger">Terisi Penghuni</span>';
-        }
-
-        tr.innerHTML = `
-          <td class="font-bold text-dark">Kamar ${k.nomor_kamar}</td>
-          <td>${k.tipe_kamar}</td>
-          <td>Rp ${k.harga_bulanan.toLocaleString('id-ID')}</td>
-          <td>${statusBadge}</td>
-          <td style="text-align: center;">
-            <button class="btn btn-ghost btn-sm text-danger" onclick="deleteKamar('${k._id}')" title="Hapus Kamar">
-              <i class="ph ph-trash" style="font-size: 18px;"></i>
-            </button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-    } else {
-      tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">Belum ada unit kamar terdaftar.</td></tr>';
-    }
-  })
-  .catch(err => {
-    console.error(err);
-    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px; color: red;">Gagal memuat data kamar dari server.</td></tr>';
-  });
-}
-
-// 2. CREATE KAMAR BARU
-function saveKamar(event) {
-  event.preventDefault();
-  const token = localStorage.getItem('token');
-  const btn = document.getElementById('btnSubmitKamar');
-
-  const payload = {
-    nomor_kamar: document.getElementById('kNomor').value.trim(),
-    tipe_kamar: document.getElementById('kTipe').value,
-    harga_bulanan: Number(document.getElementById('kHarga').value),
-    status_kamar: 'tersedia' // Default kamar baru pasti kosong/tersedia
-  };
-
-  btn.style.pointerEvents = 'none';
-  btn.textContent = 'Menyimpan Unit...';
-
-  fetch(`${API_URL}/kamar`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    },
-    body: JSON.stringify(payload)
-  })
-  .then(res => res.json())
-  .then(data => {
-    btn.style.pointerEvents = 'auto';
-    btn.textContent = 'Simpan Unit Kamar';
-
-    if (data.success) {
-      alert('Unit kamar baru berhasil ditambahkan!');
-      closeKamarModal();
-      fetchKamar(); // Refresh tabel biar langsung muncul
-    } else {
-      alert(data.message || 'Gagal menambahkan kamar.');
-    }
-  })
-  .catch(err => {
-    btn.style.pointerEvents = 'auto';
-    btn.textContent = 'Simpan Unit Kamar';
-    console.error(err);
-    alert('Terjadi kendala jaringan jaringan server.');
-  });
-}
-
-// 3. DELETE KAMAR
-function deleteKamar(id) {
-  if (!confirm('Hapus kamar ini? Pastikan kamar sedang tidak dihuni agar data aman.')) return;
-
-  const token = localStorage.getItem('token');
-  fetch(`${API_URL}/kamar/${id}`, {
-    method: 'DELETE',
-    headers: { 'Authorization': `Bearer ${token}` }
-  })
-  .then(res => res.json())
-  .then(data => {
-    if (data.success) {
-      alert('Unit kamar berhasil dihapus dari sistem.');
-      fetchKamar();
-    } else {
-      alert(data.message || 'Gagal menghapus unit kamar.');
-    }
-  });
-}
-
-// 控制弹窗 Controls Modal
-function openKamarModal() {
-  document.getElementById('formKamar').reset();
-  document.getElementById('kamarModal').style.display = 'flex';
-}
-
-function closeKamarModal() {
-  document.getElementById('kamarModal').style.display = 'none';
-}
-
-function handleLogout() {
-  localStorage.removeItem('token');
-  window.location.href = '/pages/login.html';
-}
-</script>
+    <script src="../../js/layout-pemilik.js"></script>
+    <script src="../../js/pemilik/kelola-kamar.js"></script>
 </body>
 </html>

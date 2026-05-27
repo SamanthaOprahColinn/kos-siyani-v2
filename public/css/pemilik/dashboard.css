@@ -1,72 +1,182 @@
-/* public/css/pemilik/dashboard.css */
 
-.input-wrap { 
-  position: relative; 
-  width: 100%; 
+/* ── Layout Utama Dashboard ── */
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 24px;
 }
 
-.pw-toggle {
-  position: absolute;
-  right: 13px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--n400);
-  font-size: 18px;
-  padding: 2px;
+.admin-grid-layout {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 22px;
+  align-items: start;
+}
+
+/* ── Stat Cards Component ── */
+.stat-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 24px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 10px 25px rgba(223, 168, 185, 0.2), inset 2px 2px 5px rgba(255, 255, 255, 0.7);
+}
+
+.stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: color 0.15s;
+  font-size: 22px;
+  box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.8), inset -2px -2px 5px rgba(0, 0, 0, 0.05);
 }
 
-.pw-toggle:hover { 
-  color: var(--pink-500); 
+.stat-icon-pink { background: #ffccd5; color: #a71e34; }
+.stat-icon-green { background: #a8e6cf; color: #2d6a4f; }
+.stat-icon-cream { background: #f7f0d8; color: #b48509; }
+
+.stat-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #8c737d;
+  margin-bottom: 2px;
+}
+.stat-value {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text-cozy, #5d444e);
 }
 
-.form-input.has-toggle { 
-  padding-right: 40px; 
+/* ── Table & Card Wrapper── */
+.table-wrapper {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 26px;
+  box-shadow: 0 10px 25px rgba(223, 168, 185, 0.15);
+  overflow: hidden;
 }
 
-.pemilik-highlight-row {
-  border-left: 4px solid var(--pink-500);
+/* Quick Action Card Khusus */
+.quick-action-card {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px;
+}
+.quick-action-card .card-section-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text-cozy, #5d444e);
 }
 
-
-@media (max-width: 1280px) {
-  .pemilik-stats { grid-template-columns: repeat(2, 1fr); gap: 16px; }
-  .pemilik-grid-layout { grid-template-columns: 1fr; gap: 18px; }
+.quick-action-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
+/* Tombol Aksi Cepat */
+.quick-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-cozy, #5d444e);
+  width: 100%;
+  text-decoration: none;
+  box-shadow: inset 2px 2px 4px rgba(255,255,255,0.7), 0 4px 10px rgba(0,0,0,0.02);
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.quick-action-btn:active { transform: scale(0.96); }
+
+.qab-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+  box-shadow: inset 1px 1px 3px rgba(255,255,255,0.6);
+}
+
+.qab-green { background: #e2f0cb; }
+.qab-green .qab-icon { background: #a8e6cf; color: #2d6a4f; }
+.qab-green:hover { transform: translateX(4px); background: #d4ebd0; }
+
+.qab-pink { background: #ffccd5; }
+.qab-pink .qab-icon { background: #ffaec9; color: #a71e34; }
+.qab-pink:hover { transform: translateX(4px); background: #ffb3c1; }
+
+.qab-cream { background: #fdf6e2; }
+.qab-cream .qab-icon { background: #f7f0d8; color: #b48509; }
+.qab-cream:hover { transform: translateX(4px); background: #fbecc4; }
+
+/* ── Table Header & Utility ── */
+.table-top {
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px dashed rgba(93, 68, 78, 0.1);
+}
+.table-top-title { font-size: 16px; font-weight: 800; color: var(--text-cozy, #5d444e); }
+.table-top-sub { font-size: 12px; color: #8c737d; margin-top: 2px; }
+
+.status-dot {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+.status-dot::before {
+  content: '';
+  width: 7px; height: 7px;
+  border-radius: 50%;
+}
+.status-dot.aktif   { color: #2d6a4f; }
+.status-dot.aktif::before   { background: #a8e6cf; box-shadow: 0 0 0 2.5px rgba(168,230,207,0.4); }
+
+/* Empty state & Toast */
+.table-empty { padding: 50px 24px; text-align: center; color: #8c737d; }
+.table-empty i { font-size: 40px; margin-bottom: 12px; color: #ffaec9; }
+.table-empty-title { font-size: 14px; font-weight: 700; }
+
+.toast-container { position: fixed; bottom: 28px; right: 28px; z-index: 999; display: flex; flex-direction: column; gap: 10px; }
+.toast { display: flex; align-items: center; gap: 10px; padding: 12px 18px; border-radius: 16px; font-size: 13px; font-weight: 600; backdrop-filter: blur(14px); box-shadow: 0 8px 24px rgba(223,168,185,0.3); animation: toast-in 0.3s ease; }
+.toast-success { background: rgba(242, 255, 232, 0.95); border: 1.5px solid #a8e6cf; color: #2d6a4f; }
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateX(18px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Responsive Breakpoints */
 @media (max-width: 1024px) {
-  .pemilik-stats { grid-template-columns: repeat(2, 1fr); gap: 14px; }
-  .pemilik-grid-layout { grid-template-columns: 1fr; }
-  .revenue-card { padding: 20px 22px; }
-  .revenue-value { font-size: 24px; }
+  .admin-stats { grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .admin-grid-layout { grid-template-columns: 1fr; }
+  .quick-action-list { flex-direction: row; flex-wrap: wrap; }
+  .quick-action-btn { flex: 1; min-width: 180px; }
 }
-
 @media (max-width: 768px) {
-  .pemilik-stats { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-
-  .kamar-grid { grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); gap: 8px; }
-  .kamar-chip { border-radius: 11px; }
-
-  .payment-item { gap: 10px; }
-  .payment-item-icon { width: 36px; height: 36px; font-size: 16px; }
-  .payment-item-name { font-size: 13px; }
-
-  .section-head { flex-wrap: wrap; gap: 8px; }
+  .admin-stats { grid-template-columns: repeat(2, 1fr); }
 }
-
 @media (max-width: 480px) {
-  .pemilik-stats { grid-template-columns: 1fr 1fr; gap: 10px; }
-
-  .revenue-card { padding: 18px 20px; }
-  .revenue-value { font-size: 22px; }
-
-  .kamar-grid { grid-template-columns: repeat(auto-fill, minmax(52px, 1fr)); gap: 7px; }
-  .kamar-chip i { font-size: 14px; }
-  .kamar-chip-label { font-size: 9px; }
+  .admin-stats { grid-template-columns: 1fr; }
+  .quick-action-list { flex-direction: column; }
 }
