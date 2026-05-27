@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Kelola Kamar (Admin) — Kos Siyani</title>
+    <title>Kelola Kamar (Admin) — SLEEPYANI</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css" />
     <link rel="stylesheet" href="../../css/global.css" />
     <link rel="stylesheet" href="../../css/admin/dashboard.css" />
@@ -18,63 +18,48 @@
 
         <div class="main">
             <header class="topbar">
-                <h1 class="topbar-title">Manajemen Kamar Kos</h1>
+                <h1 class="topbar-title">✨ Manajemen Kamar Kos</h1>
                 <div id="topbar-container"></div>
             </header>
 
             <main class="content page-enter">
-                <div class="flex items-center justify-between mb-6 gap-4">
-                    <div class="flex items-center gap-2 header-actions">
-                        <input type="text" id="searchKamar" class="form-input" placeholder="Cari nomor kamar..."
+                <div class="flex items-center justify-between mb-6 gap-4" style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="flex: 1; max-width: 350px;">
+                        <input type="text" id="searchKamar" class="form-input-clay" placeholder="🔍 Cari nomor kamar..."
                             oninput="debounceSearchKamar()" />
                     </div>
-                    <button class="btn btn-primary" onclick="openKamarModal()">
-                        <i class="ph ph-plus"></i> Tambah Kamar Baru
+                    <button class="btn-clay-primary" onclick="openKamarModal()">
+                        <i class="ph ph-plus-circle" style="font-size: 20px;"></i> Tambah Kamar Baru
                     </button>
                 </div>
 
-                <div class="table-wrapper">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Nomor Kamar</th>
-                                <th>Lantai</th>
-                                <th>Tipe Kamar</th>
-                                <th>Harga Sewa / Bulan</th>
-                                <th>Status</th>
-                                <th>Catatan</th>
-                                <th class="text-center">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody id="kamarTableBody">
-                            <tr>
-                                <td colspan="8" class="text-center p-20">Memuat data kamar...</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="room-grid" id="kamarGridContainer">
+                    <div style="text-align: center; width: 100%; grid-column: 1/-1; padding: 40px;">
+                        Memuat data kamar estetikmu...
+                    </div>
                 </div>
             </main>
         </div>
     </div>
 
-    <div class="modal-backdrop" id="kamarModal" style="display: none;">
-        <div class="modal modal-custom">
-            <div class="modal-header">
-                <h3 class="modal-title">Tambah Kamar Baru</h3>
-                <button onclick="closeKamarModal()" class="modal-close-btn"><i class="ph ph-x"></i></button>
+    <div class="modal-backdrop" id="kamarModal" style="display: none; justify-content: center; align-items: center; position: fixed; inset: 0; background: rgba(93, 68, 78, 0.2); backdrop-filter: blur(5px); z-index: 999;">
+        <div class="modal-clay">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3 class="modal-title" id="modalTitle" style="font-weight: 800; color: var(--text-cozy);">Tambah Kamar Baru</h3>
+                <button onclick="closeKamarModal()" style="background: none; border: none; cursor: pointer; font-size: 22px; color: var(--text-cozy);"><i class="ph ph-x-circle"></i></button>
             </div>
+            
             <form id="formKamar" onsubmit="saveKamar(event)">
+                <input type="hidden" id="kamarId" />
 
-                <div class="grid-2 gap-4 form-grid-2">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;" class="mb-3">
                     <div class="form-group">
-                        <label class="form-label">Nomor Kamar (1-10)</label>
-                        <input type="number" class="form-input" id="kNomor" min="1" max="10" required
-                            placeholder="Contoh: 1" />
+                        <label class="form-label" style="font-weight: 700;">Nomor Kamar (1-10)</label>
+                        <input type="number" class="form-input-clay" id="kNomor" min="1" max="10" required placeholder="Contoh: 1" />
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Lantai</label>
-                        <select class="form-input" id="kLantai" required>
+                        <label class="form-label" style="font-weight: 700;">Lantai</label>
+                        <select class="form-input-clay" id="kLantai" required>
                             <option value="">-- Pilih Lantai --</option>
                             <option value="1">Lantai 1</option>
                             <option value="2">Lantai 2</option>
@@ -82,10 +67,10 @@
                     </div>
                 </div>
 
-                <div class="grid-2 gap-4 form-grid-2">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;" class="mb-3">
                     <div class="form-group">
-                        <label class="form-label">Tipe Kamar</label>
-                        <select class="form-input" id="kTipe" required>
+                        <label class="form-label" style="font-weight: 700;">Tipe Kamar</label>
+                        <select class="form-input-clay" id="kTipe" required>
                             <option value="">-- Tipe --</option>
                             <option value="A">Tipe A</option>
                             <option value="B">Tipe B</option>
@@ -93,25 +78,23 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Harga Sewa (Rp)</label>
-                        <input type="number" class="form-input" id="kHarga" required placeholder="Contoh: 1200000" />
+                        <label class="form-label" style="font-weight: 700;">Harga Sewa (Rp)</label>
+                        <input type="number" class="form-input-clay" id="kHarga" required placeholder="Contoh: 1200000" />
                     </div>
                 </div>
 
                 <div class="form-group mb-3">
-                    <label class="form-label">Fasilitas (Pisahkan dengan koma)</label>
-                    <input type="text" class="form-input" id="kFasilitas" required
-                        placeholder="Contoh: kasur, lemari, ac, wifi" />
-                    <small class="form-hint">*Minimal harus diisi 1 fasilitas</small>
+                    <label class="form-label" style="font-weight: 700;">Fasilitas (Pisahkan dengan koma)</label>
+                    <input type="text" class="form-input-clay" id="kFasilitas" required placeholder="Contoh: kasur, lemari, ac, wifi" />
+                    <small style="color: #c77d90; font-size: 11px; margin-top: 5px; display: block;">*Minimal harus diisi 1 fasilitas</small>
                 </div>
 
                 <div class="form-group mb-4">
-                    <label class="form-label">Deskripsi Kamar (Opsional)</label>
-                    <textarea class="form-input" id="kDeskripsi" rows="2"
-                        placeholder="Kamar menghadap ke timur, ventilasi luas..."></textarea>
+                    <label class="form-label" style="font-weight: 700;">Deskripsi Kamar (Opsional)</label>
+                    <textarea class="form-input-clay" id="kDeskripsi" rows="2" placeholder="Kamar menghadap ke timur, ventilasi luas..." style="resize: none;"></textarea>
                 </div>
 
-                <button type="submit" class="btn btn-primary w-full" id="btnSubmitKamar">Simpan Kamar</button>
+                <button type="submit" class="btn-clay-primary w-full" id="btnSubmitKamar" style="width: 100%; justify-content: center;">Simpan Kamar</button>
             </form>
         </div>
     </div>
@@ -121,6 +104,7 @@
         const API_URL = 'http://localhost:5000/api';
         let searchTimeout;
 
+        // --- 100% LOGIKA ASLI KAMU UNTUK ONLOAD ---
         document.addEventListener('DOMContentLoaded', () => {
             const token = localStorage.getItem('token');
             if (!token) {
@@ -144,13 +128,15 @@
             fetchKamar();
         });
 
+        // --- LOGIKA ASLI KAMU (Render Kartu Diperbarui) ---
         function fetchKamar(searchQuery = '') {
             const token = localStorage.getItem('token');
-            const tbody = document.getElementById('kamarTableBody');
-            tbody.innerHTML = '<tr><td colspan="8" class="text-center p-20">Memuat data kamar...</td></tr>';
+            const container = document.getElementById('kamarGridContainer');
+            container.innerHTML = '<div style="text-align: center; width: 100%; grid-column: 1/-1; padding: 40px;">Memuat data kamar...</div>';
 
             let url = `${API_URL}/kamar`;
             if (searchQuery) {
+                // Sesuai route pencarian asli kamu
                 url = `${API_URL}/kamar/search?q=${encodeURIComponent(searchQuery)}`;
             }
 
@@ -159,44 +145,75 @@
             })
                 .then(res => res.json())
                 .then(resData => {
-                    tbody.innerHTML = '';
+                    container.innerHTML = '';
                     const daftar = resData.data?.data || resData.data || [];
 
                     if (daftar && daftar.length > 0) {
                         daftar.forEach((k, index) => {
-                            const tr = document.createElement('tr');
+                            // Style Status
                             const isTersedia = k.status_kamar === 'tersedia';
-                            const badgeClass = isTersedia ? 'badge-success' : 'badge-danger';
+                            const badgeClass = isTersedia ? 'green' : 'pink';
+                            const doorIconClass = isTersedia ? 'available' : 'occupied';
+                            const doorIcon = isTersedia ? 'ph-door-open' : 'ph-door';
                             
-                            // Penggunaan class CSS di sini
-                            const catatanKamar = k.deskripsi ? k.deskripsi : '<span class="color-ccc">-</span>';
+                            // Handling deskripsi asli kamu
+                            const catatanKamar = k.deskripsi ? k.deskripsi : '<span style="color:#bbb; font-style:italic;">Tidak ada catatan</span>';
 
-                            tr.innerHTML = `
-                                <td>${index + 1}</td>
-                                <td><strong class="text-dark">Kamar ${k.nomor_kamar}</strong></td>
-                                <td>Lantai ${k.lantai}</td>
-                                <td>Tipe ${k.tipe_kamar}</td>
-                                <td>Rp ${Number(k.harga_sewa).toLocaleString('id-ID')}</td>
-                                <td><span class="badge ${badgeClass}">${k.status_kamar}</span></td>
-                                <td><small class="text-muted table-catatan" title="${k.deskripsi || ''}">${catatanKamar}</small></td> 
-                                <td class="text-center">
-                                    <button class="btn btn-icon text-danger" onclick="deleteKamar('${k._id}')" title="Hapus Kamar">
+                            // Buat Card Element
+                            const card = document.createElement('div');
+                            card.className = 'room-card';
+                            
+                            card.innerHTML = `
+                                <div class="room-card-header">
+                                    <span class="room-number">Kamar ${k.nomor_kamar}</span>
+                                    <span class="badge-clay ${badgeClass}">${k.status_kamar.toUpperCase()}</span>
+                                </div>
+                                
+                                <div class="door-container">
+                                    <i class="ph ${doorIcon} door-3d-icon ${doorIconClass}"></i>
+                                    <div style="display: flex; gap: 15px; margin-left: 5px;">
+                                        <div>
+                                            <div style="font-size: 11px; opacity: 0.7; font-weight:700;">LANTAI</div>
+                                            <div style="font-weight: 800; font-size:15px;">${k.lantai}</div>
+                                        </div>
+                                        <div>
+                                            <div style="font-size: 11px; opacity: 0.7; font-weight:700;">TIPE</div>
+                                            <div style="font-weight: 800; font-size:15px;">${k.tipe_kamar}</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="room-details">
+                                    <span>Harga Sewa / Bln</span>
+                                    <span style="color: #c77d90; font-weight: 800;">Rp ${Number(k.harga_sewa).toLocaleString('id-ID')}</span>
+                                </div>
+
+                                <div class="room-notes">
+                                    <strong>Catatan:</strong> ${catatanKamar}
+                                </div>
+
+                                <div class="room-actions">
+                                    <button class="btn-icon-clay edit" onclick="openEditModal('${k._id}')" title="Ubah Kamar">
+                                        <i class="ph ph-pencil-simple"></i>
+                                    </button>
+                                    <button class="btn-icon-clay delete" onclick="deleteKamar('${k._id}')" title="Hapus Kamar">
                                         <i class="ph ph-trash"></i>
                                     </button>
-                                </td>
+                                </div>
                             `;
-                            tbody.appendChild(tr);
+                            container.appendChild(card);
                         });
                     } else {
-                        tbody.innerHTML = '<tr><td colspan="8" class="text-center p-20">Tidak ada data kamar ditemukan.</td></tr>';
+                        container.innerHTML = '<div style="text-align: center; width: 100%; grid-column: 1/-1; padding: 40px;">Tidak ada data kamar ditemukan.</div>';
                     }
                 })
                 .catch(err => {
                     console.error(err);
-                    tbody.innerHTML = '<tr><td colspan="8" class="text-center p-20 text-danger">Gagal terhubung ke API Kamar.</td></tr>';
+                    container.innerHTML = '<div style="text-align: center; width: 100%; grid-column: 1/-1; padding: 40px; color: red;">Gagal terhubung ke API Kamar.</div>';
                 });
         }
 
+        // --- 100% LOGIKA ASLI KAMU (DEBOUNCE SEARCH) ---
         function debounceSearchKamar() {
             clearTimeout(searchTimeout);
             const q = document.getElementById('searchKamar').value.trim();
@@ -205,10 +222,55 @@
             }, 500);
         }
 
+        // --- BARU: LOGIKA UNTUK MEMBUKA MODAL EDIT ---
+        // Mengambil data spesifik ke form sebelum diedit
+        function openEditModal(id) {
+            const token = localStorage.getItem('token');
+            
+            // GET data kamar berdasarkan ID
+            fetch(`${API_URL}/kamar/${id}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            })
+            .then(res => res.json())
+            .then(resData => {
+                const k = resData.data; // Asumsi backend balikin { success: true, data: { kamar } }
+
+                // 1. Ubah UI Modal jadi mode Edit
+                document.getElementById('modalTitle').textContent = 'Ubah Detail Kamar ✨';
+                document.getElementById('btnSubmitKamar').textContent = 'Update Data Kamar';
+                
+                // 2. Isi Hidden Input dengan ID Kamar
+                document.getElementById('kamarId').value = k._id;
+
+                // 3. Isi Form dengan data lama (Menyesuaikan field asli kamu)
+                document.getElementById('kNomor').value = k.nomor_kamar;
+                document.getElementById('kLantai').value = k.lantai;
+                document.getElementById('kTipe').value = k.tipe_kamar;
+                document.getElementById('kHarga').value = k.harga_sewa;
+                
+                // Fasilitas di DB array, di form string pisah koma (SESUAI LOGIKA PAYLOAD KAMU)
+                document.getElementById('kFasilitas').value = k.fasilitas ? k.fasilitas.join(', ') : '';
+                
+                document.getElementById('kDeskripsi').value = k.deskripsi || '';
+
+                // 4. Buka Modal
+                document.getElementById('kamarModal').style.display = 'flex';
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Gagal mengambil data kamar untuk diedit.');
+            });
+        }
+
+        // --- LOGIKA ASLI KAMU DIUBAH DIKIT (SAVE KAMAR handles POST & PUT) ---
         function saveKamar(event) {
             event.preventDefault();
             const token = localStorage.getItem('token');
             const btn = document.getElementById('btnSubmitKamar');
+            
+            // PERUBAHAN LOGIKA: Cek apakah ini Edit atau Tambah
+            const kamarId = document.getElementById('kamarId').value;
+            const isEdit = kamarId !== "";
 
             const nomorRaw = document.getElementById('kNomor').value;
             const lantaiRaw = document.getElementById('kLantai').value;
@@ -217,21 +279,25 @@
             const fasilitasRaw = document.getElementById('kFasilitas').value;
             const deskripsiRaw = document.getElementById('kDeskripsi').value.trim();
 
+            // Validasi Required (Asli Kamu)
             if (!nomorRaw || !lantaiRaw || !tipeRaw) {
                 alert("Nomor Kamar, Lantai, dan Tipe Kamar wajib diisi!");
                 return;
             }
 
+            // Payload Dasar (Asli Kamu)
             const payload = {
                 nomor_kamar: Number(nomorRaw),
                 lantai: Number(lantaiRaw),
                 tipe_kamar: tipeRaw,
             };
 
+            // Payload Opsional (Asli Kamu)
             if (hargaRaw !== "") {
                 payload.harga_sewa = Number(hargaRaw);
             }
 
+            // Fasilitas Array (Asli Kamu)
             const arrayFasilitas = fasilitasRaw.split(',')
                 .map(f => f.trim())
                 .filter(f => f !== "");
@@ -239,15 +305,22 @@
                 payload.fasilitas = arrayFasilitas;
             }
 
+            // Deskripsi (Asli Kamu)
             if (deskripsiRaw !== "") {
                 payload.deskripsi = deskripsiRaw;
             }
 
+            // LOADING STATE
             btn.style.pointerEvents = 'none';
-            btn.textContent = 'Menyimpan...';
+            btn.textContent = isEdit ? 'Updating...' : 'Menyimpan...';
 
-            fetch(`${API_URL}/kamar`, {
-                method: 'POST',
+            // PERUBAHAN LOGIKA: Tentukan URL dan Method API
+            const url = isEdit ? `${API_URL}/kamar/${kamarId}` : `${API_URL}/kamar`;
+            const method = isEdit ? 'PATCH' : 'POST'; // Backend biasanya pakai PUT/PATCH buat update
+
+            // Kirim ke Backend
+            fetch(url, {
+                method: method,
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -260,19 +333,21 @@
                 })
                 .then(({ status, data }) => {
                     btn.style.pointerEvents = 'auto';
-                    btn.textContent = 'Simpan Kamar';
+                    btn.textContent = 'Simpan Kamar'; // Reset text default
 
-                    if (status === 201 || data.success) {
-                        alert('Kamar baru berhasil ditambahkan!');
+                    // Handle Success (Asli Kamu diperluas untuk status 200/Edit)
+                    if (status === 201 || status === 200 || data.success) {
+                        alert(isEdit ? 'Data kamar berhasil diperbarui! 💖' : 'Kamar baru berhasil ditambahkan! 🎉');
                         closeKamarModal();
                         fetchKamar();
                     } else {
+                        // Error Handling (Asli Kamu)
                         console.error("❌ DETAIL ERROR BACKEND:", data);
                         if (data.errors && Array.isArray(data.errors)) {
                             const listError = data.errors.map(err => `- [Kolom ${err.field}]: ${err.message}`).join('\n');
                             alert(`Gagal Validasi Backend:\n\n${listError}`);
                         } else {
-                            alert(`Gagal: ${data.message || 'Periksa kembali isian data Anda.'}`);
+                            alert(`Gagal Menyimpan: ${data.message || 'Periksa kembali isian data Anda.'}`);
                         }
                     }
                 })
@@ -283,6 +358,7 @@
                 });
         }
 
+        // --- 100% LOGIKA ASLI KAMU (DELETE) ---
         function deleteKamar(id) {
             if (!confirm('Apakah Anda yakin ingin menghapus kamar ini?')) return;
             const token = localStorage.getItem('token');
@@ -301,9 +377,15 @@
                 });
         }
 
-        // Khusus untuk modal yang disembunyikan pakai style="display: none;", 
-        // lebih aman tetap dibiarkan di HTML, karena JS memanipulasi display-nya.
+        // --- UI UTILS (Diperbarui untuk Reset Mode Edit) ---
         function openKamarModal() {
+            // PERUBAHAN UI: Pastikan Title & Button kembali ke mode "Tambah"
+            document.getElementById('modalTitle').textContent = 'Tambah Kamar Baru';
+            document.getElementById('btnSubmitKamar').textContent = 'Simpan Kamar';
+            
+            // PERUBAHAN LOGIKA: Reset Hidden ID agar dianggap data baru (POST)
+            document.getElementById('kamarId').value = '';
+            
             document.getElementById('formKamar').reset();
             document.getElementById('kamarModal').style.display = 'flex';
         }

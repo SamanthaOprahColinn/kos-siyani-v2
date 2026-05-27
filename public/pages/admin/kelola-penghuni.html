@@ -1,321 +1,352 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Kelola Penghuni (Admin) — Kos Siyani</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css"/>
-<link rel="stylesheet" href="../../css/global.css"/>
-<link rel="stylesheet" href="../../css/admin/dashboard.css"/> 
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kelola Penghuni (Admin) — Kos Siyani</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+    <link rel="stylesheet" href="../../css/global.css" />
+    <link rel="stylesheet" href="../../css/admin/dashboard.css" />
+    <link rel="stylesheet" href="../../css/admin/kelola-penghuni.css" />
 </head>
+
 <body>
 
-<div class="layout">
+    <div class="layout">
+        <div id="sidebar-container"></div>
 
-  <div id="sidebar-container"></div>
+        <div class="main">
+            <header class="topbar">
+                <h1 class="topbar-title">Manajemen Penghuni Kos</h1>
+                <div id="topbar-container"></div>
+            </header>
 
-  <div class="main">
-    <header class="topbar">
-        <h1 class="topbar-title">Manajemen Penghuni Kos</h1>
-        
-        <div id="topbar-container"></div>
-      </header>
+            <main class="content page-enter">
+                <div class="flex items-center justify-between mb-6 gap-4">
+                    <div class="flex items-center gap-2 header-actions">
+                        <input type="text" id="searchPenghuni" class="form-input" placeholder="Cari nama, KTP, HP atau email..."
+                            oninput="debounceSearchPenghuni()" />
+                    </div>
+                    <button class="btn btn-primary" onclick="openPenghuniModal()">
+                        <i class="ph ph-plus"></i> Tambah Penghuni Baru
+                    </button>
+                </div>
 
-    <main class="content page-enter">
-      <div class="flex items-center justify-between mb-6 gap-4">
-        <div class="flex items-center gap-2" style="flex: 1; max-width: 400px;">
-          <input type="text" id="searchPenghuni" class="form-input" placeholder="Cari nama atau no. hp penghuni..." oninput="debounceSearch()"/>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Nama Lengkap</th>
+                                <th>Kamar</th>
+                                <th>No. KTP</th>
+                                <th>No. HP</th>
+                                <th>Email</th>
+                                <th>Alamat Asal</th>
+                                <th>Status</th>
+                                <th class="text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="penghuniTableBody">
+                            <tr>
+                                <td colspan="9" class="text-center p-20">Memuat data penghuni...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </main>
         </div>
-        <button class="btn btn-primary" onclick="openPenghuniModal()">
-          <i class="ph ph-user-plus"></i> Tambah Penghuni Baru
-        </button>
-      </div>
-
-      <div class="table-wrapper">
-        <table>
-          <thead>
-            <tr>
-              <th>No</th>
-              <th>Nama Lengkap</th>
-              <th>Kontak / Email</th>
-              <th>Tanggal Masuk</th>
-              <th>Status</th>
-              <th style="text-align: center;">Aksi</th>
-            </tr>
-          </thead>
-          <tbody id="penghuniTableBody">
-            <tr>
-              <td colspan="6" style="text-align: center; padding: 20px;">Menghubungkan ke database...</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </main>
-  </div>
-</div>
-
-<div class="modal-backdrop" id="penghuniModal" style="display: none;">
-  <div class="modal" style="max-width: 550px;">
-    <div class="modal-header">
-      <h3 class="modal-title">Registrasi Penghuni Baru</h3>
-      <button onclick="closePenghuniModal()" style="font-size: 20px;"><i class="ph ph-x"></i></button>
     </div>
-    <form id="formPenghuni" onsubmit="savePenghuni(event)">
-      <div class="grid-2 gap-4" style="display: grid; grid-template-columns: 1fr 1fr; margin-bottom: 12px;">
-        <div class="form-group">
-          <label class="form-label">Nama Lengkap</label>
-          <input type="text" class="form-input" id="pNama" required placeholder="Nama sesuai KTP"/>
+
+    <div class="modal-backdrop" id="penghuniModal" style="display: none;">
+        <div class="modal modal-custom">
+            <div class="modal-header">
+                <h3 class="modal-title">Form Registrasi Penghuni Baru</h3>
+                <button onclick="closePenghuniModal()" class="modal-close-btn"><i class="ph ph-x"></i></button>
+            </div>
+            <form id="formPenghuni" onsubmit="savePenghuni(event)">
+
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Nama Lengkap <span class="text-danger">*</span></label>
+                        <input type="text" class="form-input" id="pNama" required minlength="3" maxlength="100" placeholder="Contoh: Budi Santoso" />
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Alamat Email <span class="text-danger">*</span></label>
+                        <input type="email" class="form-input" id="pEmail" required placeholder="budi@email.com" />
+                    </div>
+                </div>
+
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Nomor KTP (16 Digit) <span class="text-danger">*</span></label>
+                        <input type="text" class="form-input" id="pKtp" required minlength="16" maxlength="16" pattern="^\d{16}$" placeholder="3171xxxxxxxxxxxx" />
+                        <small class="form-hint">*Harus berupa angka & pas 16 digit</small>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Nomor HP <span class="text-danger">*</span></label>
+                        <input type="text" class="form-input" id="pHp" required minlength="10" maxlength="13" pattern="^\d{10,13}$" placeholder="081234567890" />
+                        <small class="form-hint">*Angka, minimal 10 digit, maksimal 13 digit</small>
+                    </div>
+                </div>
+
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Alokasi Kamar Kosong <span class="text-danger">*</span></label>
+                        <select class="form-input" id="pKamar" required>
+                            <option value="">-- Memuat daftar kamar... --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Keadaan Awal Kamar</label>
+                        <select class="form-input" id="pKeadaan">
+                            <option value="baik" selected>Baik</option>
+                            <option value="rusak_ringan">Rusak Ringan</option>
+                            <option value="rusak_berat">Rusak Berat</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="form-label">Alamat Asal <span class="text-danger">*</span></label>
+                    <input type="text" class="form-input" id="pAlamatAsal" required minlength="10" placeholder="Masukkan alamat asal lengkap minimal 10 karakter" />
+                </div>
+
+                <div class="form-group mb-4">
+                    <label class="form-label">Catatan Tambahan <small class="color-ccc">(Opsional)</small></label>
+                    <textarea class="form-input" id="pCatatan" rows="2" maxlength="500" placeholder="Keterangan tambahan barang bawaan atau kondisi tertentu..."></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-full" id="btnSubmitPenghuni">Daftarkan Penghuni</button>
+            </form>
         </div>
-        <div class="form-group">
-          <label class="form-label">No. KTP</label>
-          <input type="text" class="form-input" id="pKtp" required placeholder="16 Digit No. KTP"/>
-        </div>
-      </div>
-      <div class="grid-2 gap-4" style="display: grid; grid-template-columns: 1fr 1fr; margin-bottom: 12px;">
-        <div class="form-group">
-          <label class="form-label">No. HP / WhatsApp</label>
-          <input type="text" class="form-input" id="pHp" required placeholder="Contoh: 0812345678"/>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Email</label>
-          <input type="email" class="form-input" id="pEmail" required placeholder="Alamat email aktif"/>
-        </div>
-      </div>
-      <div class="form-group mb-3">
-        <label class="form-label">Alamat Asal</label>
-        <input type="text" class="form-input" id="pAlamat" required placeholder="Alamat rumah asal sesuai KTP"/>
-      </div>
-      <div class="grid-2 gap-4" style="display: grid; grid-template-columns: 1fr 1fr; margin-bottom: 12px;">
-        <div class="form-group">
-          <label class="form-label">Pilih Kamar</label>
-          <select class="form-input" id="pKamar" required>
-            <option value="">-- Pilih Kamar --</option>
-            <option value="standar">Standar</option>
-            <option value="Semi-Eksklusif">Semi-Eksklusif</option>
-            <option value="Eksklusif">Eksklusif</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Tanggal Masuk</label>
-          <input type="date" class="form-input" id="pTanggalMasuk" required/>
-        </div>
-      </div>
-      <div class="form-group mb-4">
-        <label class="form-label">Catatan Tambahan (Opsional)</label>
-        <textarea class="form-input" id="pCatatan" rows="2" placeholder="Catatan fasilitas tambahan atau jaminan"></textarea>
-      </div>
-      <button type="submit" class="btn btn-primary w-full" id="btnSubmitPenghuni">Simpan & Daftarkan</button>
-    </form>
-  </div>
-</div>
+    </div>
 
-<script src="../../js/layout-admin.js"></script>
+    <script src="../../js/layout-admin.js"></script>
+    <script>
+        const API_URL = 'http://localhost:5000/api';
+        let searchTimeout;
 
-<script>
-const API_URL = 'http://localhost:5000/api';
-let searchTimeout;
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '/pages/login.html';
+                return;
+            }
 
-document.addEventListener('DOMContentLoaded', () => {
-  const token = localStorage.getItem('token');
-  if (!token) {
-    window.location.href = '/pages/login.html';
-    return;
-  }
+            // Sync Data Profil Admin di Topbar
+            fetch(`${API_URL.replace('/v1', '')}/auth/me`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success && data.data) {
+                        setTimeout(() => {
+                            const profileEl = document.getElementById('profileName');
+                            if (profileEl) profileEl.textContent = data.data.nama_lengkap;
+                        }, 150);
+                    }
+                }).catch(err => console.log(err));
 
-  fetch(`${API_URL}/auth/me`, {
-    headers: { 'Authorization': `Bearer ${token}` }
-  })
-  .then(res => res.json())
-  .then(data => {
-    if (data.success && data.data) {
-      document.getElementById('profileName').textContent = data.data.nama_lengkap;
-    }
-  });
+            fetchPenghuni();
+            fetchKamarTersedia();
+        });
 
-  fetchPenghuni();
-  fetchKamarOptions();
-});
+        // 1. QUERY GET ALL / SEARCH PENGHUNI (SESUAI KEY DATABASE)
+        function fetchPenghuni(searchQuery = '') {
+            const token = localStorage.getItem('token');
+            const tbody = document.getElementById('penghuniTableBody');
+            tbody.innerHTML = '<tr><td colspan="9" class="text-center p-20">Memuat data penghuni...</td></tr>';
 
-function fetchPenghuni(searchQuery = '') {
-  const token = localStorage.getItem('token');
-  const tbody = document.getElementById('penghuniTableBody');
-  tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px;">Memuat data penghuni...</td></tr>';
+            let url = `${API_URL}/penghuni`;
+            if (searchQuery) {
+                url = `${API_URL}/penghuni/search?q=${encodeURIComponent(searchQuery)}`;
+            }
 
-  let url = `${API_URL}/penghuni`;
-  if (searchQuery) {
-    url = `${API_URL}/penghuni/search?q=${encodeURIComponent(searchQuery)}`;
-  }
+            fetch(url, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            })
+                .then(res => res.json())
+                .then(resData => {
+                    tbody.innerHTML = '';
+                    const daftar = resData.data?.data || resData.data || [];
 
-  fetch(url, {
-    headers: { 'Authorization': `Bearer ${token}` }
-  })
-  .then(res => res.json())
-  .then(resData => {
-    tbody.innerHTML = '';
-    const daftar = resData.data.penghuni || resData.data.data || resData.data;
+                    if (daftar && daftar.length > 0) {
+                        daftar.forEach((p, index) => {
+                            const tr = document.createElement('tr');
+                            
+                            // Menyesuaikan mapping key: dari skema terlihat relasi kamar disimpan di 'id_kamar'
+                            const nomorKamar = p.id_kamar?.nomor_kamar ? `Kamar ${p.id_kamar.nomor_kamar}` : 'Belum diplot';
+                            
+                            // Handling status badge
+                            const isAktif = p.status_penghuni === 'aktif';
+                            const badgeClass = isAktif ? 'badge-success' : 'badge-danger';
 
-    if (resData.success && daftar && daftar.length > 0) {
-      daftar.forEach((p, index) => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${index + 1}</td>
-          <td>
-            <div class="font-bold text-dark">${p.nama_lengkap}</div>
-            <span class="text-xs text-muted">KTP: ${p.no_ktp}</span>
-          </td>
-          <td>
-            <div>${p.no_hp}</div>
-            <span class="text-xs text-muted">${p.email}</span>
-          </td>
-          <td>${new Date(p.tanggal_masuk).toLocaleDateString('id-ID')}</td>
-          <td><span class="badge ${p.status_penghuni === 'aktif' ? 'badge-success' : 'badge-danger'}">${p.status_penghuni}</span></td>
-          <td style="text-align: center;">
-            <button class="btn btn-ghost btn-sm text-danger" onclick="deletePenghuni('${p._id}')" title="Hapus Penghuni">
-              <i class="ph ph-trash" style="font-size: 18px;"></i>
-            </button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-    } else {
-      tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px;">Tidak ada data penghuni ditemukan.</td></tr>';
-    }
-  })
-  .catch(err => {
-    console.error(err);
-    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px; color: red;">Gagal mengambil data dari server.</td></tr>';
-  });
-}
-
-function debounceSearch() {
-  clearTimeout(searchTimeout);
-  const q = document.getElementById('searchPenghuni').value.trim();
-  searchTimeout = setTimeout(() => {
-    fetchPenghuni(q);
-  }, 500);
-}
-
-function fetchKamarOptions() {
-  const token = localStorage.getItem('token');
-  const selectKamar = document.getElementById('pKamar');
-
-  fetch(`${API_URL}/kamar`, {
-    headers: { 'Authorization': `Bearer ${token}` }
-  })
-  .then(res => res.json())
-  .then(resData => {
-    const listKamar = resData.data.kamar || resData.data;
-    if (listKamar && listKamar.length > 0) {
-      listKamar.forEach(k => {
-        if (k.status_kamar === 'tersedia') {
-          const opt = document.createElement('option');
-          opt.value = k._id;
-          opt.textContent = `Kamar ${k.nomor_kamar} (${k.tipe_kamar})`;
-          selectKamar.appendChild(opt);
+                            tr.innerHTML = `
+                                <td>${index + 1}</td>
+                                <td><strong class="text-dark">${p.nama_lengkap}</strong></td>
+                                <td><span class="badge badge-neutral">${nomorKamar}</span></td>
+                                <td><code>${p.no_ktp}</code></td>
+                                <td>${p.no_hp}</td>
+                                <td>${p.email}</td>
+                                <td><span class="table-truncate" title="${p.alamat_asal}">${p.alamat_asal}</span></td>
+                                <td><span class="badge ${badgeClass}">${p.status_penghuni}</span></td>
+                                <td class="text-center">
+                                    <button class="btn btn-icon text-danger" onclick="deletePenghuni('${p._id}')" title="Hapus Penghuni">
+                                        <i class="ph ph-trash"></i>
+                                    </button>
+                                </td>
+                            `;
+                            tbody.appendChild(tr);
+                        });
+                    } else {
+                        tbody.innerHTML = '<tr><td colspan="9" class="text-center p-20">Tidak ada data penghuni ditemukan.</td></tr>';
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    tbody.innerHTML = '<tr><td colspan="9" class="text-center p-20 text-danger">Gagal memuat data dari API Penghuni.</td></tr>';
+                });
         }
-      });
-    }
-  });
-}
 
-function savePenghuni(event) {
-  event.preventDefault();
-  const token = localStorage.getItem('token');
-  const btn = document.getElementById('btnSubmitPenghuni');
+        // 2. AMBIL LIST KAMAR STATUS 'TERSEDIA'
+        function fetchKamarTersedia() {
+            const token = localStorage.getItem('token');
+            const selectKamar = document.getElementById('pKamar');
 
-  // Ambil nilai dari form
-  const idKamar = document.getElementById('pKamar').value;
-  const teksKamar = document.getElementById('pKamar').options[document.getElementById('pKamar').selectedIndex].text;
-  const nomorKamarSaja = teksKamar.replace(/[^0-9]/g, ''); // Trik mengambil angka kamarnya saja dari teks dropdown
+            fetch(`${API_URL}/kamar`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            })
+            .then(res => res.json())
+            .then(resData => {
+                selectKamar.innerHTML = '<option value="">-- Pilih Kamar --</option>';
+                const kamarList = resData.data?.data || resData.data || [];
+                
+                kamarList.forEach(k => {
+                    if (k.status_kamar === 'tersedia') {
+                        const opt = document.createElement('option');
+                        opt.value = k._id; 
+                        opt.textContent = `Kamar ${k.nomor_kamar} - Lantai ${k.lantai}`;
+                        selectKamar.appendChild(opt);
+                    }
+                });
+            })
+            .catch(err => {
+                selectKamar.innerHTML = '<option value="">Gagal sinkronisasi data kamar</option>';
+            });
+        }
 
-  // Payload yang akan dikirim ke backend
-  const payload = {
-    nama_lengkap: document.getElementById('pNama').value.trim(),
-    no_ktp: document.getElementById('pKtp').value.trim(),
-    no_hp: document.getElementById('pHp').value.trim(),
-    email: document.getElementById('pEmail').value.trim(),
-    alamat_asal: document.getElementById('pAlamat').value.trim(),
-    
-    // BACKEND BIASANYA MINTA SALAH SATU DARI INI (tergantung schema kamu):
-    id_kamar: idKamar,         // Mengirim ID unik MongoDB
-    
-    tanggal_masuk: document.getElementById('pTanggalMasuk').value,
-    catatan: document.getElementById('pCatatan').value.trim()
-  };
+        function debounceSearchPenghuni() {
+            clearTimeout(searchTimeout);
+            const q = document.getElementById('searchPenghuni').value.trim();
+            searchTimeout = setTimeout(() => {
+                fetchPenghuni(q);
+            }, 500);
+        }
 
-  console.log("🚀 DATA YANG DIKIRIM FRONTEND:", payload);
+        // 3. PROSES SIMPAN PENGHUNI (DENGAN PAYLOAD SESUAI STRUKTUR MONGOOSE)
+        function savePenghuni(event) {
+            event.preventDefault();
+            const token = localStorage.getItem('token');
+            const btn = document.getElementById('btnSubmitPenghuni');
 
-  btn.style.pointerEvents = 'none';
-  btn.textContent = 'Mendaftarkan...';
+            const namaRaw = document.getElementById('pNama').value.trim();
+            const emailRaw = document.getElementById('pEmail').value.trim();
+            const ktpRaw = document.getElementById('pKtp').value.trim();
+            const hpRaw = document.getElementById('pHp').value.trim();
+            const kamarRaw = document.getElementById('pKamar').value;
+            const keadaanRaw = document.getElementById('pKeadaan').value;
+            const alamatRaw = document.getElementById('pAlamatAsal').value.trim();
+            const catatanRaw = document.getElementById('pCatatan').value.trim();
 
-  fetch(`${API_URL}/penghuni`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    },
-    body: JSON.stringify(payload)
-  })
-  .then(async (res) => {
-    // Kita tangkap respons mentah dari backend
-    const data = await res.json();
-    console.log("📥 RESPONS DARI BACKEND:", data);
-    return { status: res.status, data };
-  })
-  .then(({ status, data }) => {
-    btn.style.pointerEvents = 'auto';
-    btn.textContent = 'Simpan & Daftarkan';
+            // Membangun struktur payload murni yang lolos validasi skema
+            const payload = {
+                nama_lengkap: namaRaw,
+                email: emailRaw,
+                no_ktp: ktpRaw,
+                no_hp: hpRaw,
+                id_kamar: kamarRaw,
+                alamat_asal: alamatRaw,
+                keadaan_kamar: keadaanRaw
+            };
 
-    if (status === 200 || status === 201 || data.success) {
-      alert('Penghuni baru berhasil didaftarkan!');
-      closePenghuniModal();
-      fetchPenghuni();
-    } else {
-      // Menampilkan pesan error yang sebenarnya dari backend ke layar
-      const errorMsg = data.message || JSON.stringify(data.errors) || 'Gagal validasi';
-      alert(`Validasi Gagal: ${errorMsg}`);
-    }
-  })
-  .catch(err => {
-    btn.style.pointerEvents = 'auto';
-    btn.textContent = 'Simpan & Daftarkan';
-    console.error("❌ ERROR JARINGAN / KODE:", err);
-    alert('Terjadi kesalahan. Cek Console (F12).');
-  });
-}
+            // Masukkan data catatan jika ada represents isian opsional
+            if (catatanRaw !== "") {
+                payload.catatan = catatanRaw;
+            }
 
-function deletePenghuni(id) {
-  if (!confirm('Apakah Anda yakin ingin menghapus penghuni ini dari daftar aktif?')) return;
-  
-  const token = localStorage.getItem('token');
-  fetch(`${API_URL}/penghuni/${id}`, {
-    method: 'DELETE',
-    headers: { 'Authorization': `Bearer ${token}` }
-  })
-  .then(res => res.json())
-  .then(data => {
-    if (data.success) {
-      alert('Penghuni berhasil dihapus.');
-      fetchPenghuni();
-    } else {
-      alert(data.message || 'Gagal menghapus data.');
-    }
-  });
-}
+            btn.style.pointerEvents = 'none';
+            btn.textContent = 'Mendaftarkan...';
 
-function openPenghuniModal() {
-  document.getElementById('formPenghuni').reset();
-  document.getElementById('penghuniModal').style.display = 'flex';
-}
+            fetch(`${API_URL}/penghuni`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(payload)
+            })
+                .then(async (res) => {
+                    const data = await res.json();
+                    return { status: res.status, data };
+                })
+                .then(({ status, data }) => {
+                    btn.style.pointerEvents = 'auto';
+                    btn.textContent = 'Daftarkan Penghuni';
 
-function closePenghuniModal() {
-  document.getElementById('penghuniModal').style.display = 'none';
-}
+                    if (status === 201 || data.success) {
+                        alert('Penghuni baru berhasil didaftarkan ke sistem!');
+                        closePenghuniModal();
+                        fetchPenghuni(); 
+                        fetchKamarTersedia(); 
+                    } else {
+                        console.error("❌ BACKEND VALIDATION FAILED:", data);
+                        if (data.errors && Array.isArray(data.errors)) {
+                            const listError = data.errors.map(err => `- [${err.field}]: ${err.message}`).join('\n');
+                            alert(`Gagal Validasi Backend:\n\n${listError}`);
+                        } else {
+                            alert(`Gagal Menyimpan: ${data.message || 'Periksa kecocokan data dengan KTP/HP.'}`);
+                        }
+                    }
+                })
+                .catch(err => {
+                    btn.style.pointerEvents = 'auto';
+                    btn.textContent = 'Daftarkan Penghuni';
+                    alert('Terjadi kesalahan koneksi jaringan ke server backend.');
+                });
+        }
 
-function handleLogout() {
-  localStorage.removeItem('token');
-  window.location.href = '/pages/login.html';
-}
-</script>
+        // 4. SOFT DELETE PENGHUNI
+        function deletePenghuni(id) {
+            if (!confirm('Apakah Anda yakin ingin menghapus data penghuni ini?')) return;
+            const token = localStorage.getItem('token');
+            
+            fetch(`${API_URL}/penghuni/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Data penghuni berhasil dihapus (Soft Delete aktif).');
+                        fetchPenghuni();
+                        fetchKamarTersedia();
+                    } else {
+                        alert(data.message || 'Gagal mengeksekusi penghapusan.');
+                    }
+                });
+        }
+
+        function openPenghuniModal() {
+            document.getElementById('formPenghuni').reset();
+            document.getElementById('penghuniModal').style.display = 'flex';
+        }
+
+        function closePenghuniModal() {
+            document.getElementById('penghuniModal').style.display = 'none';
+        }
+    </script>
 </body>
+
 </html>

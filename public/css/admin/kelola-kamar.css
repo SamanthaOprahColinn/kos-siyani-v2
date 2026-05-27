@@ -1,68 +1,105 @@
-/* css/admin/kelola-kamar.css */
+/* ============================================================
+   KELOLA KAMAR VIEW — Kos Siyani
+   Inherits: global.css (Buttons, Inputs, Modals, Badges are Globalized)
+   ============================================================ */
 
-/* Utilities */
-.text-center {
-    text-align: center;
+/* Skin khusus halaman kamar */
+.content {
+    background: #fbe6ec;
+    min-height: 100vh;
+    color: var(--text-cozy);
 }
 
-.p-20 {
-    padding: 20px;
-}
-
-.color-ccc {
-    color: #ccc;
-}
-
-.text-danger {
-    color: #dc3545; /* Merah untuk ikon hapus */
-}
-
-/* Header Area (Pencarian & Tombol) */
-.header-actions {
-    flex: 1;
-    max-width: 400px;
-}
-
-/* Tabel Customization */
-.table-catatan {
-    display: block;
-    max-width: 200px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.btn-icon {
-    font-size: 18px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    transition: transform 0.2s;
-}
-
-.btn-icon:hover {
-    transform: scale(1.1);
-}
-
-/* Modal Customization */
-.modal-custom {
-    max-width: 450px;
-}
-
-.modal-close-btn {
-    font-size: 20px;
-    background: none;
-    border: none;
-    cursor: pointer;
-}
-
-.form-grid-2 {
+/* Room Grid Layout */
+.room-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    margin-bottom: 12px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+    margin-top: 20px;
 }
 
-.form-hint {
-    color: #666;
-    font-size: 11px;
+/* Room Card Interactive Component */
+.room-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 30px;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(223, 168, 185, 0.3), inset 2px 2px 5px rgba(255, 255, 255, 0.8), inset -2px -2px 5px rgba(0, 0, 0, 0.05);
+    position: relative;
+    transition: transform 0.3s ease;
+}
+.room-card:hover {
+    transform: translateY(-8px) scale(1.02);
+}
+
+.room-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.room-number {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text-cozy);
+    background: rgba(255, 255, 255, 0.5);
+    padding: 6px 16px;
+    border-radius: 15px;
+    box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.8), inset -2px -2px 5px rgba(0, 0, 0, 0.05);
+}
+
+/* 3D Door Section */
+.door-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0;
+    background: rgba(255, 255, 255, 0.3);
+    padding: 12px;
+    border-radius: 20px;
+    box-shadow: inset 1px 2px 5px rgba(0,0,0,0.03);
+}
+
+.door-3d-icon {
+    font-size: 36px;
+    padding: 8px;
+    border-radius: 15px;
+    box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.8), inset -2px -2px 5px rgba(0, 0, 0, 0.05);
+}
+.door-3d-icon.available { background: #a8e6cf; color: #2d6a4f; }
+.door-3d-icon.occupied { background: #ffccd5; color: #a71e34; }
+
+/* Room Specification Meta */
+.room-details {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px dashed rgba(93, 68, 78, 0.1);
+    padding-bottom: 6px;
+}
+
+.room-notes {
+    background: rgba(255, 255, 255, 0.4);
+    padding: 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    margin-top: 12px;
+    font-style: italic;
+    min-height: 40px;
+}
+
+.room-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+/* Micro-interaction khusus tombol aksi kartu kamar */
+.btn-icon-clay:hover { 
+    transform: scale(1.15) rotate(5deg); 
 }

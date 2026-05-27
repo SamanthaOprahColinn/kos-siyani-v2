@@ -1,0 +1,70 @@
+/* css/admin/kelola-penghuni.css */
+
+/* Utilities & Helper Classes */
+.text-center {
+    text-align: center;
+}
+
+.p-20 {
+    padding: 20px;
+}
+
+.color-ccc {
+    color: #ccc;
+}
+
+.text-danger {
+    color: #dc3545;
+}
+
+/* layouting & responsive actions */
+.header-actions {
+    flex: 1;
+    max-width: 400px;
+}
+
+.table-truncate {
+    display: block;
+    max-width: 140px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.btn-icon {
+    font-size: 18px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.btn-icon:hover {
+    transform: scale(1.1);
+}
+
+/* Modal Form Configuration (Menampung Lebih Banyak Field) */
+.modal-custom {
+    max-width: 600px; /* Diperlebar agar muat 2 kolom dengan rapi */
+}
+
+.modal-close-btn {
+    font-size: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.form-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.form-hint {
+    color: #666;
+    font-size: 11px;
+    margin-top: 2px;
+    display: block;
+}
