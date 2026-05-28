@@ -1,3 +1,5 @@
+<!-- public/pages/admin/kelola-penghuni.html -->
+
 <!DOCTYPE html>
 <html lang="id">
 
@@ -26,6 +28,24 @@
 
                     <div style="display: flex; flex-direction: column; gap: 20px;">
 
+                        <div class="filter-action-header"
+                            style="display: flex; gap: 15px; flex-wrap: wrap; background: #ffffff; padding: 12px 16px; border-radius: 20px; box-shadow: 6px 6px 12px rgba(165, 215, 210, 0.2), inset -2px -2px 6px rgba(0,0,0,0.02), inset 2px 2px 5px #ffffff;">
+                            <div class="search-wrapper" style="flex: 1; min-width: 200px;">
+                                <input type="text" id="searchPenghuni" class="form-input-clay"
+                                    style="width: 100%; padding: 10px 16px; border-radius: 14px; border: 1px solid #e2e8f0; background: #f7fafc; box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05);"
+                                    placeholder="🔍 Cari nama penghuni..." oninput="debounceSearchPenghuni()" />
+                            </div>
+                            <div class="sort-wrapper" style="min-width: 220px;">
+                                <select id="sortPenghuni" class="form-input-clay"
+                                    style="width: 100%; padding: 10px 16px; border-radius: 14px; border: 1px solid #e2e8f0; background: #f7fafc; cursor: pointer; box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05);"
+                                    onchange="fetchPenghuni()">
+                                    <option value="name_asc">🔤 Nama Penghuni (A → Z)</option>
+                                    <option value="name_desc">🔤 Nama Penghuni (Z → A)</option>
+                                    <option value="newest">✨ Terbaru Bergabung</option>
+                                    <option value="oldest">⏳ Terlama Bergabung</option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="table-wrapper">
                             <div class="table-top">
                                 <div>
@@ -142,6 +162,8 @@
             </div>
             <form id="formEditPenghuni" onsubmit="updateTenant(event)">
                 <input type="hidden" id="editTenantId">
+                <input type="hidden" id="editTenantOldRoomId">
+
                 <div class="form-group">
                     <label>Nama Lengkap</label>
                     <input type="text" id="editTenantName" required minlength="3" maxlength="100">
@@ -154,6 +176,13 @@
                     <label>Alamat Email</label>
                     <input type="email" id="editTenantEmail" required>
                 </div>
+
+                <div class="form-group">
+                    <label>Kamar Saat Ini / Pindah Kamar</label>
+                    <select id="editTenantRoom" required>
+                    </select>
+                </div>
+
                 <div class="form-group">
                     <label>Alamat Asal</label>
                     <textarea id="editTenantAddress" required minlength="10" rows="2"></textarea>
@@ -195,312 +224,7 @@
     </div>
 
     <script src="../../js/layout-admin.js"></script>
-
-    <script>
-        const API_URL = 'http://localhost:5000/api';
-        window.currentPenghuni = [];
-        window.availableRoomsHtml = '<option value="">-- Pilih Nomor Kamar --</option>'; // Cache untuk dropdown kamar
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const token = localStorage.getItem('token');
-            if (!token) { window.location.href = '../login.html'; return; }
-
-            // Verifikasi User
-            fetch(`${API_URL}/auth/me`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            }).then(res => res.json()).then(data => {
-                if (data.success && data.data) {
-                    document.getElementById('profileName').textContent = data.data.nama_lengkap;
-                    document.getElementById('avatarInitial').textContent = data.data.nama_lengkap.charAt(0).toUpperCase();
-                }
-            }).catch(() => {
-                localStorage.removeItem('token');
-                window.location.href = '../login.html';
-            });
-
-            fetchKamarPilihan();
-            fetchPenghuni();
-        });
-
-        // 1. FETCH DATA KAMAR (Untuk Form Register & Form Restore)
-        function fetchKamarPilihan() {
-            const token = localStorage.getItem('token');
-            const selectRegister = document.getElementById('tenantRoom');
-            const selectRestore = document.getElementById('restoreTenantRoom');
-
-            fetch(`${API_URL}/kamar?status=tersedia`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            })
-                .then(res => res.json())
-                .then(resData => {
-                    const kamarList = resData.data?.data || resData.data || [];
-                    let optionsHtml = '<option value="">-- Pilih Nomor Kamar --</option>';
-
-                    if (kamarList.length > 0) {
-                        kamarList.forEach(k => {
-                            if (k.isDeleted === true || k.status_kamar === 'tidak tersedia' || k.status_kamar === 'terisi') return;
-
-                            const nomor = k.nomor_kamar || k.no_kamar || '??';
-                            const harga = k.harga_sewa ? ` - Rp ${Number(k.harga_sewa).toLocaleString('id-ID')}` : '';
-                            optionsHtml += `<option value="${k._id}">Kamar ${nomor}${harga} - Tersedia</option>`;
-                        });
-                    } else {
-                        optionsHtml = '<option value="">Tidak ada kamar kosong yang tersedia</option>';
-                    }
-
-                    // Terapkan ke kedua dropdown
-                    window.availableRoomsHtml = optionsHtml;
-                    selectRegister.innerHTML = optionsHtml;
-                    selectRestore.innerHTML = optionsHtml;
-                })
-                .catch(err => console.error('Gagal memuat kamar:', err));
-        }
-
-        // 2. FETCH PENGHUNI (Dipisah Aktif vs Non-Aktif)
-        function fetchPenghuni() {
-            const token = localStorage.getItem('token');
-            const tbodyAktif = document.getElementById('tenantTableBody');
-            const tbodyHistory = document.getElementById('historyTableBody');
-
-            tbodyAktif.innerHTML = '<tr><td colspan="5" style="text-align:center;">Memuat data...</td></tr>';
-            tbodyHistory.innerHTML = '<tr><td colspan="4" style="text-align:center;">Memuat data...</td></tr>';
-
-            fetch(`${API_URL}/penghuni`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-            })
-                .then(res => res.json())
-                .then(resData => {
-                    tbodyAktif.innerHTML = '';
-                    tbodyHistory.innerHTML = '';
-
-                    const penghuniList = resData.data?.data || resData.data || (Array.isArray(resData) ? resData : []);
-                    window.currentPenghuni = penghuniList;
-
-                    let countAktif = 0;
-                    let countHistory = 0;
-
-                    penghuniList.forEach(p => {
-                        const status = String(p.status_penghuni || 'aktif').toLowerCase();
-                        const isAktif = status === 'aktif';
-
-                        const kamarData = p.id_kamar || p.kamar_id || {};
-                        const nomorKamar = kamarData.nomor_kamar || kamarData.no_kamar || p.nomor_kamar || 'Belum ada';
-
-                        if (isAktif) {
-                            countAktif++;
-                            tbodyAktif.insertAdjacentHTML('beforeend', `
-                            <tr>
-                                <td class="font-bold">Kamar ${nomorKamar}</td>
-                                <td style="font-weight: 600;">${p.nama_lengkap || '-'}</td>
-                                <td style="font-size: 12px; color: var(--text-muted);">
-                                    <div><i class="ph ph-phone"></i> ${p.no_hp || p.nomor_hp || '-'}</div>
-                                    <div><i class="ph ph-envelope"></i> ${p.email || '-'}</div>
-                                </td>
-                                <td><span class="status-dot aktif">Aktif</span></td>
-                                <td>
-                                    <div class="action-flex">
-                                        <button class="btn btn-ghost btn-sm" style="color: #3182ce;" onclick="openEditModal('${p._id}')" title="Edit Data">
-                                            <i class="ph ph-pencil-simple"></i>
-                                        </button>
-                                        <button class="btn btn-ghost btn-sm" style="color: #e53e3e;" onclick="checkoutTenant('${p._id}')" title="Keluarkan Penghuni">
-                                            <i class="ph ph-sign-out"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        `);
-                        } else {
-                            countHistory++;
-                            tbodyHistory.insertAdjacentHTML('beforeend', `
-                            <tr style="opacity: 0.8;">
-                                <td style="font-weight: 600;">${p.nama_lengkap || '-'}</td>
-                                <td style="font-size: 12px; color: var(--text-muted);">
-                                    <div><i class="ph ph-phone"></i> ${p.no_hp || p.nomor_hp || '-'}</div>
-                                </td>
-                                <td>Kamar Terakhir: ${nomorKamar}</td>
-                                <td>
-                                    <button class="btn btn-ghost btn-sm" style="color: #38a169; width:100%; border: 1px solid #38a169;" onclick="openRestoreModal('${p._id}', '${p.nama_lengkap}')" title="Aktifkan Kembali">
-                                        <i class="ph ph-arrow-u-up-left"></i> Pulihkan
-                                    </button>
-                                </td>
-                            </tr>
-                        `);
-                        }
-                    });
-
-                    if (countAktif === 0) tbodyAktif.innerHTML = '<tr><td colspan="5"><div class="table-empty"><div class="table-empty-title">Tidak ada penghuni aktif</div></div></td></tr>';
-                    if (countHistory === 0) tbodyHistory.innerHTML = '<tr><td colspan="4"><div class="table-empty"><div class="table-empty-title">Belum ada riwayat penghuni</div></div></td></tr>';
-                })
-                .catch(() => {
-                    tbodyAktif.innerHTML = '<tr><td colspan="5" style="text-align: center; color: red;">Gagal memuat data.</td></tr>';
-                    tbodyHistory.innerHTML = '<tr><td colspan="4" style="text-align: center; color: red;">Gagal memuat data.</td></tr>';
-                });
-        }
-
-        // 3. TAMBAH PENGHUNI
-        function saveTenant(event) {
-            event.preventDefault();
-            const token = localStorage.getItem('token');
-            const roomId = document.getElementById('tenantRoom').value;
-
-            const payload = {
-                nama_lengkap: document.getElementById('tenantName').value.trim(),
-                no_ktp: document.getElementById('tenantKtp').value.trim(),
-                no_hp: document.getElementById('tenantHp').value.trim(),
-                email: document.getElementById('tenantEmail').value.trim(),
-                id_kamar: roomId,
-                alamat_asal: document.getElementById('tenantAddress').value.trim(),
-                status_penghuni: 'aktif'
-            };
-
-            const btn = document.getElementById('btnSaveTenant');
-            btn.innerHTML = 'Menyimpan...'; btn.style.pointerEvents = 'none';
-
-            fetch(`${API_URL}/penghuni`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                body: JSON.stringify(payload)
-            }).then(res => res.json()).then(data => {
-                btn.innerHTML = '<i class="ph ph-floppy-disk"></i> Simpan Data Penghuni'; btn.style.pointerEvents = 'auto';
-                if (data.success) {
-                    // Cegah double-click lokal
-                    const optTerpilih = document.getElementById('tenantRoom').querySelector(`option[value="${roomId}"]`);
-                    if (optTerpilih) { optTerpilih.disabled = true; optTerpilih.textContent += ' [TERISI]'; }
-
-                    document.getElementById('formPenghuni').reset();
-                    fetchPenghuni(); fetchKamarPilihan();
-                } else {
-                    alert('Gagal: ' + (data.message || 'Cek kembali data Anda.'));
-                }
-            });
-        }
-
-// 4. CHECKOUT (GANTI STATUS JADI 'keluar' SESUAI VALIDASI BACKEND)
-function checkoutTenant(id) {
-    if (!confirm('Apakah Anda yakin ingin mengeluarkan penghuni ini?\nData akan dipindah ke Riwayat dan kamar otomatis berstatus tersedia.')) return;
-
-    const token = localStorage.getItem('token');
-    
-    // Cari data lengkap penghuni dari array lokal
-    const target = window.currentPenghuni.find(p => p._id === id);
-    if (!target) return alert('Data tidak ditemukan!');
-
-    // Ekstrak ID kamar dengan aman
-    let roomId = target.id_kamar;
-    if (roomId && typeof roomId === 'object') roomId = roomId._id;
-    if (!roomId && target.kamar_id) {
-        roomId = typeof target.kamar_id === 'object' ? target.kamar_id._id : target.kamar_id;
-    }
-
-    // Siapkan payload dengan status 'keluar' agar lolos validasi ENUM backend
-    const payload = { 
-        nama_lengkap: target.nama_lengkap,
-        no_ktp: target.no_ktp ? String(target.no_ktp).trim() : '', 
-        no_hp: target.no_hp || target.nomor_hp ? String(target.no_hp || target.nomor_hp).trim() : '',
-        email: target.email || '-',
-        alamat_asal: target.alamat_asal || '-',
-        id_kamar: roomId, 
-        status_penghuni: 'keluar' // <-- Diubah dari 'nonaktif' menjadi 'keluar'
-    };
-
-    fetch(`${API_URL}/penghuni/${id}`, {
-        method: 'PATCH',
-        headers: { 
-            'Content-Type': 'application/json', 
-            'Authorization': `Bearer ${token}` 
-        },
-        body: JSON.stringify(payload)
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            alert('Penghuni berhasil dikeluarkan & masuk ke riwayat!');
-            fetchPenghuni(); // Refresh tabel aktif & riwayat
-            fetchKamarPilihan(); // Refresh dropdown kamar agar kembali tersedia
-        } else {
-            alert('Gagal mengeluarkan penghuni: ' + (data.message || 'Validasi Gagal'));
-        }
-    })
-    .catch(() => alert('Terjadi masalah koneksi.'));
-}
-        // 5. MODAL EDIT (Aktif Saja)
-        function openEditModal(id) {
-            const target = window.currentPenghuni.find(p => p._id === id);
-            if (!target) return;
-            document.getElementById('editTenantId').value = target._id;
-            document.getElementById('editTenantName').value = target.nama_lengkap;
-            document.getElementById('editTenantHp').value = target.no_hp || target.nomor_hp || '';
-            document.getElementById('editTenantEmail').value = target.email || '';
-            document.getElementById('editTenantAddress').value = target.alamat_asal || '';
-            document.getElementById('editTenantModal').style.display = 'flex';
-        }
-        function closeEditModal() { document.getElementById('editTenantModal').style.display = 'none'; }
-
-        function updateTenant(event) {
-            event.preventDefault();
-            const token = localStorage.getItem('token');
-            const id = document.getElementById('editTenantId').value;
-            const payload = {
-                nama_lengkap: document.getElementById('editTenantName').value.trim(),
-                no_hp: document.getElementById('editTenantHp').value.trim(),
-                email: document.getElementById('editTenantEmail').value.trim(),
-                alamat_asal: document.getElementById('editTenantAddress').value.trim(),
-            };
-            fetch(`${API_URL}/penghuni/${id}`, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                body: JSON.stringify(payload)
-            }).then(res => res.json()).then(data => {
-                if (data.success) {
-                    closeEditModal(); fetchPenghuni();
-                } else {
-                    alert('Gagal memperbarui: ' + data.message);
-                }
-            });
-        }
-
-        // 6. MODAL RESTORE (Pulihkan Penghuni)
-        function openRestoreModal(id, nama) {
-            document.getElementById('restoreTenantId').value = id;
-            document.getElementById('restoreTenantNameDisplay').textContent = nama;
-            document.getElementById('restoreTenantRoom').innerHTML = window.availableRoomsHtml; // Reset dropdown pakai cache terbaru
-            document.getElementById('restoreTenantModal').style.display = 'flex';
-        }
-        function closeRestoreModal() { document.getElementById('restoreTenantModal').style.display = 'none'; }
-
-        function submitRestoreTenant(event) {
-            event.preventDefault();
-            const token = localStorage.getItem('token');
-            const id = document.getElementById('restoreTenantId').value;
-            const newRoomId = document.getElementById('restoreTenantRoom').value;
-
-            const payload = {
-                status_penghuni: 'aktif',
-                id_kamar: newRoomId
-            };
-
-            const btn = document.getElementById('btnRestoreTenant');
-            btn.innerHTML = 'Memulihkan...'; btn.style.pointerEvents = 'none';
-
-            fetch(`${API_URL}/penghuni/${id}`, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                body: JSON.stringify(payload)
-            }).then(res => res.json()).then(data => {
-                btn.innerHTML = '<i class="ph ph-check"></i> Aktifkan & Simpan'; btn.style.pointerEvents = 'auto';
-                if (data.success) {
-                    closeRestoreModal();
-                    fetchPenghuni();
-                    fetchKamarPilihan();
-                } else {
-                    alert('Gagal memulihkan penghuni: ' + data.message);
-                }
-            }).catch(() => {
-                btn.innerHTML = '<i class="ph ph-check"></i> Aktifkan & Simpan'; btn.style.pointerEvents = 'auto';
-            });
-        }
-
-    </script>
+    <script src="../../js/admin/kelola-penghuni.js"></script>
 </body>
 
 </html>

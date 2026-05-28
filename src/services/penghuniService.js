@@ -30,18 +30,20 @@ export const createPenghuni = async (penghuniData) => {
     throw new ApiError(400, 'Data penghuni dengan no_ktp, email, atau no_hp sudah terdaftar');
   }
 
-  // 2. BARU: Validasi & Update status kamar jika id_kamar diisi saat daftar
+// 2. BARU: Validasi & Update status kamar jika id_kamar diisi saat daftar
   if (id_kamar) {
     const kamar = await Kamar.findById(id_kamar);
     if (!kamar) {
       throw new ApiError(404, 'Kamar tidak ditemukan');
     }
-    if (kamar.status_kamar === 'tidak tersedia') {
-      throw new ApiError(400, 'Kamar tersebut sudah terisi oleh penghuni lain');
+    
+    // PERBAIKAN: Tolak pendaftaran jika kamar berstatus 'terisi' atau 'tidak tersedia'
+    if (kamar.status_kamar === 'terisi' || kamar.status_kamar === 'tidak tersedia') {
+      throw new ApiError(400, 'Kamar tersebut sudah terisi atau tidak dapat digunakan');
     }
     
-    // Ubah status kamar menjadi tidak tersedia
-    kamar.status_kamar = 'tidak tersedia';
+    // PERBAIKAN: Ubah status kamar menjadi 'terisi' (sinkron dengan kelola kamar)
+    kamar.status_kamar = 'terisi';
     await kamar.save();
   }
 
@@ -121,13 +123,14 @@ export const getAllPenghuni = async (queryParams = {}) => {
   const order = sortOrder.toLowerCase() === 'asc' ? 1 : -1;
   sortObject[sortField] = order;
 
-  // Execute query
+  // === EXECUTE QUERY DENGAN POPULATE KAMAR ===
   const [penghuni, total] = await Promise.all([
     Penghuni.find(filter)
       .sort(sortObject)
       .skip(skip)
       .limit(limitNum)
       .populate('user_id', 'email role isActive')
+      .populate('id_kamar') // <--- BARIS AJAIBNYA DI SINI
       .lean(),
     Penghuni.countDocuments(filter),
   ]);

@@ -154,6 +154,7 @@ export const getDeleted = asyncHandler(async (req, res) => {
       .limit(limitNum)
       .sort({ deletedAt: -1 })
       .populate('user_id', 'email role isActive')
+      .populate('id_kamar') // <--- TAMBAHKAN BARIS INI
       .lean(),
     Penghuni.countDocuments({ isDeleted: true }),
   ]);
