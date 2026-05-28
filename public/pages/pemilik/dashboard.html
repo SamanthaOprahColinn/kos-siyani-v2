@@ -1,77 +1,31 @@
+<!-- public\pages\pemilik\dashboard.html -->
+ 
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Dashboard Owner — Kos Siyani</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css"/>
-<link rel="stylesheet" href="../../css/global.css"/>
-<link rel="stylesheet" href="../../css/pemilik/dashboard.css"/>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard Owner — Kos Siyani</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css"/>
+  <link rel="stylesheet" href="../../css/global.css"/>
+  <link rel="stylesheet" href="../../css/pemilik/dashboard.css"/>
+
 </head>
 <body>
 
 <div class="layout">
-  <aside class="sidebar">
-    <div class="sidebar-brand">
-      <div class="sidebar-brand-logo">KS</div>
-      <div>
-        <div class="sidebar-brand-name">Kos Siyani</div>
-        <div class="sidebar-brand-sub">Admin Panel v2</div>
-      </div>
-    </div>
-    
-    <nav class="sidebar-nav">
-      <div class="sidebar-section-title">Utama</div>
-      <a href="#" class="sidebar-link active">
-        <i class="ph ph-squares-four sidebar-link-icon"></i>
-        <span>Dashboard</span>
-      </a>
-      
-      <div class="sidebar-section-title">Manajemen</div>
-      <a href="/pages/pemilik/kelola-kamar.html" class="sidebar-link">
-        <i class="ph ph-door-open sidebar-link-icon"></i>
-        <span>Kelola Kamar</span>
-      </a>
-      <a href="/pages/pemilik/kelola-penghuni.html" class="sidebar-link">
-        <i class="ph ph-users sidebar-link-icon"></i>
-        <span>Kelola Penghuni</span>
-      </a>
-      <a href="#" class="sidebar-link" onclick="alert('Modul Transaksi segera hadir')">
-        <i class="ph ph-receipt sidebar-link-icon"></i>
-        <span>Transaksi</span>
-      </a>
-
-      <div class="sidebar-section-title">Sistem</div>
-      <a href="#" class="sidebar-link" onclick="openAdminModal()">
-        <i class="ph ph-user-plus sidebar-link-icon"></i>
-        <span>Tambah Admin Baru</span>
-      </a>
-      
-      <div class="sidebar-section-title">Akun</div>
-      <a href="#" class="sidebar-link" onclick="handleLogout()">
-        <i class="ph ph-sign-out sidebar-link-icon"></i>
-        <span>Keluar</span>
-      </a>
-    </nav>
-  </aside>
+  
+  <div id="sidebar-container"></div>
 
   <div class="main">
     <header class="topbar">
       <h1 class="topbar-title">Dashboard Pemilik</h1>
       
-      <div class="flex items-center gap-3">
-        <div class="text-right">
-          <div class="font-bold text-dark" id="profileName">Memuat...</div>
-          <span class="badge badge-pink text-xs" id="profileRole">PEMILIK</span>
-        </div>
-        <div class="avatar avatar-md avatar-pink avatar-ring">
-          <span id="avatarInitial">-</span>
-        </div>
-      </div>
+      <div id="topbar-container"></div>
     </header>
 
     <main class="content page-enter">
-      <div class="grid-4 mb-6">
+      <div class="admin-stats" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 24px;">
         <div class="stat-card">
           <div class="stat-icon stat-icon-pink"><i class="ph ph-house-line"></i></div>
           <div>
@@ -105,39 +59,34 @@
         </div>
       </div>
 
-      <div class="mt-6">
-        <div class="table-wrapper">
-          <div class="p-4 flex items-center justify-between" style="border-bottom: 1px solid var(--glass-border);">
-            <h3 class="font-display font-bold text-dark">Ikhtisar Pembayaran Kamar (Real-time)</h3>
-            <button class="btn btn-ghost btn-sm" onclick="fetchPembayaran()"><i class="ph ph-arrows-clockwise"></i> Segarkan</button>
+      <div class="table-wrapper">
+        <div class="table-top">
+          <div>
+            <div class="table-top-title">Ikhtisar Pembayaran Kamar</div>
+            <div class="table-top-sub">Data real-time dari database</div>
           </div>
-          <table>
-            <thead>
-              <tr>
-                <th>No. Kamar</th>
-                <th>Nama Penghuni</th>
-                <th>Status Pembayaran</th>
-              </tr>
-            </thead>
-            <tbody id="paymentTableBody">
-              <tr>
-                <td colspan="3" style="text-align: center; padding: 20px;">Menghubungkan ke database...</td>
-              </tr>
-            </tbody>
-          </table>
+          <button class="btn btn-ghost btn-sm" onclick="fetchPembayaran()">
+            <i class="ph ph-arrows-clockwise"></i> Segarkan
+          </button>
         </div>
+        <table>
+          <thead>
+            <tr>
+              <th>No. Kamar</th>
+              <th>Nama Penghuni</th>
+              <th>Status Pembayaran</th>
+            </tr>
+          </thead>
+          <tbody id="paymentTableBody">
+            <tr>
+              <td colspan="3" style="text-align: center; padding: 20px;">Menghubungkan ke database...</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </main>
     
-    <footer class="main-footer">
-      <div class="footer-text">
-        &copy; 2026 <span>Kos Siyani</span>. Hak cipta dilindungi undang-undang.
-      </div>
-      <div class="footer-links">
-        <a href="#">Bantuan Operasional</a>
-        <a href="#">Hubungi Developer</a>
-      </div>
-    </footer>
+    <div id="footer-container"></div>
   </div>
 </div>
 
@@ -145,12 +94,16 @@
   <div class="modal">
     <div class="modal-header">
       <h3 class="modal-title">Tambah Akun Admin Baru</h3>
-      <button onclick="closeAdminModal()" style="font-size: 20px;"><i class="ph ph-x"></i></button>
+      <button onclick="closeAdminModal()" style="font-size: 20px; background: none; border: none; cursor: pointer;">
+        <i class="ph ph-x"></i>
+      </button>
     </div>
-    <div class="error-box" id="adminErrorBox" style="margin-bottom: 12px;">
+    
+    <div class="error-box" id="adminErrorBox" style="margin-bottom: 12px; display: none;">
       <i class="ph ph-warning-circle"></i>
       <span id="adminErrorMsg"></span>
     </div>
+    
     <div class="flex flex-col gap-4">
       <div class="form-group">
         <label class="form-label">Nama Lengkap</label>
@@ -162,9 +115,9 @@
       </div>
       <div class="form-group">
         <label class="form-label">Password</label>
-        <div class="input-wrap">
+        <div class="input-wrap" style="position: relative;">
           <input type="password" class="form-input has-toggle" id="adminPassword" placeholder="Minimal 8 karakter kombinasi"/>
-          <button type="button" class="pw-toggle" onclick="toggleAdminPw()">
+          <button type="button" class="pw-toggle" onclick="toggleAdminPw()" style="position: absolute; right: 10px; top: 10px; background: none; border: none; cursor: pointer;">
             <i class="ph ph-eye" id="adminPwIcon"></i>
           </button>
         </div>
@@ -174,201 +127,8 @@
   </div>
 </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const token = localStorage.getItem('token');
-  if (!token) {
-    window.location.href = '../login.html';
-    return;
-  }
-  
-  fetch('http://localhost:5000/api/auth/me', {
-    method: 'GET',
-    headers: { 'Authorization': `Bearer ${token}` }
-  })
-  .then(res => res.json())
-  .then(data => {
-    if (data.success && data.data) {
-      if (data.data.role === 'admin') {
-        window.location.href = '../admin/dashboard.html';
-        return;
-      }
-      document.getElementById('profileName').textContent = data.data.nama_lengkap;
-      document.getElementById('avatarInitial').textContent = data.data.nama_lengkap.charAt(0).toUpperCase();
-    }
-  })
-  .catch(() => {
-    localStorage.removeItem('token');
-    window.location.href = '../login.html';
-  });
+<script src="../../js/layout-pemilik.js"></script>
+<script src="../../js/pemilik/dashboard-pemilik.js"></script>
 
-  fetchDashboardStats();
-  fetchPembayaran();
-});
-
-function fetchDashboardStats() {
-  const token = localStorage.getItem('token');
-  const headers = { 'Authorization': `Bearer ${token}` };
-
-  fetch('http://localhost:5000/api/kamar/stats/summary', { method: 'GET', headers })
-    .then(res => res.json())
-    .then(data => {
-      if(data.success && data.data) {
-        document.getElementById('statTotalKamar').textContent = data.data.total || '0';
-        document.getElementById('statKamarTersedia').textContent = data.data.tersedia || '0';
-      }
-    }).catch(() => {
-      document.getElementById('statTotalKamar').textContent = 'Error';
-      document.getElementById('statKamarTersedia').textContent = 'Error';
-    });
-
-  fetch('http://localhost:5000/api/penghuni/stats/summary', { method: 'GET', headers })
-    .then(res => res.json())
-    .then(data => {
-      if(data.success && data.data) {
-        document.getElementById('statPenghuniAktif').textContent = data.data.aktif || '0';
-      }
-    }).catch(() => document.getElementById('statPenghuniAktif').textContent = 'Error');
-
-  fetch('http://localhost:5000/api/pembayaran/stats/summary', { method: 'GET', headers })
-    .then(res => res.json())
-    .then(data => {
-      if(data.success && data.data) {
-        const nominal = data.data.totalPemasukan || 0;
-        document.getElementById('statPemasukan').textContent = 'Rp ' + nominal.toLocaleString('id-ID');
-      }
-    }).catch(() => document.getElementById('statPemasukan').textContent = 'Error');
-}
-
-// FUNGSI MEMUAT DATA TABEL PEMBAYARAN (ROUTE 6.1)
-function fetchPembayaran() {
-  const token = localStorage.getItem('token');
-  const tbody = document.getElementById('paymentTableBody');
-  tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 20px;">Menarik ringkasan transaksi...</td></tr>';
-
-  fetch('http://localhost:5000/api/pembayaran', {
-    method: 'GET',
-    headers: { 'Authorization': `Bearer ${token}` }
-  })
-  .then(res => res.json())
-  .then(data => {
-    tbody.innerHTML = '';
-    if (data.success && data.data && data.data.length > 0) {
-      data.data.forEach(item => {
-        const tr = document.createElement('tr');
-        
-        let statusBadge = '';
-        const status = (item.status_pembayaran || '').toLowerCase();
-        if(status === 'lunas') {
-          statusBadge = '<span class="badge badge-success">Lunas</span>';
-        } else if(status === 'tenggat waktu' || status === 'pending') {
-          statusBadge = '<span class="badge badge-warning">Tenggat Waktu</span>';
-        } else {
-          statusBadge = '<span class="badge badge-danger">Belum Bayar</span>';
-        }
-
-        tr.innerHTML = `
-          <td class="font-bold">Kamar ${item.nomor_kamar || '-'}</td>
-          <td>${item.nama_penghuni || '-'}</td>
-          <td>${statusBadge}</td>
-        `;
-        tbody.appendChild(tr);
-      });
-    } else {
-      tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 20px; color: var(--n500);">Belum ada riwayat pembayaran transaksi.</td></tr>';
-    }
-  })
-  .catch(err => {
-    console.error(err);
-    tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 20px; color: #dc2626;">Gagal sinkronisasi data tabel dengan API backend.</td></tr>';
-  });
-}
-
-function openAdminModal() {
-  document.getElementById('adminErrorBox').classList.remove('show');
-  document.getElementById('adminModal').style.display = 'flex';
-  document.getElementById('adminName').value = '';
-  document.getElementById('adminEmail').value = '';
-  const pwInput = document.getElementById('adminPassword');
-  pwInput.value = '';
-  pwInput.type = 'password';
-  document.getElementById('adminPwIcon').className = 'ph ph-eye';
-}
-
-function closeAdminModal() {
-  document.getElementById('adminModal').style.display = 'none';
-}
-
-function toggleAdminPw() {
-  const inp = document.getElementById('adminPassword');
-  const ico = document.getElementById('adminPwIcon');
-  if (inp.type === 'password') {
-    inp.type = 'text';
-    ico.className = 'ph ph-eye-slash';
-  } else {
-    inp.type = 'password';
-    ico.className = 'ph ph-eye';
-  }
-}
-
-function saveAdmin() {
-  const nama_lengkap = document.getElementById('adminName').value.trim();
-  const email = document.getElementById('adminEmail').value.trim();
-  const password = document.getElementById('adminPassword').value;
-  const errorBox = document.getElementById('adminErrorBox');
-  const errorMsg = document.getElementById('adminErrorMsg');
-  const token = localStorage.getItem('token');
-
-  errorBox.classList.remove('show');
-
-  if(!nama_lengkap || !email || !password) {
-    errorMsg.textContent = 'Semua kolom formulir wajib diisi.';
-    errorBox.classList.add('show');
-    return;
-  }
-
-  const btn = document.getElementById('btnSaveAdmin');
-  btn.style.pointerEvents = 'none';
-  btn.textContent = 'Mendaftarkan...';
-
-  fetch('http://localhost:5000/api/auth/create-admin', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    },
-    body: JSON.stringify({ nama_lengkap, email, password, role: 'admin' })
-  })
-  .then(res => res.json())
-  .then(data => {
-    btn.style.pointerEvents = 'auto';
-    btn.textContent = 'Daftarkan Admin';
-
-    if(data.success) {
-      alert('Akun Admin operasional baru berhasil didaftarkan!');
-      closeAdminModal();
-    } else {
-      if (data.errors && Array.isArray(data.errors) && data.errors.length > 0) {
-        errorMsg.textContent = data.errors[0].message || data.errors[0];
-      } else {
-        errorMsg.textContent = data.message || 'Gagal mendaftarkan akun admin.';
-      }
-      errorBox.classList.add('show');
-    }
-  })
-  .catch(err => {
-    btn.style.pointerEvents = 'auto';
-    btn.textContent = 'Daftarkan Admin';
-    errorMsg.textContent = 'Gangguan koneksi jaringan menuju server.';
-    errorBox.classList.add('show');
-    console.error(err);
-  });
-}
-
-function handleLogout() {
-  localStorage.removeItem('token');
-  window.location.href = '../login.html';
-}
-</script>
 </body>
 </html>
