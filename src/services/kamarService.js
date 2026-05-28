@@ -8,13 +8,13 @@ import { ApiError } from '../utils/ApiError.js';
 export const createKamar = async (kamarData) => {
   const { nomor_kamar } = kamarData;
 
-  // Check unique nomor_kamar
   const existingKamar = await Kamar.findOne({ nomor_kamar });
   if (existingKamar) {
     throw new ApiError(400, 'Nomor kamar sudah terdaftar');
   }
 
-  const kamar = await Kamar.create(kamarData);
+  // Inject isDeleted: false secara paksa di sini
+  const kamar = await Kamar.create({ ...kamarData, isDeleted: false });
   return kamar;
 };
 
@@ -22,29 +22,14 @@ export const createKamar = async (kamarData) => {
  * Get all kamar dengan search, filter, pagination, sorting
  */
 export const getAllKamar = async (queryParams = {}) => {
-  const {
-    search,
-    status,
-    tipe,
-    page = 1,
-    limit = 10,
-    sort = 'createdAt',
-  } = queryParams;
+  const { search, status, tipe, page = 1, limit = 10, sort = 'createdAt' } = queryParams;
 
-  // Build filter
-  let filter = {};
+  // Set default filter: HANYA AMBIL YANG BELUM DIHAPUS
+  let filter = { isDeleted: false };
 
-  // Status filter
-  if (status) {
-    filter.status_kamar = status;
-  }
+  if (status) filter.status_kamar = status;
+  if (tipe) filter.tipe_kamar = tipe.toUpperCase();
 
-  // Tipe filter
-  if (tipe) {
-    filter.tipe_kamar = tipe.toUpperCase();
-  }
-
-  // Search filter (nomor_kamar, tipe_kamar)
   if (search) {
     filter.$or = [
       { nomor_kamar: parseInt(search) || -1 },
@@ -52,58 +37,22 @@ export const getAllKamar = async (queryParams = {}) => {
     ];
   }
 
-  // Pagination
   const pageNum = parseInt(page, 10) || 1;
   const limitNum = parseInt(limit, 10) || 10;
   const skip = (pageNum - 1) * limitNum;
 
-  // Sorting
   const sortObject = {};
-  let sortField = 'createdAt';
-  let sortOrder = -1; // default descending
-
-  if (sort) {
-    if (sort.startsWith('-')) {
-      sortField = sort.substring(1);
-      sortOrder = -1;
-    } else {
-      sortField = sort;
-      sortOrder = 1;
-    }
-
-    const validSortFields = [
-      'nomor_kamar',
-      'harga_sewa',
-      'lantai',
-      'createdAt',
-    ];
-
-    if (!validSortFields.includes(sortField)) {
-      throw new ApiError(400, 'Field sorting tidak valid');
-    }
-  }
+  let sortField = sort.startsWith('-') ? sort.substring(1) : sort;
+  let sortOrder = sort.startsWith('-') ? -1 : 1;
 
   sortObject[sortField] = sortOrder;
 
-  // Execute query
   const [kamar, total] = await Promise.all([
-    Kamar.find(filter)
-      .sort(sortObject)
-      .skip(skip)
-      .limit(limitNum)
-      .lean(),
+    Kamar.find(filter).sort(sortObject).skip(skip).limit(limitNum).lean(),
     Kamar.countDocuments(filter),
   ]);
 
-  return {
-    data: kamar,
-    pagination: {
-      total,
-      page: pageNum,
-      limit: limitNum,
-      pages: Math.ceil(total / limitNum),
-    },
-  };
+  return { data: kamar, pagination: { total, page: pageNum, limit: limitNum, pages: Math.ceil(total / limitNum) } };
 };
 
 /**
@@ -172,7 +121,8 @@ export const deleteKamar = async (id) => {
  * Restore kamar (Undo soft delete)
  */
 export const restoreKamar = async (id) => {
-  const kamar = await Kamar.findById(id, {}, { includeDeleted: true });
+  // Masukkan kembali opsi { includeDeleted: true }
+  const kamar = await Kamar.findById(id).setOptions({ includeDeleted: true });
 
   if (!kamar) {
     throw new ApiError(404, 'Kamar tidak ditemukan');
@@ -256,11 +206,10 @@ export const getKamarStats = async () => {
 export const searchKamar = async (queryParams = {}) => {
   const { q, page = 1, limit = 10 } = queryParams;
 
-  if (!q) {
-    throw new ApiError(400, 'Parameter pencarian (q) harus diisi');
-  }
+  if (!q) throw new ApiError(400, 'Parameter pencarian (q) harus diisi');
 
   const filter = {
+    isDeleted: false, // Tambahkan baris ini
     $or: [
       { nomor_kamar: parseInt(q) || -1 },
       { tipe_kamar: q.toUpperCase() },
@@ -273,23 +222,11 @@ export const searchKamar = async (queryParams = {}) => {
   const skip = (pageNum - 1) * limitNum;
 
   const [kamar, total] = await Promise.all([
-    Kamar.find(filter)
-      .skip(skip)
-      .limit(limitNum)
-      .sort({ createdAt: -1 })
-      .lean(),
+    Kamar.find(filter).skip(skip).limit(limitNum).sort({ createdAt: -1 }).lean(),
     Kamar.countDocuments(filter),
   ]);
 
-  return {
-    data: kamar,
-    pagination: {
-      total,
-      page: pageNum,
-      limit: limitNum,
-      pages: Math.ceil(total / limitNum),
-    },
-  };
+  return { data: kamar, pagination: { total, page: pageNum, limit: limitNum, pages: Math.ceil(total / limitNum) } };
 };
 
 /**
@@ -302,11 +239,12 @@ export const getDeletedKamar = async (page = 1, limit = 10) => {
 
   const [kamar, total] = await Promise.all([
     Kamar.find({ isDeleted: true })
+      .setOptions({ includeDeleted: true }) // <-- SURAT IZIN LEWAT MIDDLEWARE
       .skip(skip)
       .limit(limitNum)
       .sort({ updatedAt: -1 })
       .lean(),
-    Kamar.countDocuments({ isDeleted: true }),
+    Kamar.countDocuments({ isDeleted: true }).setOptions({ includeDeleted: true }), // <-- Jangan lupa di count juga
   ]);
 
   return {
