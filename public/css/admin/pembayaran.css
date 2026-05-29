@@ -1,4 +1,4 @@
-/* public/css/admin/pembayaran.css  */
+/* public/css/admin/pembayaran.css */
 
 /* ─── 1. SCOPED LOCAL TOKENS ─── */
 :is(.tagihan-container, .tagihan-container-wide) {
@@ -19,21 +19,60 @@
   margin: 0 auto;
   padding: 10px;
 }
-.tagihan-container      { max-width: 850px; }
-.tagihan-container-wide { max-width: 1100px; }
+
+.tagihan-container {
+  max-width: 850px;
+}
+
+.tagihan-container-wide {
+  max-width: 1100px;
+}
 
 /* Struktur Grid & Flex Utility */
-.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
-.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-.flex { display: flex; }
-.flex-col { flex-direction: column; }
-.items-center { align-items: center; }
-.justify-between { justify-content: space-between; }
-.justify-center { justify-content: center; }
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
 .mb-3 { margin-bottom: 12px; }
 .mb-4 { margin-bottom: 16px; }
 .mb-6 { margin-bottom: 24px; }
 .mt-6 { margin-top: 24px; }
+
+.card.flex-col {
+  grid-column: span 1;
+}
+
+.grid-3>.card:first-child {
+  grid-column: span 2;
+}
 
 /* ─── 3. CLAYMORPHISM COMPONENTS ─── */
 :is(.tagihan-container, .tagihan-container-wide) .clay-header {
@@ -46,7 +85,7 @@
   backdrop-filter: blur(10px);
   margin-bottom: 25px;
   border: 1px solid rgba(255, 255, 255, 0.6);
-  box-shadow: 
+  box-shadow:
     inset 2px 2px 5px rgba(255, 255, 255, 0.5),
     inset -2px -2px 5px rgba(0, 0, 0, 0.02),
     0 10px 25px rgba(0, 0, 0, 0.04);
@@ -59,19 +98,11 @@
   padding: 35px;
   border: 2px solid rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(12px);
-  box-shadow: 
+  box-shadow:
     inset 4px 4px 8px rgba(255, 255, 255, 0.7),
     inset -4px -4px 8px rgba(0, 0, 0, 0.03),
     10px 15px 35px rgba(0, 0, 0, 0.05);
   height: 100%;
-}
-
-.card.flex-col {
-  grid-column: span 1;
-}
-
-.grid-3 > .card:first-child {
-  grid-column: span 2;
 }
 
 /* ─── 4. FORM ELEMENTS & CLAY INPUTS ─── */
@@ -79,6 +110,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  margin-bottom: 16px;
 }
 
 .form-label {
@@ -87,44 +119,54 @@
   color: #4a5568;
   padding-left: 6px;
 }
-.form-label .req { color: #e53e3e; }
 
-/* Style Universal Input & Select */
-.form-input, 
+.form-label .req {
+  color: #e53e3e;
+}
+
+.form-input,
 .form-input-clay {
   width: 100%;
-  padding: 14px 16px;
-  border-radius: 16px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  background: rgba(247, 250, 252, 0.7);
-  font-size: 14px;
-  color: var(--local-text-main);
+  padding: 10px 14px;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  background: #f7fafc;
+  font-size: 13.5px;
+  color: #5d444e;
   outline: none;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 
-    inset 2px 2px 4px rgba(0, 0, 0, 0.04), 
-    1px 1px 2px rgba(255, 255, 255, 0.8);
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+  box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.05);
 }
 
-/* Focus States Bersama */
-.form-input:focus, 
+.form-input:focus,
 .form-input-clay:focus {
+  border-color: #ffccd5;
   background: #ffffff;
-  border-color: var(--local-focus-yellow);
-  box-shadow: 
-    inset 1px 1px 2px rgba(0, 0, 0, 0.02),
-    0 0 0 4px var(--local-focus-shadow);
+  box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.02), 0 0 0 3px rgba(255, 204, 213, 0.4);
 }
 
-/* Read-Only State (Kamar Kos) */
-input[readonly] {
+input[readonly], .input-readonly {
   color: var(--local-text-muted);
   box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.03);
-  background: rgba(0, 0, 0, 0.02) !important;
+  background: rgba(0, 0, 0, 0.04) !important;
   cursor: not-allowed;
 }
 
-/* ─── 5. EXTRA CUSTOM STYLES FROM INLINE HTML ─── */
+select.form-input-clay {
+  cursor: pointer;
+}
+
+.form-row {
+  display: flex;
+  gap: 12px;
+}
+
+.form-col {
+  flex: 1;
+}
+
+/* ─── 5. COMPONENTS MODIFIERS & BUTTONS ─── */
 .pembayaran-title {
   padding-left: 0 !important;
 }
@@ -146,36 +188,57 @@ input[readonly] {
   margin-top: 8px;
 }
 
-/* Modifier khusus Tombol Riwayat (Warna Gelap Global) */
 .btn-clay-yellow {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: #fef08a; /* Kuning pastel lembut (Yellow 200) */
-  color: #854d0e;      /* Teks cokelat tua/gelap agar kontrasnya aman dan terbaca (Yellow 800) */
+  background: #fef08a;
+  color: #854d0e;
   border: none;
   padding: 11px 24px;
   border-radius: 30px;
-  font-family: var(--fd);
   font-weight: 800;
   font-size: 14px;
   cursor: pointer;
-  box-shadow: inset -4px -4px 8px #ca8a04, 
-    inset 4px 4px 8px #ffffff, 
-    0 12px 24px rgba(234, 179, 8, 0.25);
+  box-shadow: inset -4px -4px 8px #ca8a04, inset 4px 4px 8px #ffffff, 0 12px 24px rgba(234, 179, 8, 0.25);
   transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   text-decoration: none;
 }
 
 .btn-clay-yellow:hover {
-  background: #fef08a; /* Tetap pertahankan warna dasar agar tidak terlalu mencolok */
   transform: translateY(-3px);
-  /* Inset shadow disesuaikan: bayangan dalam gelap pakai kuning tua, highlight atas pakai putih bersih */
-  box-shadow: 
-    inset -4px -4px 8px #9b6b03, 
-    inset 4px 4px 8px #ffffff, 
-    0 12px 24px rgba(130, 99, 8, 0.25); /* Glow bayangan bawah warna kuning pastel */
+  box-shadow: inset -4px -4px 8px #9b6b03, inset 4px 4px 8px #ffffff, 0 12px 24px rgba(130, 99, 8, 0.25);
   text-decoration: none;
+}
+
+.btn-trash {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);
+  color: var(--text-cozy, #4a5568);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  padding: 12px 24px;
+  border-radius: 20px;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 4px 4px 15px rgba(223, 168, 185, 0.2),
+    inset 2px 2px 5px rgba(255, 255, 255, 0.9),
+    inset -2px -2px 5px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.btn-trash:hover {
+  transform: translateY(-3px) scale(1.02);
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.btn-submit-block {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  margin-top: 10px;
 }
 
 /* ─── 6. MINI STATS & ICONS ─── */
@@ -189,15 +252,24 @@ input[readonly] {
   align-items: center;
   justify-content: center;
   font-size: 28px;
-  margin: 0 auto 12px; /* Otomatis ke tengah */
-  box-shadow: 
-    inset 3px 3px 6px rgba(255, 255, 255, 0.6),
-    inset -3px -3px 6px rgba(0, 0, 0, 0.06),
-    0 4px 12px rgba(229, 62, 62, 0.15);
+  margin: 0 auto 12px;
+  box-shadow: inset 3px 3px 6px rgba(255, 255, 255, 0.6), inset -3px -3px 6px rgba(0, 0, 0, 0.06), 0 4px 12px rgba(229, 62, 62, 0.15);
 }
 
-.stat-label { font-size: 11px; font-weight: 700; color: #e53e3e; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
-.stat-sub { font-size: 13px; color: var(--local-text-muted); line-height: 1.5; }
+.stat-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #e53e3e;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.stat-sub {
+  font-size: 13px;
+  color: var(--local-text-muted);
+  line-height: 1.5;
+}
 
 /* ─── 7. CLAY TABLE SPECIFICS ─── */
 .table-wrapper {
@@ -205,9 +277,11 @@ input[readonly] {
   border-radius: 24px;
   padding: 24px;
   border: 2px solid rgba(255, 255, 255, 0.8);
-  box-shadow: 
-    inset 4px 4px 8px rgba(255, 255, 255, 0.7),
-    10px 15px 35px rgba(0, 0, 0, 0.05);
+  box-shadow: inset 4px 4px 8px rgba(255, 255, 255, 0.7), 10px 15px 35px rgba(0, 0, 0, 0.05);
+}
+
+.table-responsive {
+  overflow-x: auto;
 }
 
 table {
@@ -233,7 +307,35 @@ table td {
   vertical-align: middle;
 }
 
-table tr:hover td { background: rgba(247, 250, 252, 0.5); }
+table tr:hover td {
+  background: rgba(247, 250, 252, 0.5);
+}
+
+.text-empty-state {
+  color: var(--n400, #94a3b8);
+  padding: 30px;
+  text-align: center;
+}
+
+/* Tong Sampah Specific Table */
+.trash-table {
+  width: 100%;
+  font-size: 14px;
+}
+
+.trash-table-header {
+  background: #f8fafc;
+}
+
+.trash-th-left {
+  padding: 10px;
+  text-align: left;
+}
+
+.trash-th-center {
+  padding: 10px;
+  text-align: center;
+}
 
 /* Badges Status Bayar */
 .badge-clay {
@@ -243,11 +345,11 @@ table tr:hover td { background: rgba(247, 250, 252, 0.5); }
   font-weight: 700;
   border-radius: 10px;
   text-transform: uppercase;
-  box-shadow: inset 1px 1px 2px rgba(255,255,255,0.5);
+  box-shadow: inset 1px 1px 2px rgba(255, 255, 255, 0.5);
 }
+
 .badge-clay.green { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
 .badge-clay.pink { background: #ffe4e6; color: #e11d48; border: 1px solid #fecdd3; }
-.badge { background: #fef3c7; color: #b45309; border: 1px solid #fde68a; display: inline-flex; padding: 6px 12px; border-radius: 10px; font-weight: 700;}
 
 .btn-success-sm {
   background: linear-gradient(135deg, #48bb78 0%, #2f855a 100%);
@@ -262,17 +364,13 @@ table tr:hover td { background: rgba(247, 250, 252, 0.5); }
   align-items: center;
   gap: 6px;
   transition: all 0.2s ease;
-  box-shadow: 
-    inset 2px 2px 4px rgba(255, 255, 255, 0.4),
-    0 4px 10px rgba(48, 187, 120, 0.25);
+  box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.4), 0 4px 10px rgba(48, 187, 120, 0.25);
 }
 
 .btn-success-sm:hover {
   transform: translateY(-2px);
   background: linear-gradient(135deg, #38a169 0%, #276749 100%);
-  box-shadow: 
-    inset 2px 2px 4px rgba(255, 255, 255, 0.4),
-    0 6px 15px rgba(48, 187, 120, 0.35);
+  box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.4), 0 6px 15px rgba(48, 187, 120, 0.35);
 }
 
 .btn-success-sm:active {
@@ -280,177 +378,34 @@ table tr:hover td { background: rgba(247, 250, 252, 0.5); }
   box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.text-selesai-lunas {
-  color: #2f855a; 
-  background: rgba(72, 187, 120, 0.1); 
-  padding: 6px 12px; 
-  border-radius: 10px; 
-  font-size: 12px; 
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-
-/* ─── 8. TOM SELECT CLAYMORPHISM OVERRIDES ─── */
-.ts-wrapper.form-input {
-  padding: 0;
-  border: none;
-  background: transparent;
-  box-shadow: none;
-}
-.ts-wrapper.form-input .ts-control {
-  padding: 14px 16px;
-  border-radius: 16px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  background: rgba(247, 250, 252, 0.7);
-  font-size: 14px;
-  color: var(--local-text-main);
-  box-shadow: 
-    inset 2px 2px 4px rgba(0, 0, 0, 0.04), 
-    1px 1px 2px rgba(255, 255, 255, 0.8);
-  transition: all 0.25s ease;
-  min-height: 50px;
+/* ─── 8. STRUCTURE ACTION BAR & FILTER WORKERS ─── */
+.page-header-actions {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-}
-.ts-wrapper.form-input.focus .ts-control {
-  background: #ffffff;
-  border-color: var(--local-focus-yellow);
-  box-shadow: 
-    inset 1px 1px 2px rgba(0, 0, 0, 0.02),
-    0 0 0 4px var(--local-focus-shadow);
-}
-.ts-dropdown {
-  border-radius: 16px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  margin-top: 8px;
-  background: #ffffff;
-}
-.ts-dropdown .option {
-  padding: 12px 16px;
-  font-size: 14px;
-  color: var(--local-text-main);
-  transition: background 0.1s;
-}
-.ts-dropdown .option:hover, 
-.ts-dropdown .active {
-  background: var(--local-blue-100);
-  color: var(--local-blue-600);
-  font-weight: 600;
+  flex-wrap: wrap;
+  gap: 16px;
 }
 
-/* ─── 9. RESPONSIVENESS ─── */
-@media (max-width: 860px) {
-  .grid-3 { grid-template-columns: 1fr; }
-  .grid-3 > .card:first-child { grid-column: span 1; }
-  .grid-2 { grid-template-columns: 1fr; }
-  
-  .mb-6[style*="display: flex"] {
-    flex-direction: column;
-    align-items: flex-start !important;
-    gap: 16px;
-  }
+.title-no-pad {
+  padding-left: 0;
 }
 
-/* Container Utama Filter */
-.clay-filter-container {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    align-items: center;
-    margin-bottom: 24px;
-    width: 100%;
-}
-
-/* Wrapper komponen untuk menaruh icon di dalam */
-.clay-input-wrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
-    flex: 1;
-    min-width: 160px;
-}
-
-/* Khusus kotak pencarian dibuat agak lebih lebar sedikit */
-.clay-input-wrapper.search-box {
-    flex: 1.5;
-    min-width: 220px;
-}
-
-/* Styling Icon di dalam Input/Select */
-.clay-input-wrapper .field-icon {
-    position: absolute;
-    left: 16px;
-    color: #3b82f6; 
-    font-size: 1.25rem;
-    pointer-events: none;
-    z-index: 2;
-}
-
-/* Base Style Input & Select Claymorphism */
-.clay-input, .clay-select {
-    width: 100%;
-    padding: 12px 16px 12px 44px; 
-    font-size: 0.95rem;
-    font-weight: 500;
-    color: var(--n700, #475569);
-    background-color: #f1f5f9; 
-    border: 1px solid rgba(226, 232, 240, 0.8);
-    border-radius: 16px; 
-    outline: none;
-    transition: all 0.2s ease-in-out;
-    box-shadow: 
-        inset 0px 2px 4px rgba(255, 255, 255, 0.8),
-        inset 0px -2px 4px rgba(0, 0, 0, 0.03),
-        0px 4px 12px rgba(0, 0, 0, 0.03);
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-}
-
-.clay-select {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 16px center;
-    background-size: 16px;
-    padding-right: 40px;
-}
-
-.clay-input:focus, .clay-select:focus {
-    background-color: #ffffff;
-    border-color: #3b82f6;
-    box-shadow: 
-        0px 0px 0px 4px rgba(59, 130, 246, 0.15),
-        0px 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-.clay-input::placeholder {
-    color: var(--n400, #94a3b8);
-    font-weight: 400;
-}
-
-/* ─── 10. STRUCTURE ACTION BAR ─── */
-.kamar-top-action-bar {
-    display: flex;
-    gap: 16px;
-    align-items: center;
-    width: 100%;
-    margin-bottom: 24px;
-    flex-wrap: nowrap;
+.header-btn-group {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .filter-action-header-clay {
-    display: flex; 
-    gap: 12px; 
-    flex: 1; 
-    background: #ffffff; 
-    padding: 12px 16px; 
-    border-radius: 20px; 
-    box-shadow: 6px 6px 12px rgba(165, 215, 210, 0.2), inset -2px -2px 6px rgba(0,0,0,0.02), inset 2px 2px 5px #ffffff; 
-    box-sizing: border-box;
+  display: flex;
+  gap: 12px;
+  background: #ffffff;
+  padding: 12px 16px;
+  border-radius: 20px;
+  box-shadow: 6px 6px 12px rgba(165, 215, 210, 0.2), inset -2px -2px 6px rgba(0, 0, 0, 0.02), inset 2px 2px 5px #ffffff;
+  box-sizing: border-box;
+  margin-bottom: 24px;
 }
 
 .search-wrapper-clay { flex: 1.8; min-width: 160px; }
@@ -458,27 +413,122 @@ table tr:hover td { background: rgba(247, 250, 252, 0.5); }
 .filter-wrapper-clay-small { flex: 0.8; min-width: 110px; }
 .sort-wrapper-clay { flex: 1.2; min-width: 140px; }
 
-.form-input-clay {
-    width: 100%; 
-    padding: 10px 14px; 
-    border-radius: 14px; 
-    border: 1px solid #e2e8f0; 
-    background: #f7fafc; 
-    box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05); 
-    font-family: inherit; 
-    font-size: 13.5px; 
-    color: #5d444e; 
-    outline: none;
-    box-sizing: border-box;
-    transition: all 0.2s ease;
+/* ─── 9. OVERLAY MODAL SYSTEM (CLAYMORPHISM STYLE) ─── */
+.modal-overlay-clay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 23, 42, 0.35);
+  backdrop-filter: blur(6px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-select.form-input-clay {
-    cursor: pointer;
+.modal-overlay-clay.show {
+  opacity: 1;
+  pointer-events: auto;
 }
 
-.form-input-clay:focus {
-    border-color: #ffccd5;
-    background: #ffffff;
-    box-shadow: inset 2px 2px 5px rgba(0,0,0,0.02), 0 0 0 3px rgba(255, 204, 213, 0.4);
+.modal-box-clay {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 28px;
+  border-radius: 24px;
+  width: 90%;
+  max-width: 550px;
+  max-height: 85vh;
+  overflow-y: auto;
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  box-shadow:
+    inset 4px 4px 8px rgba(255, 255, 255, 0.6),
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  transform: scale(0.95) translateY(-10px);
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.modal-box-large {
+  max-width: 700px;
+}
+
+.modal-overlay-clay.show .modal-box-clay {
+  transform: scale(1) translateY(0);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #edf2f7;
+  padding-bottom: 12px;
+}
+
+.modal-header h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+
+.modal-title-normal {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.modal-title-danger {
+  font-size: 18px;
+  font-weight: 700;
+  color: #a71e34;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: #94a3b8;
+  transition: color 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-close:hover {
+  color: #ef4444;
+}
+
+/* ─── 10. RESPONSIVENESS ─── */
+@media (max-width: 860px) {
+  .grid-3 { grid-template-columns: 1fr; }
+  .grid-3>.card:first-child { grid-column: span 1; }
+  .grid-2 { grid-template-columns: 1fr; }
+
+  .filter-action-header-clay {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  :is(.search-wrapper-clay, .filter-wrapper-clay, .filter-wrapper-clay-small, .sort-wrapper-clay) {
+    width: 100%;
+    flex: none;
+  }
+
+  .mb-6[style*="display: flex"] {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 16px;
+  }
+
+  .page-header-actions {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }

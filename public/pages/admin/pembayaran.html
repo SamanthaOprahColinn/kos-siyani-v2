@@ -46,10 +46,12 @@
             <form id="formPembayaran">
               <div class="grid-2 mb-4">
                 <div class="form-group">
-                  <label class="form-label" for="id_penghuni">Pilih Penghuni <span class="req">*</span></label>
-                  <select id="id_penghuni" class="form-input" required>
-                    <option value="">-- Sedang memuat data... --</option>
-                  </select>
+                  <label class="form-label" for="cari_penghuni">Cari Penghuni <span class="req">*</span></label>
+                  <input list="list_penghuni" id="cari_penghuni" class="form-input" placeholder="Ketik nama penghuni..." autocomplete="off" required>
+                  
+                  <datalist id="list_penghuni"></datalist>
+                  
+                  <input type="hidden" id="id_penghuni" required>
                 </div>
 
                 <div class="form-group">
