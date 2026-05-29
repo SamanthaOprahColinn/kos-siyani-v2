@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <i class="ph ph-users sidebar-link-icon"></i>
             <span>Kelola Penghuni</span>
           </a>
-          <a href="/pages/pemilik/transaksi.html" class="sidebar-link" onclick="alert('Modul Transaksi segera hadir')">
+          <a href="/pages/pemilik/transaksi.html" class="sidebar-link">
             <i class="ph ph-receipt sidebar-link-icon"></i>
             <span>Transaksi</span>
           </a>
@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
       </aside>
     `;
 
-    // Fitur Deteksi Halaman Aktif (Auto-Highlight Sidebar)
+    // Fitur Deteksi Halaman Aktif 
     const currentPath = window.location.pathname;
     const sidebarLinks = sidebarContainer.querySelectorAll('.sidebar-link');
     
