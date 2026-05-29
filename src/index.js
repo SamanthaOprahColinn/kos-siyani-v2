@@ -10,6 +10,7 @@ import { errorHandler, notFoundHandler } from './middlewares/errorHandler.js';
 import authRoutes from './routes/authRoutes.js';
 import penghuniRoutes from './routes/penghuniRoutes.js';
 import kamarRoutes from './routes/kamarRoutes.js';          
+import pembayaranRoutes from './routes/pembayaranRoutes.js'; 
 
 // Load environment variables
 dotenv.config();
@@ -31,16 +32,8 @@ app.use(cors({
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 app.use(morgan('dev'));
-app.use(express.static('public'));
 
 // Health check endpoint
-app.get("/", (req, res) => {
-  res.json({
-    success: true,
-    message: "Home"
-  });
-});
-
 app.get('/api/health', (req, res) => {
   res.status(200).json({
     success: true,
@@ -53,7 +46,7 @@ app.get('/api/health', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/penghuni', penghuniRoutes);
 app.use('/api/kamar', kamarRoutes);           
-
+app.use('/api/pembayaran', pembayaranRoutes); 
 
 // Documentation endpoint
 app.get('/api', (req, res) => {
@@ -90,6 +83,19 @@ app.get('/api', (req, res) => {
         getStats: 'GET /api/kamar/stats/summary',
         search: 'GET /api/kamar/search',
       },
+      pembayaran: {                 // BARU
+        getAll: 'GET /api/pembayaran',
+        create: 'POST /api/pembayaran',
+        getById: 'GET /api/pembayaran/:id',
+        getMyBills: 'GET /api/pembayaran/my-bills',
+        uploadBukti: 'PATCH /api/pembayaran/:id/upload',
+        deleteBukti: 'DELETE /api/pembayaran/:id/bukti',
+        validatePayment: 'PATCH /api/pembayaran/:id/validate',
+        delete: 'DELETE /api/pembayaran/:id',
+        restore: 'PATCH /api/pembayaran/:id/restore',
+        getStats: 'GET /api/pembayaran/stats/summary',
+        search: 'GET /api/pembayaran/search',
+      },
     },
   });
 });
@@ -105,7 +111,7 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`
 ═════════════════════════════════════════════════════════
-             Kos Siyani Backend Server        
+            🏘️  Kos Siyani Backend Server        
 ═════════════════════════════════════════════════════════
    Server running on: http://localhost:${PORT}
    Environment: ${process.env.NODE_ENV || 'development'}
