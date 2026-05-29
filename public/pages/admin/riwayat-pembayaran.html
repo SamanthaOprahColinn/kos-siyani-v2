@@ -1,0 +1,67 @@
+<!-- public/pages/admin/riwayat-pembayaran.html -->
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daftar Pembayaran - Kos Siyani</title>
+  <link rel="stylesheet" href="../../css/global.css">
+  <link rel="stylesheet" href="../../css/admin/pembayaran.css">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body>
+
+  <div class="layout">
+    <div id="sidebar-container"></div>
+
+    <div class="main">
+            <header class="topbar">
+                <h1 class="topbar-title">Manajemen Pembayaran</h1>
+                <div id="topbar-container"></div>
+            </header>
+
+      <main class="content page-enter">
+        
+        <div class="mb-6" style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <h1 class="topbar-title" style="padding-left: 0;">Riwayat Pembayaran</h1>
+            <p class="stat-sub">Pantau seluruh status tagihan (Lunas, Belum Bayar, Menunggu Konfirmasi).</p>
+          </div>
+          <a href="pembayaran.html" class="btn-clay-primary">
+            <i class="ph ph-plus"></i> Buat Tagihan Baru
+          </a>
+        </div>
+
+        <div class="table-wrapper">
+          <div style="overflow-x: auto;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nama Penghuni</th>
+                  <th>Nomor Kamar</th>
+                  <th>Periode Tagihan</th>
+                  <th>Nominal</th>
+                  <th>Jatuh Tempo</th>
+                  <th>Status Bayar</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="tabelPembayaranBody">
+                <tr>
+                  <td colspan="7" class="text-center" style="color: var(--n400); padding: 30px;">Memuat basis data pembayaran...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </main>
+      <div id="footer-container"></div>
+    </div>
+  </div>
+
+  <script src="../../js/layout-admin.js"></script>
+  <script src="../../js/admin/riwayat-pembayaran.js"></script>
+</body>
+</html>

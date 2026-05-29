@@ -1,201 +1,167 @@
 // public/js/admin/pembayaran.js
 
-document.addEventListener('DOMContentLoaded', () => {
-    const formPembayaran = document.getElementById('formPembayaran');
+document.addEventListener('DOMContentLoaded', async () => {
+    const form = document.getElementById('formPembayaran');
     const selectPenghuni = document.getElementById('id_penghuni');
-    const inputKamarDisplay = document.getElementById('kamar_display'); // 🟢 Menangkap input readonly
-    const inputIdKamarHidden = document.getElementById('id_kamar');     // 🟢 Menangkap input hidden
-    const tabelBody = document.getElementById('tabelPembayaranBody');
+    const inputKamarDisplay = document.getElementById('kamar_display');
+    const inputIdKamar = document.getElementById('id_kamar');
 
-    // Variabel untuk menyimpan instance library pencarian agar bisa di-reset nanti
-    let selectLibrary; 
-    let masterDaftarPenghuni = [];
-
-    // Isi otomatis default tahun saat ini
-    document.getElementById('tahun_tagihan').value = new Date().getFullYear();
-
-    // 1. LOAD DATA PENGHUNI UNTUK DROP-DOWN SEARCH
-    async function ambilDataPenghuniDropdown() {
+    // 1. FUNGSI MENGAMBIL DATA PENGHUNI DARI BACKEND (SUDAH DISESUAIKAN DENGAN STRUKTUR ASLI)
+    async function muatDaftarPenghuni() {
         try {
             const token = localStorage.getItem('token');
-            // Hanya ambil penghuni yang aktif
-            const response = await fetch('/api/penghuni?status=aktif', {
+            
+            const response = await fetch('/api/penghuni', { 
                 headers: { 'Authorization': `Bearer ${token}` }
             });
+            
             const result = await response.json();
 
             if (response.ok) {
-                // 🟢 DEFENSIVE CODING: Deteksi array dengan aman
-                let listPenghuni = [];
-                if (Array.isArray(result.data)) {
-                    listPenghuni = result.data;
-                } else if (result.data && Array.isArray(result.data.data)) {
-                    listPenghuni = result.data.data;
-                } else if (result.data && Array.isArray(result.data.docs)) {
-                    listPenghuni = result.data.docs;
-                }
-
-                masterDaftarPenghuni = listPenghuni;
-                selectPenghuni.innerHTML = '<option value="">-- Cari atau Pilih Penghuni --</option>';
-
-                masterDaftarPenghuni.forEach(p => {
-                    const noKamar = p.id_kamar?.nomor_kamar || 'Tanpa Kamar';
-                    selectPenghuni.innerHTML += `<option value="${p._id}">${p.nama_lengkap} (Kamar: ${noKamar})</option>`;
-                });
-
-                // 🟢 AKTIFKAN FITUR SEARCH (TOM SELECT)
-                if (selectLibrary) {
-                    selectLibrary.destroy(); // Hancurkan sisa cache jika dipanggil ulang
-                }
-                selectLibrary = new TomSelect(selectPenghuni, {
-                    create: false,
-                    sortField: { field: "text", direction: "asc" }
-                });
-            }
-        } catch (error) {
-            console.error('Gagal memuat daftar penghuni:', error);
-        }
-    }
-
-    // 2. DETEKSI PILIHAN PENGHUNI UNTUK AUTO-FILL DATA KAMAR & HARGA
-    selectPenghuni.addEventListener('change', (e) => {
-        const idPenghuniTerpilih = e.target.value;
-        const infoPenghuni = masterDaftarPenghuni.find(p => p._id === idPenghuniTerpilih);
-
-        if (infoPenghuni && infoPenghuni.id_kamar) {
-            const kamarObj = infoPenghuni.id_kamar;
-            const idKamar = kamarObj._id || kamarObj;
-            const nomorKamar = kamarObj.nomor_kamar || 'Terdaftar';
-
-            // 🟢 PERBAIKAN: Isi teks kamar ke input readonly, dan ID ke input hidden
-            inputIdKamarHidden.value = idKamar;
-            inputKamarDisplay.value = `Kamar No. ${nomorKamar}`;
-
-            // Auto-fill harga sewa kamar ke input nominal tagihan
-            if (kamarObj.harga_sewa) {
-                document.getElementById('jumlah_tagihan').value = kamarObj.harga_sewa;
-            }
-        } else {
-            // Reset jika penghuni tidak punya kamar / batal pilih
-            inputIdKamarHidden.value = '';
-            inputKamarDisplay.value = '';
-            document.getElementById('jumlah_tagihan').value = '';
-        }
-    });
-
-    // 3. LOAD SEMUA LOG TRANSAKSI/PEMBAYARAN DARI BACKEND
-    async function muatRiwayatPembayaran() {
-        try {
-            const token = localStorage.getItem('token');
-            const response = await fetch('/api/pembayaran', {
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            const result = await response.json();
-
-            if (response.ok) {
-                let listPembayaran = [];
-                if (Array.isArray(result.data)) {
-                    listPembayaran = result.data;
-                } else if (result.data && Array.isArray(result.data.data)) {
-                    listPembayaran = result.data.data;
-                } else if (result.data && Array.isArray(result.data.docs)) {
-                    listPembayaran = result.data.docs;
-                }
-
-                if (listPembayaran.length === 0) {
-                    tabelBody.innerHTML = `<tr><td colspan="6" class="text-center" style="color: var(--n500); padding: 24px;">Belum ada riwayat tagihan terbit.</td></tr>`;
+                // Bersihkan dropdown terlebih dahulu
+                selectPenghuni.innerHTML = '<option value="">-- Pilih Penghuni --</option>';
+                
+                // FIXED: Membongkar data sesuai struktur asli backend kamu (result.data.data)
+                const listPenghuni = result.data && Array.isArray(result.data.data) ? result.data.data : [];
+                
+                if (listPenghuni.length === 0) {
+                    selectPenghuni.innerHTML = '<option value="">Tidak ada data penghuni aktif</option>';
                     return;
                 }
 
-                tabelBody.innerHTML = '';
-                listPembayaran.forEach(item => {
-                    const namaUser = item.id_penghuni?.nama_lengkap || 'Kosong/Keluar';
-                    const noKamar = item.id_kamar?.nomor_kamar || '-';
-                    const formatRupiah = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(item.jumlah_tagihan);
-                    const tglJatuhTempo = new Date(item.tgl_jatuh_tempo).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+                listPenghuni.forEach(item => {
+                    const detailUser = item.user_id || {};
+                    
+                    // 🔥 1. TAMBAHKAN PENYARING STATUS DI SINI
+                    // Menangkap status penghuni dari backend (bisa berupa teks atau boolean)
+                    const statusPenghuni = (item.status || item.status_penghuni || '').toString().toLowerCase();
+                    const apakahAktif = item.is_active !== undefined ? item.is_active : true;
 
-                    let classBadgeClay = 'badge-clay pink'; 
-                    if (item.status_bayar === 'lunas') {
-                        classBadgeClay = 'badge-clay green';
-                    } else if (item.status_bayar === 'menunggu konfirmasi') {
-                        classBadgeClay = 'badge'; 
+                    // Jika terdeteksi statusnya sudah keluar/tidak aktif, langsung SKIP (lewati)
+                    if (
+                        statusPenghuni === 'keluar' || 
+                        statusPenghuni === 'tidak aktif' || 
+                        statusPenghuni === 'tidak_aktif' || 
+                        statusPenghuni === 'non-aktif' || 
+                        apakahAktif === false
+                    ) {
+                        return; // Perulangan langsung lompat ke data berikutnya
                     }
 
-                    tabelBody.innerHTML += `
-                        <tr>
-                          <td class="font-bold">${namaUser}</td>
-                          <td>No. ${noKamar}</td>
-                          <td>Bulan ${item.bulan_tagihan} / ${item.tahun_tagihan}</td>
-                          <td class="font-bold" style="color: var(--pink-600);">${formatRupiah}</td>
-                          <td style="color: var(--n500);">${tglJatuhTempo}</td>
-                          <td>
-                            <span class="${classBadgeClay}" style="text-transform: uppercase; font-size: 10px;">
-                              ${item.status_bayar}
-                            </span>
-                          </td>
-                        </tr>
-                    `;
+                    // 2. JIKA LOLOS PENYARING, BARU MASUKKAN KE DROPDOWN
+                    if (detailUser.role === 'penghuni') {
+                        const option = document.createElement('option');
+                        
+                        option.value = item._id;
+                        
+                        // Menyisir kemungkinan nama kolom di database
+                        const namaTampil = item.nama_lengkap || item.nama || 
+                                           detailUser.nama_lengkap || detailUser.nama || 
+                                           detailUser.username || detailUser.email || "Penghuni Kos";
+                        
+                        option.textContent = namaTampil;
+                        
+                        // Ambil data kamar
+                        const dataKamar = item.id_kamar || item.kamar || {};
+                        const nomorKamar = dataKamar.nomor_kamar || '-';
+                        const idKamar = dataKamar._id || '';
+                        
+                        option.dataset.nomorkamar = nomorKamar;
+                        option.dataset.idkamar = idKamar;
+                        
+                        selectPenghuni.appendChild(option);
+                    }
                 });
+
+                // Hancurkan TomSelect lama jika ada, lalu inisialisasi ulang agar data ter-refresh
+                if (selectPenghuni.tomselect) {
+                    selectPenghuni.tomselect.destroy();
+                }
+
+                // Jalankan Tom-Select pencarian modern
+                new TomSelect("#id_penghuni", {
+                    create: false,
+                    sortField: { field: "text", direction: "asc" },
+                    placeholder: "Cari nama penghuni..."
+                });
+
+            } else {
+                selectPenghuni.innerHTML = '<option value="">Gagal memuat penghuni</option>';
             }
         } catch (error) {
-            console.error('Gagal memuat log pembayaran:', error);
-            tabelBody.innerHTML = `<tr><td colspan="6" class="text-center" style="color: red; padding: 24px;">Gagal terhubung dengan server backend.</td></tr>`;
+            console.error("Gagal mengambil data penghuni:", error);
+            selectPenghuni.innerHTML = '<option value="">Gagal terhubung ke server</option>';
         }
     }
 
-    // 4. LOGIKA SUBMIT DAN POST DATA KE API
-    formPembayaran.addEventListener('submit', async (e) => {
-        e.preventDefault();
+    // 2. OTOMATIS MENGISI INPUT KAMAR SAAT PENGHUNI DIPILIH
+    selectPenghuni.addEventListener('change', () => {
+        const selectedOption = selectPenghuni.options[selectPenghuni.selectedIndex];
+        if (selectedOption && selectedOption.value) {
+            const noKamar = selectedOption.dataset.nomorkamar;
+            inputKamarDisplay.value = noKamar !== '-' ? `Kamar ${noKamar}` : 'Tidak ada kamar';
+            inputIdKamar.value = selectedOption.dataset.idkamar;
+        } else {
+            inputKamarDisplay.value = '';
+            inputIdKamar.value = '';
+        }
+    });
 
-        const dataPayload = {
-            id_penghuni: document.getElementById('id_penghuni').value,
-            id_kamar: inputIdKamarHidden.value, // Ambil dari input hidden
-            bulan_tagihan: parseInt(document.getElementById('bulan_tagihan').value, 10),
-            tahun_tagihan: parseInt(document.getElementById('tahun_tagihan').value, 10),
-            jumlah_tagihan: parseInt(document.getElementById('jumlah_tagihan').value, 10),
-            tgl_jatuh_tempo: document.getElementById('tgl_jatuh_tempo').value
-        };
+    // 3. FUNGSI MENGIRIM FORM (BUAT TAGIHAN BARU)
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault(); // Cegah halaman reload saat submit
+        
+        const token = localStorage.getItem('token');
+        const id_kamar = inputIdKamar.value;
 
-        // Validasi ekstra kalau id_kamar kosong
-        if (!dataPayload.id_kamar) {
-            return alert('Penghuni ini belum ditugaskan ke kamar mana pun!');
+        if (!id_kamar) {
+            alert("⚠️ Penghuni yang dipilih belum memiliki kamar! Tagihan tidak bisa dibuat.");
+            return;
         }
 
+        // 🔥 FIXED: Membungkus nilai input dengan Number() agar dikirim sebagai angka asli
+        const dataTagihanBaru = {
+            id_penghuni: selectPenghuni.value,
+            id_kamar: id_kamar,
+            bulan_tagihan: Number(document.getElementById('bulan_tagihan').value),
+            tahun_tagihan: Number(document.getElementById('tahun_tagihan').value),
+            jumlah_tagihan: Number(document.getElementById('jumlah_tagihan').value),
+            tgl_jatuh_tempo: document.getElementById('tgl_jatuh_tempo').value,
+            status_bayar: 'belum_bayar'
+        };
+
         try {
-            const token = localStorage.getItem('token');
             const response = await fetch('/api/pembayaran', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify(dataPayload)
+                body: JSON.stringify(dataTagihanBaru)
             });
-
+            
             const result = await response.json();
 
+            console.log("📦 ISI DATA DARI BACKEND:", result);
+            
             if (response.ok) {
-                alert('🎉 Tagihan Pembayaran berhasil terbit!');
-                
-                // 🟢 Reset form dan library search
-                formPembayaran.reset();
-                document.getElementById('tahun_tagihan').value = new Date().getFullYear();
-                if (selectLibrary) selectLibrary.clear(); // Bersihkan pilihan dropdown
-                inputKamarDisplay.value = '';
-                inputIdKamarHidden.value = '';
-                
-                // Refresh tabel log otomatis
-                muatRiwayatPembayaran();
+                alert("✅ Tagihan berhasil diterbitkan ke penghuni!");
+                // Langsung tendang/lempar kembali ke halaman riwayat
+                window.location.href = 'riwayat-pembayaran.html'; 
             } else {
-                alert(`Gagal menerbitkan: ${result.message || 'Kesalahan validasi'}`);
+                // Modifikasi alert agar menampilkan pesan error spesifik jika ada array errors dari backend
+                let pesanError = result.message || "Periksa kembali inputan.";
+                if (result.errors && Array.isArray(result.errors)) {
+                    pesanError = result.errors.map(err => `- ${err.message}`).join('\n');
+                }
+                alert(`Gagal membuat tagihan:\n${pesanError}`);
             }
         } catch (error) {
-            console.error('Koneksi HTTP Error:', error);
-            alert('Gagal mengirimkan data, server backend tidak merespons.');
+            console.error("Error saat submit:", error);
+            alert("Gagal terhubung ke server saat mengirim tagihan.");
         }
     });
 
-    // Jalankan fungsi otomatis saat halaman siap
-    ambilDataPenghuniDropdown();
-    muatRiwayatPembayaran();
+    // Jalankan fungsi memuat daftar penghuni saat pertama kali halaman dibuka
+    muatDaftarPenghuni();
 });

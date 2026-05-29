@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
           </a>
 
           <div class="sidebar-section-title font-extrabold text-muted">Akun</div>
-          <a href="#" class="sidebar-link font-bold text-muted" onclick="handleLogout()">
+          <a href="/pages/login.html" class="sidebar-link font-bold text-muted" onclick="handleLogout()">
             <i class="ph ph-sign-out sidebar-link-icon"></i>
             <span>Keluar</span>
           </a>
@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('avatarInitial').textContent = 'A';
     }
   }
-  
+
   // 3. INJEKSI FOOTER
   const footerContainer = document.getElementById('footer-container');
   if (footerContainer) {
