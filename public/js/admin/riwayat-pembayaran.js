@@ -104,8 +104,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 classBadgeClay = 'badge-clay green';
                 statusDanKonfirmasi = `<span style="color: #10b981; font-weight: 600;"><i class="ph ph-check-circle"></i> Selesai</span>`;
             } else {
-                if (item.status_bayar === 'menunggu_konfirmasi') classBadgeClay = 'badge'; 
-                statusDanKonfirmasi = `<button class="btn-success-sm btn-konfirmasi-lunas" data-id="${item._id}"><i class="ph ph-check-square-offset"></i> Konf Lunas</button>`;
+                if (item.status_bayar === 'menunggu_konfirmasi') {
+                    classBadgeClay = 'badge'; 
+                    statusDanKonfirmasi = `<span style="color: #3b82f6; font-weight: 600;"><i class="ph ph-clock"></i> Menunggu Verifikasi Pemilik</span>`;
+                }
             }
 
             tabelBody.innerHTML += `
@@ -213,44 +215,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.getElementById('modalEdit').classList.add('show');
                 }
             } catch (error) { console.error('Gagal mengambil detail data:', error); }
-        }
-
-        // --- AKSI: KONFIRMASI LUNAS ---
-        const tombolLunas = e.target.closest('.btn-konfirmasi-lunas');
-        if (tombolLunas) {
-            const id = tombolLunas.getAttribute('data-id');
-            if (!confirm("Yakin ingin mengonfirmasi tagihan ini sebagai LUNAS?")) return;
-            
-            // Berikan efek loading
-            const teksAsli = tombolLunas.innerHTML;
-            tombolLunas.innerHTML = '⏳ Proses...';
-            tombolLunas.disabled = true;
-
-            try {
-                const response = await fetch(`/api/pembayaran/${id}/validate`, {
-                    method: 'PATCH',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                    body: JSON.stringify({ status_bayar: 'lunas' })
-                });
-                
-                // Ambil respons dari backend untuk mengecek error
-                const result = await response.json(); 
-
-                if (response.ok) { 
-                    alert("✅ Status berhasil diubah menjadi LUNAS!"); 
-                    await muatRiwayatPembayaran(); 
-                } else {
-                    // Jika backend menolak, tampilkan alasannya!
-                    alert(`❌ Gagal Konfirmasi: ${result.message || result.error || 'Cek console untuk detail'}`);
-                    console.error("Backend Error:", result);
-                }
-            } catch (error) { 
-                console.error("Gagal Fetch:", error); 
-                alert("Terjadi kesalahan jaringan atau server mati.");
-            } finally {
-                tombolLunas.innerHTML = teksAsli;
-                tombolLunas.disabled = false;
-            }
         }
     });
 
