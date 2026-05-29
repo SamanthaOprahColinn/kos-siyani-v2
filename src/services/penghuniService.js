@@ -1,11 +1,12 @@
 // src/services/penghuniService.js
 import Penghuni from '../models/Penghuni.js';
 import User from '../models/User.js';
+import Kamar from '../models/Kamar.js'; 
 import { ApiError } from '../utils/ApiError.js';
 import { PENGHUNI_STATUS } from '../constants/enums.js';
 
 /**
- * Create Penghuni
+ * Create Penghuni (Sudah otomatis update status kamar menjadi tidak tersedia)
  */
 export const createPenghuni = async (penghuniData) => {
   const {
@@ -20,7 +21,7 @@ export const createPenghuni = async (penghuniData) => {
     password,
   } = penghuniData;
 
-  // Validasi unique fields
+  // 1. Validasi unique fields penghuni
   const existingPenghuni = await Penghuni.findOne({
     $or: [{ no_ktp }, { email }, { no_hp }],
   });
@@ -29,7 +30,24 @@ export const createPenghuni = async (penghuniData) => {
     throw new ApiError(400, 'Data penghuni dengan no_ktp, email, atau no_hp sudah terdaftar');
   }
 
-  // Create user terlebih dahulu
+// 2. BARU: Validasi & Update status kamar jika id_kamar diisi saat daftar
+  if (id_kamar) {
+    const kamar = await Kamar.findById(id_kamar);
+    if (!kamar) {
+      throw new ApiError(404, 'Kamar tidak ditemukan');
+    }
+    
+    // PERBAIKAN: Tolak pendaftaran jika kamar berstatus 'terisi' atau 'tidak tersedia'
+    if (kamar.status_kamar === 'terisi' || kamar.status_kamar === 'tidak tersedia') {
+      throw new ApiError(400, 'Kamar tersebut sudah terisi atau tidak dapat digunakan');
+    }
+    
+    // PERBAIKAN: Ubah status kamar menjadi 'terisi' (sinkron dengan kelola kamar)
+    kamar.status_kamar = 'terisi';
+    await kamar.save();
+  }
+
+  // 3. Create user terlebih dahulu
   const user = await User.create({
     nama_lengkap,
     email: email.toLowerCase(),
@@ -37,7 +55,7 @@ export const createPenghuni = async (penghuniData) => {
     role: 'penghuni',
   });
 
-  // Create penghuni
+  // 4. Create penghuni
   const penghuni = await Penghuni.create({
     user_id: user._id,
     nama_lengkap,
@@ -105,13 +123,14 @@ export const getAllPenghuni = async (queryParams = {}) => {
   const order = sortOrder.toLowerCase() === 'asc' ? 1 : -1;
   sortObject[sortField] = order;
 
-  // Execute query
+  // === EXECUTE QUERY DENGAN POPULATE KAMAR ===
   const [penghuni, total] = await Promise.all([
     Penghuni.find(filter)
       .sort(sortObject)
       .skip(skip)
       .limit(limitNum)
       .populate('user_id', 'email role isActive')
+      .populate('id_kamar') // <--- BARIS AJAIBNYA DI SINI
       .lean(),
     Penghuni.countDocuments(filter),
   ]);
@@ -194,27 +213,31 @@ export const updatePenghuni = async (id, updateData) => {
 };
 
 /**
- * Soft Delete Penghuni
+ * 1. SOFT DELETE: Hapus sementara & lepaskan kamar
  */
 export const deletePenghuni = async (id) => {
   const penghuni = await Penghuni.findById(id);
+  if (!penghuni) throw new ApiError(404, 'Penghuni tidak ditemukan');
 
-  if (!penghuni) {
-    throw new ApiError(404, 'Penghuni tidak ditemukan');
+  // Ubah status kamar menjadi tersedia agar bisa disewa orang lain (Penghuni 2)
+  if (penghuni.id_kamar) {
+    await Kamar.findByIdAndUpdate(penghuni.id_kamar, { status_kamar: 'tersedia' });
   }
 
-  // Soft delete
+  // Soft delete penghuni & kosongkan hubungan kamarnya
   penghuni.isDeleted = true;
+  penghuni.status_penghuni = PENGHUNI_STATUS.KELUAR; 
+  penghuni.id_kamar = null; 
   await penghuni.save();
 
-  // Soft delete user terkait
+  // Matikan juga user terkait agar sejalan saat nanti di-restore
   await User.findByIdAndUpdate(penghuni.user_id, { isDeleted: true });
 
   return penghuni;
 };
 
 /**
- * Restore Penghuni (Undo soft delete)
+ * 2. RESTORE: Memulihkan Penghuni (Tanpa langsung mengunci kamar)
  */
 export const restorePenghuni = async (id) => {
   const penghuni = await Penghuni.findById(id, {}, { includeDeleted: true });
@@ -227,8 +250,10 @@ export const restorePenghuni = async (id) => {
     throw new ApiError(400, 'Penghuni tidak dalam status dihapus');
   }
 
-  // Restore
+  // Ambil data kembali ke keadaan aktif
   penghuni.isDeleted = false;
+  penghuni.status_penghuni = PENGHUNI_STATUS.AKTIF;
+  penghuni.id_kamar = null; 
   await penghuni.save();
 
   // Restore user terkait

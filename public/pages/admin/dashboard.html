@@ -1,3 +1,5 @@
+<!-- public/pages/admin/dashboard.html -->
+
 <!DOCTYPE html>
 <html lang="id">
 
@@ -18,7 +20,6 @@
     <div class="main">
       <header class="topbar">
         <h1 class="topbar-title">Dashboard Operasional Admin</h1>
-        
         <div id="topbar-container"></div>
       </header>
 
@@ -56,7 +57,7 @@
                 <div class="table-top-title">Daftar Penghuni</div>
                 <div class="table-top-sub">Data real-time dari database</div>
               </div>
-              <button class="btn btn-ghost btn-sm" onclick="fetchPenghuni()">
+              <button class="btn btn-ghost btn-sm" onclick="fetchPenghuni(); fetchDashboardStats();">
                 <i class="ph ph-arrows-clockwise"></i> Segarkan
               </button>
             </div>
@@ -93,7 +94,8 @@
                 Registrasi Penghuni Baru
               </button>
 
-              <button class="quick-action-btn qab-pink" onclick="window.location.href='/pages/admin/buat-tagihan.html'">
+              <button class="quick-action-btn qab-pink" 
+                onclick="window.location.href='/pages/admin/buat-tagihan.html'">
                 <div class="qab-icon"><i class="ph ph-receipt"></i></div>
                 Buat Tagihan
               </button>
@@ -112,164 +114,10 @@
       <div id="footer-container"></div>
     </div>
   </div>
+
   <script src="../../js/layout-admin.js"></script>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        window.location.href = '../login.html';
-        return;
-      }
-
-      fetch('http://localhost:5000/api/auth/me', {
-        method: 'GET',
-        headers: { 'Authorization': `Bearer ${token}` }
-      })
-        .then(res => res.json())
-        .then(data => {
-          if (data.success && data.data) {
-            if (data.data.role === 'pemilik') {
-              window.location.href = '../pemilik/dashboard.html';
-              return;
-            }
-            document.getElementById('profileName').textContent = data.data.nama_lengkap;
-            document.getElementById('avatarInitial').textContent = data.data.nama_lengkap.charAt(0).toUpperCase();
-          }
-        })
-        .catch(() => {
-          localStorage.removeItem('token');
-          window.location.href = '../login.html';
-        });
-
-      fetchPenghuni();
-      fetchDashboardStats();
-    });
-
-    function fetchDashboardStats() {
-      const token = localStorage.getItem('token');
-      const headers = { 'Authorization': `Bearer ${token}` };
-
-      fetch('http://localhost:5000/api/kamar/stats/summary', { method: 'GET', headers })
-        .then(res => res.json())
-        .then(data => {
-          if (data.success && data.data) {
-            document.getElementById('statKamarKosong').textContent = data.data.tersedia || '0';
-          }
-        }).catch(() => document.getElementById('statKamarKosong').textContent = 'Error');
-    }
-
-    function fetchPenghuni() {
-      const token = localStorage.getItem('token');
-      const tbody = document.getElementById('tenantTableBody');
-
-      tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px;">Menarik data dari database...</td></tr>';
-
-      fetch('http://localhost:5000/api/penghuni', {
-        method: 'GET',
-        headers: { 'Authorization': `Bearer ${token}` }
-      })
-        .then(res => res.json())
-        .then(data => {
-          tbody.innerHTML = '';
-
-          if (data.success && data.data && data.data.length > 0) {
-            document.getElementById('statTotalPenghuni').textContent = data.data.length;
-            document.getElementById('statKamarTerisi').textContent = data.data.length;
-
-            data.data.forEach(penghuni => {
-              const tr = document.createElement('tr');
-              tr.innerHTML = `
-          <td class="font-bold">Kamar ${penghuni.nomor_kamar || '-'}</td>
-          <td>${penghuni.nama_lengkap || '-'}</td>
-          <td>${penghuni.no_ktp || '-'}</td>
-          <td>
-            <button class="btn btn-ghost btn-sm" onclick="alert('Fitur tagih untuk ${penghuni.nama_lengkap} segera hadir')">
-              <i class="ph ph-receipt"></i> Tagih
-            </button>
-          </td>
-        `;
-              tbody.appendChild(tr);
-            });
-          } else {
-            document.getElementById('statTotalPenghuni').textContent = '0';
-            document.getElementById('statKamarTerisi').textContent = '0';
-            tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px; color: var(--n500);">Belum ada data penghuni yang terdaftar.</td></tr>';
-          }
-        })
-        .catch(err => {
-          console.error('Error memuat penghuni:', err);
-          tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px; color: #dc2626;">Koneksi ke backend gagal. Pastikan API GET /api/penghuni sudah dibuat.</td></tr>';
-        });
-    }
-
-    function saveTenant() {
-      const nama_lengkap = document.getElementById('tenantName').value.trim();
-      const no_ktp = document.getElementById('tenantKtp').value.trim();
-      const nomor_kamar = document.getElementById('tenantRoom').value.trim();
-      const token = localStorage.getItem('token');
-
-      if (!nama_lengkap || !no_ktp || !nomor_kamar) {
-        alert('Semua kolom wajib diisi!');
-        return;
-      }
-
-      const btn = document.getElementById('btnSaveTenant');
-      btn.textContent = 'Menyimpan...';
-      btn.style.pointerEvents = 'none';
-
-      fetch('http://localhost:5000/api/penghuni', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          nama_lengkap: nama_lengkap,
-          no_ktp: no_ktp,
-          nomor_kamar: nomor_kamar
-        })
-      })
-        .then(res => res.json())
-        .then(data => {
-          btn.textContent = 'Simpan Data Penghuni';
-          btn.style.pointerEvents = 'auto';
-
-          if (data.success) {
-            alert('Data penghuni berhasil ditambahkan!');
-            closeModal('tenantModal');
-            document.getElementById('tenantName').value = '';
-            document.getElementById('tenantKtp').value = '';
-            document.getElementById('tenantRoom').value = '';
-
-            fetchPenghuni();
-            fetchDashboardStats();
-          } else {
-            alert('Gagal menyimpan: ' + (data.message || 'Terjadi kesalahan pada validasi backend'));
-          }
-        })
-        .catch(err => {
-          btn.textContent = 'Simpan Data Penghuni';
-          btn.style.pointerEvents = 'auto';
-          alert('Gagal terhubung ke server backend. Pastikan API POST /api/penghuni siap.');
-          console.error(err);
-        });
-    }
-
-    function openAddTenantModal(roomNum) {
-      document.getElementById('tenantRoom').value = roomNum || '';
-      document.getElementById('tenantModal').style.display = 'flex';
-    }
-
-    function closeModal(id) {
-      document.getElementById(id).style.display = 'none';
-    }
-
-    function handleLogout() {
-      localStorage.removeItem('token');
-      window.location.href = '../login.html';
-    }
-  </script>
+  <script src="../../js/admin/dashboard.js"></script>
 </body>
 
 </html>
