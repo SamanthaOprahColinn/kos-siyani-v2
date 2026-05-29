@@ -1,0 +1,46 @@
+<!-- public\pages\pemilik\kelola-admin.html -->
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tambah Admin — Kos Siyani</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+    <link rel="stylesheet" href="../../css/global.css" />
+    <link rel="stylesheet" href="../../css/pemilik/dashboard.css" />
+    <link rel="stylesheet" href="../../css/pemilik/kelola-admin.css" />
+</head>
+<body>
+    <div class="layout">
+        <div id="sidebar-container"></div>
+        <div class="main">
+            <header class="topbar">
+                <h1 class="topbar-title">Tambah Admin Baru</h1>
+            </header>
+
+            <main class="content page-enter">
+                <div class="modal-content" style="max-width: 500px; margin: 0 auto; background: white; padding: 30px; border-radius: 20px;">
+                    <form id="formAdmin">
+                        <div class="form-group mb-3">
+                            <label>Nama Lengkap</label>
+                            <input type="text" id="nama" class="form-input-clay" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label>Email</label>
+                            <input type="email" id="email" class="form-input-clay" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label>Password</label>
+                            <input type="password" id="password" class="form-input-clay" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Buat Akun Admin</button>
+                    </form>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script src="../../js/layout-pemilik.js"></script>
+    <script src="../../js/pemilik/kelola-admin.js"></script>
+</body>
+</html>

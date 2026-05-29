@@ -1,4 +1,5 @@
 // File: public/js/pemilik/layout-pemilik.js
+
 window.API_URL = 'http://localhost:5000/api';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -110,8 +111,8 @@ document.addEventListener('DOMContentLoaded', () => {
   .then(resData => {
     const user = resData.data; 
     if (user) {
-      document.getElementById('profileName').textContent = user.nama || 'Pemilik Kos';
-      document.getElementById('avatarInitial').textContent = (user.nama || 'P').charAt(0).toUpperCase();
+      document.getElementById('profileName').textContent = user.nama_lengkap || user.nama || 'Pemilik Kos';
+      document.getElementById('avatarInitial').textContent = (user.nama_lengkap || user.nama || 'P').charAt(0).toUpperCase();
     }
   })
   .catch(() => {
@@ -123,4 +124,8 @@ document.addEventListener('DOMContentLoaded', () => {
 function handleLogout() {
   localStorage.removeItem('token');
   window.location.href = '../login.html';
+}
+
+function openAdminModal() {
+  window.location.href = '/pages/pemilik/kelola-admin.html';
 }
