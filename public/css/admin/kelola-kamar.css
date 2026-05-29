@@ -108,19 +108,79 @@
    CLASS PINDAHAN DARI INLINE STYLE KELOLA KAMAR 
    ========================================== */
 
-.filter-action-header {
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center;
-    margin-bottom: 24px;
+/* Wrapper Utama: Memaksa Box Filter dan Tombol MUTLAK Samping-Sampingan */
+.kamar-top-action-bar {
+    display: flex;
     gap: 16px;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 24px;
+    flex-wrap: nowrap; /* Mengunci baris agar tidak ada elemen yang mental ke bawah */
 }
 
-.search-wrapper {
+/* Container Box Putih */
+.filter-action-header-clay {
+    display: flex; 
+    gap: 15px; 
+    flex: 1; /* Menghabiskan sisa ruang kosong di sebelah kiri */
+    background: #ffffff; 
+    padding: 12px 16px; 
+    border-radius: 20px; 
+    box-shadow: 6px 6px 12px rgba(165, 215, 210, 0.2), inset -2px -2px 6px rgba(0,0,0,0.02), inset 2px 2px 5px #ffffff; 
+    box-sizing: border-box;
+}
+
+/* Wrapper Grid Input di Dalam Box Putih */
+.search-wrapper-clay {
+    flex: 1.5; 
+    min-width: 150px;
+}
+
+.sort-wrapper-clay {
     flex: 1; 
-    max-width: 350px;
+    min-width: 150px;
 }
 
+/* Tombol Tambah Kamar Baru (Kokoh di Samping Box) */
+.btn-kamar-standalone {
+    white-space: nowrap;      /* Mengunci teks dalam satu baris, anti-pecah/turun */
+    height: 48px;             /* Menyamakan tinggi tombol agar presisi dengan box filter */
+    padding: 0 24px;
+    flex-shrink: 0;           /* Melarang keras tombol mengkerut / gepeng */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+/* Base Form Input & Select Claymorphism */
+.form-input-clay {
+    width: 100%; 
+    padding: 10px 16px; 
+    border-radius: 14px; 
+    border: 1px solid #e2e8f0; 
+    background: #f7fafc; 
+    box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05); 
+    font-family: inherit; 
+    font-size: 13.5px; 
+    color: var(--text-cozy, #5d444e); 
+    outline: none;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+}
+
+/* Interaksi Efek Hover & Focus */
+select.form-input-clay {
+    cursor: pointer;
+}
+
+.form-input-clay:focus {
+    border-color: #ffccd5;
+    background: #ffffff;
+    box-shadow: inset 2px 2px 5px rgba(0,0,0,0.02), 0 0 0 3px rgba(255, 204, 213, 0.4);
+}
+
+/* Sisa kode di bawahnya (.icon-btn ke bawah) tetap utuh */
 .icon-btn {
     font-size: 20px;
 }

@@ -1,6 +1,4 @@
-/* ==========================================================================
-   public/css/admin/pembayaran.css
-   ========================================================================== */
+/* public/css/admin/pembayaran.css  */
 
 /* ─── 1. SCOPED LOCAL TOKENS ─── */
 :is(.tagihan-container, .tagihan-container-wide) {
@@ -24,7 +22,7 @@
 .tagihan-container      { max-width: 850px; }
 .tagihan-container-wide { max-width: 1100px; }
 
-/* Struktur Grid Baru yang ditambahkan dari HTML */
+/* Struktur Grid & Flex Utility */
 .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
 .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
 .flex { display: flex; }
@@ -118,37 +116,66 @@
     0 0 0 4px var(--local-focus-shadow);
 }
 
-/* Read-Only State */
+/* Read-Only State (Kamar Kos) */
 input[readonly] {
   color: var(--local-text-muted);
   box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.03);
+  background: rgba(0, 0, 0, 0.02) !important;
+  cursor: not-allowed;
 }
 
-/* ─── 5. CLAY BUTTON SYSTEM ─── */
-.btn-clay-primary {
+/* ─── 5. EXTRA CUSTOM STYLES FROM INLINE HTML ─── */
+.pembayaran-title {
+  padding-left: 0 !important;
+}
+
+.card-title {
+  font-size: 16px;
+}
+
+.form-group-date {
+  min-width: 220px;
+}
+
+.scheme-title {
+  font-size: 15px;
+  color: var(--text-cozy, #4a5568);
+}
+
+.scheme-desc {
+  margin-top: 8px;
+}
+
+/* Modifier khusus Tombol Riwayat (Warna Gelap Global) */
+.btn-clay-yellow {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 14px 24px;
-  font-weight: 600;
-  font-size: 14px;
-  border-radius: 16px;
+  background: #fef08a; /* Kuning pastel lembut (Yellow 200) */
+  color: #854d0e;      /* Teks cokelat tua/gelap agar kontrasnya aman dan terbaca (Yellow 800) */
   border: none;
+  padding: 11px 24px;
+  border-radius: 30px;
+  font-family: var(--fd);
+  font-weight: 800;
+  font-size: 14px;
   cursor: pointer;
-  background: linear-gradient(135deg, var(--local-blue-500) 0%, var(--local-blue-600) 100%);
-  color: #ffffff;
-  box-shadow: 
-    inset 2px 2px 4px rgba(255, 255, 255, 0.4),
-    0 5px 15px rgba(49, 130, 206, 0.3);
-  transition: all 0.2s ease;
+  box-shadow: inset -4px -4px 8px #ca8a04, 
+    inset 4px 4px 8px #ffffff, 
+    0 12px 24px rgba(234, 179, 8, 0.25);
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   text-decoration: none;
 }
 
-.btn-clay-primary:hover {
-  transform: translateY(-2px);
+.btn-clay-yellow:hover {
+  background: #fef08a; /* Tetap pertahankan warna dasar agar tidak terlalu mencolok */
+  transform: translateY(-3px);
+  /* Inset shadow disesuaikan: bayangan dalam gelap pakai kuning tua, highlight atas pakai putih bersih */
   box-shadow: 
-    inset 2px 2px 4px rgba(255, 255, 255, 0.4),
-    0 8px 20px rgba(49, 130, 206, 0.4);
+    inset -4px -4px 8px #9b6b03, 
+    inset 4px 4px 8px #ffffff, 
+    0 12px 24px rgba(130, 99, 8, 0.25); /* Glow bayangan bawah warna kuning pastel */
+  text-decoration: none;
 }
 
 /* ─── 6. MINI STATS & ICONS ─── */
@@ -162,6 +189,7 @@ input[readonly] {
   align-items: center;
   justify-content: center;
   font-size: 28px;
+  margin: 0 auto 12px; /* Otomatis ke tengah */
   box-shadow: 
     inset 3px 3px 6px rgba(255, 255, 255, 0.6),
     inset -3px -3px 6px rgba(0, 0, 0, 0.06),
@@ -171,7 +199,7 @@ input[readonly] {
 .stat-label { font-size: 11px; font-weight: 700; color: #e53e3e; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
 .stat-sub { font-size: 13px; color: var(--local-text-muted); line-height: 1.5; }
 
-/* ─── 7. CLAY TABLE SPECIFICS (Untuk daftar-pembayaran.html) ─── */
+/* ─── 7. CLAY TABLE SPECIFICS ─── */
 .table-wrapper {
   background: rgba(255, 255, 255, 0.85);
   border-radius: 24px;
@@ -221,7 +249,6 @@ table tr:hover td { background: rgba(247, 250, 252, 0.5); }
 .badge-clay.pink { background: #ffe4e6; color: #e11d48; border: 1px solid #fecdd3; }
 .badge { background: #fef3c7; color: #b45309; border: 1px solid #fde68a; display: inline-flex; padding: 6px 12px; border-radius: 10px; font-weight: 700;}
 
-/* 🟢 PERBAIKAN: CSS Tombol Konfirmasi Lunas (Clay Style Hijau) */
 .btn-success-sm {
   background: linear-gradient(135deg, #48bb78 0%, #2f855a 100%);
   color: #ffffff;
@@ -253,7 +280,6 @@ table tr:hover td { background: rgba(247, 250, 252, 0.5); }
   box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* 🟢 TAMBAHAN: Style untuk text status "Selesai" jika sudah lunas */
 .text-selesai-lunas {
   color: #2f855a; 
   background: rgba(72, 187, 120, 0.1); 
@@ -267,7 +293,6 @@ table tr:hover td { background: rgba(247, 250, 252, 0.5); }
 }
 
 /* ─── 8. TOM SELECT CLAYMORPHISM OVERRIDES ─── */
-/* Merombak library dropdown agar menyatu dengan tema Clay UI */
 .ts-wrapper.form-input {
   padding: 0;
   border: none;
@@ -328,4 +353,132 @@ table tr:hover td { background: rgba(247, 250, 252, 0.5); }
     align-items: flex-start !important;
     gap: 16px;
   }
+}
+
+/* Container Utama Filter */
+.clay-filter-container {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 24px;
+    width: 100%;
+}
+
+/* Wrapper komponen untuk menaruh icon di dalam */
+.clay-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-width: 160px;
+}
+
+/* Khusus kotak pencarian dibuat agak lebih lebar sedikit */
+.clay-input-wrapper.search-box {
+    flex: 1.5;
+    min-width: 220px;
+}
+
+/* Styling Icon di dalam Input/Select */
+.clay-input-wrapper .field-icon {
+    position: absolute;
+    left: 16px;
+    color: #3b82f6; 
+    font-size: 1.25rem;
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* Base Style Input & Select Claymorphism */
+.clay-input, .clay-select {
+    width: 100%;
+    padding: 12px 16px 12px 44px; 
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--n700, #475569);
+    background-color: #f1f5f9; 
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    border-radius: 16px; 
+    outline: none;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 
+        inset 0px 2px 4px rgba(255, 255, 255, 0.8),
+        inset 0px -2px 4px rgba(0, 0, 0, 0.03),
+        0px 4px 12px rgba(0, 0, 0, 0.03);
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+.clay-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-size: 16px;
+    padding-right: 40px;
+}
+
+.clay-input:focus, .clay-select:focus {
+    background-color: #ffffff;
+    border-color: #3b82f6;
+    box-shadow: 
+        0px 0px 0px 4px rgba(59, 130, 246, 0.15),
+        0px 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.clay-input::placeholder {
+    color: var(--n400, #94a3b8);
+    font-weight: 400;
+}
+
+/* ─── 10. STRUCTURE ACTION BAR ─── */
+.kamar-top-action-bar {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 24px;
+    flex-wrap: nowrap;
+}
+
+.filter-action-header-clay {
+    display: flex; 
+    gap: 12px; 
+    flex: 1; 
+    background: #ffffff; 
+    padding: 12px 16px; 
+    border-radius: 20px; 
+    box-shadow: 6px 6px 12px rgba(165, 215, 210, 0.2), inset -2px -2px 6px rgba(0,0,0,0.02), inset 2px 2px 5px #ffffff; 
+    box-sizing: border-box;
+}
+
+.search-wrapper-clay { flex: 1.8; min-width: 160px; }
+.filter-wrapper-clay { flex: 1; min-width: 130px; }
+.filter-wrapper-clay-small { flex: 0.8; min-width: 110px; }
+.sort-wrapper-clay { flex: 1.2; min-width: 140px; }
+
+.form-input-clay {
+    width: 100%; 
+    padding: 10px 14px; 
+    border-radius: 14px; 
+    border: 1px solid #e2e8f0; 
+    background: #f7fafc; 
+    box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05); 
+    font-family: inherit; 
+    font-size: 13.5px; 
+    color: #5d444e; 
+    outline: none;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+}
+
+select.form-input-clay {
+    cursor: pointer;
+}
+
+.form-input-clay:focus {
+    border-color: #ffccd5;
+    background: #ffffff;
+    box-shadow: inset 2px 2px 5px rgba(0,0,0,0.02), 0 0 0 3px rgba(255, 204, 213, 0.4);
 }

@@ -1,6 +1,4 @@
-/* ==========================================
-   1. LAYOUT GRID UTAMA
-   ========================================== */
+/* public/css/admin/kelola-penghuni.css */
 .admin-grid-layout {
     display: grid;
     grid-template-columns: 1fr 360px;
@@ -9,9 +7,30 @@
     width: 100%;
 }
 
-.font-bold {
+.content-left-col {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* DIKUNCI: Agar tidak mengubah font-bold di area Sidebar */
+.admin-grid-layout .font-bold,
+.table-wrapper .font-bold,
+.modal-box .font-bold {
     font-weight: 700;
     color: var(--text-cozy, #5d444e);
+}
+
+.text-center {
+    text-align: center;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+.mt-10 {
+    margin-top: 10px;
 }
 
 /* ==========================================
@@ -23,7 +42,7 @@
     padding: 24px;
     box-shadow: 0 8px 24px rgba(93, 68, 78, 0.05);
     border: 1px solid rgba(93, 68, 78, 0.05);
-    overflow-x: auto; /* Biar kalau di HP tabelnya bisa di-scroll kesamping, gak pecah */
+    overflow-x: auto;
 }
 
 .quick-action-card {
@@ -42,7 +61,57 @@
 }
 
 /* ==========================================
-   3. TABLE TOPBAR / HEADER KARTU
+   3. FILTER, SEARCH & SORT HEADER
+   ========================================== */
+.filter-action-header-clay {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    background: #ffffff;
+    padding: 12px 16px;
+    border-radius: 20px;
+    box-shadow:
+        6px 6px 12px rgba(165, 215, 210, 0.2),
+        inset -2px -2px 6px rgba(0, 0, 0, 0.02),
+        inset 2px 2px 5px #ffffff;
+}
+
+.search-wrapper-clay {
+    flex: 1;
+    min-width: 200px;
+}
+
+.sort-wrapper-clay {
+    min-width: 220px;
+}
+
+.form-input-clay {
+    width: 100%;
+    padding: 10px 16px;
+    border-radius: 14px;
+    border: 1px solid #e2e8f0;
+    background: #f7fafc;
+    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.05);
+    font-family: inherit;
+    font-size: 13.5px;
+    color: var(--text-cozy, #5d444e);
+    outline: none;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+}
+
+select.form-input-clay {
+    cursor: pointer;
+}
+
+.form-input-clay:focus {
+    border-color: #ffccd5;
+    background: #ffffff;
+    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.02), 0 0 0 3px rgba(255, 204, 213, 0.4);
+}
+
+/* ==========================================
+   4. TABLE TOPBAR / HEADER KARTU
    ========================================== */
 .table-top {
     display: flex;
@@ -57,6 +126,10 @@
     color: var(--text-cozy, #5d444e);
 }
 
+.history-title {
+    color: #718096;
+}
+
 .table-top-sub {
     font-size: 12px;
     color: #8c737d;
@@ -69,15 +142,15 @@
 }
 
 /* ==========================================
-   4. STYLING ELEMEN TABEL (Sangat Penting!)
+   5. STYLING ELEMEN TABEL (DIKUNCI KE .table-wrapper)
    ========================================== */
-table {
+.table-wrapper table {
     width: 100%;
     border-collapse: collapse;
     text-align: left;
 }
 
-th {
+.table-wrapper th {
     font-size: 12px;
     font-weight: 700;
     text-transform: uppercase;
@@ -87,7 +160,7 @@ th {
     letter-spacing: 0.5px;
 }
 
-td {
+.table-wrapper td {
     padding: 16px;
     font-size: 14px;
     color: var(--text-cozy, #5d444e);
@@ -95,14 +168,20 @@ td {
     vertical-align: middle;
 }
 
-tr:hover td {
-    background: rgba(255, 204, 213, 0.1); /* Efek highlight lembut saat baris di-hover */
+.table-wrapper tr:hover td {
+    background: rgba(255, 204, 213, 0.1);
+}
+
+.table-loading {
+    text-align: center;
+    padding: 20px;
 }
 
 /* ==========================================
-   5. TOMBOL & AKSI (BUTTONS)
+   6. TOMBOL & AKSI (BUTTONS)
    ========================================== */
-.btn {
+.admin-grid-layout .btn,
+.modal-box .btn {
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -115,13 +194,15 @@ tr:hover td {
     transition: all 0.2s ease;
 }
 
-.btn-ghost {
+.admin-grid-layout .btn-ghost,
+.modal-box .btn-ghost {
     background: transparent;
     color: var(--text-cozy, #5d444e);
     border: 1px solid rgba(93, 68, 78, 0.15);
 }
 
-.btn-ghost:hover {
+.admin-grid-layout .btn-ghost:hover,
+.modal-box .btn-ghost:hover {
     background: rgba(93, 68, 78, 0.05);
 }
 
@@ -131,29 +212,31 @@ tr:hover td {
 }
 
 .quick-action-btn {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
     gap: 8px;
-    width: 100%;
-    padding: 12px;
-    border-radius: 12px;
+    background: #e2fcdb; /* Hijau pastel super lembut */
+    color: #2b5c3a;      /* Hijau tua cozy untuk teks */
     border: none;
+    padding: 11px 24px;
+    border-radius: 30px;
+    font-family: var(--fd);
+    font-weight: 800;
     font-size: 14px;
-    font-weight: 700;
     cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.1);
+    /* Efek claymorphism awal bernuansa hijau */
+    box-shadow: inset -4px -4px 8px #c1e7ba, inset 4px 4px 8px #ffffff, 0 8px 20px rgba(43, 92, 58, 0.08);
+    transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-decoration: none;
 }
 
-.qab-green {
-    background: #c6f6d5;
-    color: #22543d;
-}
-
-.qab-green:hover {
-    background: #b2f5ea;
-    transform: translateY(-1px);
+.quick-action-btn:hover {
+    background: #d2f7ca; /* Sedikit lebih gelap pas di-hover agar kontras */
+    color: #1e4228;      /* Teks menua sedikit saat hover */
+    transform: translateY(-3px);
+    /* Efek bayangan saat hover disesuaikan ke tema hijau, bukan pink lagi */
+    box-shadow: inset -4px -4px 8px #a8d6a0, inset 4px 4px 8px #ffffff, 0 12px 24px rgba(43, 92, 58, 0.18);
+    text-decoration: none;
 }
 
 .action-flex {
@@ -163,10 +246,11 @@ tr:hover td {
 }
 
 /* ==========================================
-   6. STYLING GRUP FORM INPUTAN
+   7. STYLING GRUP FORM INPUTAN
    ========================================== */
 #formPenghuni,
-#formEditPenghuni {
+#formEditPenghuni,
+#formRestorePenghuni {
     display: flex;
     flex-direction: column;
     gap: 14px;
@@ -213,7 +297,7 @@ tr:hover td {
 }
 
 /* ==========================================
-   7. BADGES STATUS & STATE KOSONG
+   8. BADGES STATUS & STATE KOSONG
    ========================================== */
 .status-dot {
     display: inline-flex;
@@ -259,7 +343,7 @@ tr:hover td {
 }
 
 /* ==========================================
-   8. POPUP MODAL (EDIT DATA)
+   9. POPUP MODAL (EDIT & RESTORE DATA)
    ========================================== */
 .modal-backdrop {
     display: none;
@@ -292,6 +376,10 @@ tr:hover td {
     margin-bottom: 24px;
 }
 
+.modal-title {
+    margin: 0;
+}
+
 .modal-close-btn {
     background: none;
     border: none;
@@ -307,8 +395,14 @@ tr:hover td {
     color: #f56565;
 }
 
+.restore-desc {
+    margin-bottom: 15px;
+    font-size: 14px;
+    color: var(--text-muted, #718096);
+}
+
 /* ==========================================
-   9. RESPONSIVE MEDIA QUERIES
+   10. RESPONSIVE MEDIA QUERIES
    ========================================== */
 @media (max-width: 1024px) {
     .admin-grid-layout {
@@ -320,6 +414,7 @@ tr:hover td {
     .table-wrapper {
         padding: 16px;
     }
+
     .modal-box {
         max-width: 95%;
         padding: 20px;

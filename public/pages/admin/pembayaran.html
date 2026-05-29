@@ -1,5 +1,3 @@
-<!-- public/pages/admin/pembayaran.html -->
-
 <!DOCTYPE html>
 <html lang="id">
 
@@ -29,14 +27,13 @@
 
       <main class="content page-enter">
 
-        <div class="mb-6" style="display: flex; justify-content: space-between; align-items: center;">
+        <div class="flex justify-between items-center mb-6">
           <div>
-            <h1 class="topbar-title" style="padding-left: 0;">Buat Tagihan Baru</h1>
+            <h1 class="topbar-title pembayaran-title">Buat Tagihan Baru</h1>
             <p class="stat-sub">Daftarkan tagihan bulanan baru ke panel penghuni.</p>
           </div>
 
-          <a href="riwayat-pembayaran.html" class="btn-clay-primary"
-            style="text-decoration: none; background: var(--n900); color: white;">
+          <a href="riwayat-pembayaran.html" class="btn-clay-yellow">
             <i class="ph ph-list-bullets"></i> Lihat Riwayat Tagihan
           </a>
         </div>
@@ -44,7 +41,7 @@
         <div class="grid-3 mb-6">
 
           <div class="card">
-            <h2 class="font-bold mb-4" style="font-size: 16px;">Form Buat Tagihan Baru</h2>
+            <h2 class="font-bold mb-4 card-title">Form Buat Tagihan Baru</h2>
 
             <form id="formPembayaran">
               <div class="grid-2 mb-4">
@@ -57,8 +54,7 @@
 
                 <div class="form-group">
                   <label class="form-label" for="kamar_display">Kamar Kos</label>
-                  <input type="text" id="kamar_display" class="form-input" placeholder="-- Menunggu Penghuni --"
-                    readonly style="background: rgba(0,0,0,0.02); cursor: not-allowed;">
+                  <input type="text" id="kamar_display" class="form-input" placeholder="-- Menunggu Penghuni --" readonly>
                   <input type="hidden" id="id_kamar" required>
                 </div>
               </div>
@@ -89,13 +85,12 @@
 
                 <div class="form-group">
                   <label class="form-label" for="jumlah_tagihan">Jumlah Tagihan (Rp) <span class="req">*</span></label>
-                  <input type="number" id="jumlah_tagihan" min="0" placeholder="Otomatis terisi..."
-                    class="form-input-clay" required>
+                  <input type="number" id="jumlah_tagihan" min="0" placeholder="Otomatis terisi..." class="form-input-clay" required>
                 </div>
               </div>
 
               <div class="flex items-center justify-between mt-6">
-                <div class="form-group mb-3" style="min-width: 220px;">
+                <div class="form-group mb-3 form-group-date">
                   <label class="form-label" for="tgl_jatuh_tempo">Jatuh Tempo <span class="req">*</span></label>
                   <input type="date" id="tgl_jatuh_tempo" class="form-input-clay" required>
                 </div>
@@ -109,13 +104,12 @@
 
           <div class="card flex flex-col justify-center">
             <div class="text-center">
-              <div class="stat-icon stat-icon-pink mb-3" style="margin: 0 auto 12px;">
+              <div class="stat-icon stat-icon-pink mb-3">
                 <i class="ph ph-receipt"></i>
               </div>
               <div class="stat-label">Sistem Otomasi</div>
-              <div class="font-bold" style="font-size: 15px; color: var(--text-cozy);">Skema Pembayaran v2</div>
-              <p class="stat-sub" style="margin-top: 8px;">Tagihan yang dibuat akan langsung muncul di panel aplikasi
-                milik penghuni kos yang bersangkutan secara *real-time*.</p>
+              <div class="font-bold scheme-title">Skema Pembayaran v2</div>
+              <p class="stat-sub scheme-desc">Tagihan yang dibuat akan langsung muncul di panel aplikasi milik penghuni kos yang bersangkutan secara *real-time*.</p>
             </div>
           </div>
 
