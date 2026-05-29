@@ -216,6 +216,7 @@ function saveTenant(event) {
     btn.innerHTML = 'Menyimpan...';
     btn.style.pointerEvents = 'none';
 
+    // Cukup 1 kali fetch, karena backend sudah urus update status kamar otomatis!
     fetch(`${API_URL}/penghuni`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
@@ -225,22 +226,11 @@ function saveTenant(event) {
         .then(data => {
             if (!data.success) throw new Error(data.message || 'Gagal mendaftar penghuni.');
 
-            return fetch(`${API_URL}/kamar/${roomId}`, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                body: JSON.stringify({
-                    status_kamar: 'tidak tersedia',
-                    status: 'tidak tersedia'
-                })
-            });
-        })
-        .then(res => res.json())
-        .then(() => {
             btn.innerHTML = '<i class="ph ph-floppy-disk"></i> Simpan Data Penghuni';
             btn.style.pointerEvents = 'auto';
 
             document.getElementById('formPenghuni').reset();
-            alert('Penghuni sukses terdaftar & Kamar berhasil dikunci!');
+            alert('Penghuni sukses terdaftar & Kamar otomatis dikunci!');
             fetchPenghuni();
             fetchKamarPilihan();
         })

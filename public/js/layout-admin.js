@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <i class="ph ph-users sidebar-link-icon"></i>
             <span>Kelola Penghuni</span>
           </a>
-          <a href="#" class="sidebar-link font-bold text-muted" onclick="alert('Modul Buat Tagihan segera hadir')">
+          <a href="/pages/admin/pembayaran.html" class="sidebar-link font-bold text-muted">
             <i class="ph ph-receipt sidebar-link-icon"></i>
             <span>Buat Tagihan</span>
           </a>
@@ -78,9 +78,34 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       </div>
     `;
-  }
 
-  // 3. INJEKSI FOOTER
+    // --- TAMBAHAN KODE UNTUK MENGGANTI TEKS "MEMUAT..." MENJADI NAMA ADMIN ---
+    try {
+      // Mengambil data user dari Local Storage (sesuaikan dengan key saat kamu login)
+      let namaAdmin = 'Admin Siyani'; // Nama default jika gagal
+      const userStr = localStorage.getItem('user'); // Biasanya data user disimpan di key 'user'
+
+      if (userStr) {
+        const userData = JSON.parse(userStr);
+        // Coba ambil dari properti nama_lengkap, nama, atau username
+        namaAdmin = userData.nama_lengkap || userData.nama || userData.username || namaAdmin;
+      } else {
+        // Alternatif jika nama disimpan langsung tanpa object
+        namaAdmin = localStorage.getItem('nama') || localStorage.getItem('username') || namaAdmin;
+      }
+
+      // Tembakkan nama ke elemen HTML
+      document.getElementById('profileName').textContent = namaAdmin;
+      // Ambil huruf pertama untuk Avatar
+      document.getElementById('avatarInitial').textContent = namaAdmin.charAt(0).toUpperCase();
+
+    } catch (error) {
+      console.error('Gagal mengambil data admin:', error);
+      document.getElementById('profileName').textContent = 'Admin';
+      document.getElementById('avatarInitial').textContent = 'A';
+    }
+  }
+  
   // 3. INJEKSI FOOTER
   const footerContainer = document.getElementById('footer-container');
   if (footerContainer) {

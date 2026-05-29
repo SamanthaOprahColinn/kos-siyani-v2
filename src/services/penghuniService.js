@@ -43,7 +43,7 @@ export const createPenghuni = async (penghuniData) => {
     }
     
     // PERBAIKAN: Ubah status kamar menjadi 'terisi' (sinkron dengan kelola kamar)
-    kamar.status_kamar = 'terisi';
+    kamar.status_kamar = 'tidak tersedia';
     await kamar.save();
   }
 
