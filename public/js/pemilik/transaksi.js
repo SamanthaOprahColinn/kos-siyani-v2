@@ -34,18 +34,22 @@ function fetchTransaksi() {
                      (resData.data && Array.isArray(resData.data.docs)) ? resData.data.docs : [];
 
         if (list.length > 0) {
-            // Urutkan: Menunggu Konfirmasi tampil paling atas
-            list.sort((a, b) => {
-                if (a.status_bayar === 'menunggu_konfirmasi' && b.status_bayar !== 'menunggu_konfirmasi') return -1;
-                if (a.status_bayar !== 'menunggu_konfirmasi' && b.status_bayar === 'menunggu_konfirmasi') return 1;
-                return new Date(b.tgl_jatuh_tempo) - new Date(a.tgl_jatuh_tempo);
-            });
+            list.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
             list.forEach(t => {
                 const tr = document.createElement('tr');
                 
                 const namaPenghuni = t.id_penghuni?.nama_lengkap || 'Kosong/Keluar';
-                const noKamar = t.id_kamar?.nomor_kamar || '-';
+                
+                // --- PENARIKAN DATA NOMOR KAMAR DAN LANTAI ---
+                const nomorKamar = t.id_kamar?.nomor_kamar || '-';
+                const lantaiKamar = t.id_kamar?.lantai || '-';
+                
+                // --- FORMAT TANGGAL PEMBUATAN ---
+                const tanggalDibuat = new Date(t.createdAt).toLocaleDateString('id-ID', {
+                    day: 'numeric', month: 'short', year: 'numeric'
+                });
+                
                 const formatRupiah = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(t.jumlah_tagihan);
                 const statusStr = (t.status_bayar || 'belum_bayar').toLowerCase();
                 
@@ -68,10 +72,20 @@ function fetchTransaksi() {
                     `;
                 }
 
+                // --- EFEK VISUAL UNTUK LUNAS ---
+                if (statusStr === 'lunas') {
+                    tr.style.backgroundColor = '#f8fafc';
+                    tr.style.opacity = '0.65';
+                }
+
+                // --- UPDATE TAMPILAN TABEL ---
                 tr.innerHTML = `
                     <td class="font-bold">${namaPenghuni}</td>
-                    <td>No. ${noKamar}</td>
-                    <td>Bln ${t.bulan_tagihan} / ${t.tahun_tagihan}</td>
+                    <td>No. ${nomorKamar} / Lt. ${lantaiKamar}</td>
+                    <td>
+                        Bln ${t.bulan_tagihan} / ${t.tahun_tagihan}<br>
+                        <span style="font-size: 11.5px; color: #94a3b8; font-weight: normal;">Dibuat: ${tanggalDibuat}</span>
+                    </td>
                     <td class="font-bold" style="color: var(--pink-600);">${formatRupiah}</td>
                     <td><span class="badge badge-${badgeClass}">${statusLabel}</span></td>
                     <td style="text-align: center;">${aksiHtml}</td>
