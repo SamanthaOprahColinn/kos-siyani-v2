@@ -45,18 +45,35 @@ function renderTabelKamar(data) {
     tbody.innerHTML = '';
 
     if (data.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px;">Belum ada data kamar atau pencarian tidak ditemukan.</td></tr>';
+        // Colspan diubah menjadi 5 karena ada tambahan kolom Fasilitas
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">Belum ada data kamar atau pencarian tidak ditemukan.</td></tr>';
         return;
     }
 
     data.forEach(k => {
         const tr = document.createElement('tr');
         const status = (k.status_kamar || 'tersedia').toLowerCase();
+        
+        let badgeClass = 'badge-kosong';
+        let statusText = 'TERSEDIA';
+
+        if (status === 'terisi' || status === 'tidak tersedia') {
+            badgeClass = 'badge-terisi';
+            statusText = 'TERISI';
+        }
+
+        const fasilitasStr = (Array.isArray(k.fasilitas) && k.fasilitas.length > 0) 
+            ? k.fasilitas.join(', ') 
+            : (k.fasilitas || '-');
+
         tr.innerHTML = `
-            <td class="font-bold">Kamar ${k.nomor_kamar || '-'}</td>
-            <td>${k.tipe_kamar || '-'} / Lt. ${k.lantai || '-'}</td>
-            <td>Rp ${Number(k.harga_sewa || 0).toLocaleString('id-ID')}</td>
-            <td><span class="badge badge-${status === 'tersedia' ? 'success' : 'warning'}">${status.toUpperCase()}</span></td>
+            <td class="font-bold">No. ${k.nomor_kamar || '-'} / Lt. ${k.lantai || '-'}</td>
+            <td>Tipe ${k.tipe_kamar || '-'}</td>
+            <td style="font-size: 13px; color: var(--n500); max-width: 220px; white-space: normal; line-height: 1.4;">
+                ${fasilitasStr}
+            </td>
+            <td style="color: var(--pink-600); font-weight: 600;">Rp ${Number(k.harga_sewa || 0).toLocaleString('id-ID')}</td>
+            <td><span class="badge-kamar ${badgeClass}">${statusText}</span></td>
         `;
         tbody.appendChild(tr);
     });

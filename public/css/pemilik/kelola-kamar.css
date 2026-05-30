@@ -100,6 +100,39 @@
     width: 420px; box-shadow: 0 20px 40px rgba(0,0,0,0.15);
     animation: slideIn 0.3s ease-out;
 }
+
+.modal-content input:focus, .modal-content select:focus { 
+    border-color: #ec4899; outline: none; box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.1);
+}
+.modal-actions { 
+    display: flex; justify-content: flex-end; gap: 12px; margin-top: 10px; 
+}
+
+/* --- Badge Status Kamar --- */
+.badge-kamar {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.badge-kosong {
+    background: #e6fffa; /* Teal/Hijau muda */
+    color: #234e52;
+    border: 1px solid #b2f5ea;
+}
+
+.badge-terisi {
+    background: #fff5f5; /* Merah muda lembut */
+    color: #9b2c2c;
+    border: 1px solid #feb2b2;
+}
+
 @keyframes slideIn { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 .modal-content h3 { margin-bottom: 25px; color: var(--n900); font-size: 1.25rem; }
 .modal-content input, .modal-content select { 
@@ -108,7 +141,20 @@
     font-size: 14px; transition: border 0.3s;
     box-sizing: border-box;
 }
-.modal-content input:focus, .modal-content select:focus { 
-    border-color: #ec4899; outline: none; box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.1);
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 768px) {
+    .kamar-top-action-bar {
+        flex-direction: column; /* Mengubah baris menjadi kolom */
+        align-items: stretch;
+    }
+    
+    .filter-action-header-clay {
+        width: 100%; /* Pencarian memenuhi lebar layar */
+    }
+    
+    .btn-kamar-standalone {
+        width: 100%; /* Tombol memenuhi lebar layar */
+        justify-content: center;
+    }
 }
-.modal-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 10px; }
