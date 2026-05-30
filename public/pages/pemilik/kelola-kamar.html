@@ -27,18 +27,18 @@
                             <i class="ph ph-magnifying-glass search-icon-clay"></i>
                             <input type="text" id="searchKamar" class="form-input-clay" placeholder="Cari nomor kamar, tipe, atau harga..." onkeyup="filterTabelKamar()">
                         </div>
-                        <button class="btn btn-ghost btn-sm icon-btn" onclick="fetchKamar()" title="Segarkan Data">
+                        <button class="btn-icon-clay edit" onclick="fetchKamar()" title="Segarkan Data">
                             <i class="ph ph-arrows-clockwise"></i>
                         </button>
                     </div>
                     
-                    <button class="btn-kamar-standalone" onclick="openModal()">
-                        <i class="ph ph-plus-circle"></i>
+                    <button class="btn-clay-primary" onclick="openModal()">
+                        <i class="ph ph-plus-circle" style="font-size: 20px;"></i>
                         <span>Tambah Kamar</span>
                     </button>
                 </div>
 
-                <div class="table-wrapper" style="width: 100%;">
+                <div class="table-wrapper">
                     <div class="table-top">
                         <div>
                             <div class="table-top-title">Daftar Kamar Kos</div>
@@ -89,7 +89,7 @@
                 
                 <div class="modal-actions">
                     <button type="button" class="btn btn-ghost" onclick="closeModal()">Batal</button>
-                    <button type="submit" class="btn btn-primary" id="btnSaveKamar">Simpan Kamar</button>
+                    <button type="submit" class="btn-clay-primary" id="btnSaveKamar">Simpan Kamar</button>
                 </div>
             </form>
         </div>

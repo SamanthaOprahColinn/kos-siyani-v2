@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css" />
     <link rel="stylesheet" href="../../css/global.css" />
     <link rel="stylesheet" href="../../css/pemilik/dashboard.css" />
-    <link rel="stylesheet" href="../../css/pemilik/kelola-penghuni.css" />
 </head>
 <body>
 
@@ -22,29 +21,34 @@
             </header>
 
             <main class="content page-enter">
-                <div class="table-wrapper" style="width: 100%;">
+                
+                <div class="kamar-top-action-bar">
+                    <!-- Kolom Pencarian -->
+                    <div class="filter-action-header-clay">
+                        <div class="search-wrapper-clay">
+                            <i class="ph ph-magnifying-glass search-icon-clay"></i>
+                            <input type="text" id="searchPenghuni" class="form-input-clay" placeholder="Cari nama, no. kamar, atau email..." oninput="renderTable()">
+                        </div>
+                    </div>
+                    
+                    <select id="filterStatus" class="filter-dropdown-clay" onchange="renderTable()">
+                        <option value="aktif">Status: Aktif</option>
+                        <option value="keluar">Status: Keluar (Riwayat)</option>
+                        <option value="semua">Status: Semua</option>
+                    </select>
+                </div>
+
+                <div class="table-wrapper">
                     <div class="table-top">
                         <div>
                             <div class="table-top-title">Daftar Seluruh Penghuni</div>
                             <div class="table-top-sub">Monitoring data penghuni terdaftar</div>
                         </div>
-
-                        <div class="penghuni-action-container">
-                            <select id="filterStatus" class="filter-dropdown-clay" onchange="renderTable()">
-                                <option value="aktif">Status: Aktif</option>
-                                <option value="keluar">Status: Keluar (Riwayat)</option>
-                                <option value="semua">Status: Semua</option>
-                            </select>
-
-                            <button class="btn btn-ghost btn-sm" onclick="fetchPenghuni()">
-                                <i class="ph ph-arrows-clockwise"></i>
-                            </button>
-                        </div>
                     </div>
                     <table>
                         <thead>
                             <tr>
-                                <th>Kamar</th>
+                                <th>Kamar & Tipe</th>
                                 <th>Nama Lengkap</th>
                                 <th>Kontak & Email</th>
                                 <th>Status</th>

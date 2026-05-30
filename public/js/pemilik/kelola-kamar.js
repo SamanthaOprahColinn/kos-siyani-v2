@@ -73,7 +73,7 @@ function renderTabelKamar(data) {
                 ${fasilitasStr}
             </td>
             <td style="color: var(--pink-600); font-weight: 600;">Rp ${Number(k.harga_sewa || 0).toLocaleString('id-ID')}</td>
-            <td><span class="badge-kamar ${badgeClass}">${statusText}</span></td>
+            <td><span class="badge ${badgeClass}">${statusText}</span></td>
         `;
         tbody.appendChild(tr);
     });

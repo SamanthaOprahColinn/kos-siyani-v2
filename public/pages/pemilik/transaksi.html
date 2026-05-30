@@ -21,15 +21,27 @@
             </header>
 
             <main class="content page-enter">
+
+                <div class="kamar-top-action-bar">
+                    <div class="filter-action-header-clay">
+                        <div class="search-wrapper-clay">
+                            <i class="ph ph-magnifying-glass search-icon-clay"></i>
+                            <input type="text" id="searchTransaksi" class="form-input-clay" placeholder="Cari nama penghuni, no. kamar, atau status..." oninput="filterTransaksi()">
+                        </div>
+                    </div>
+
+                    <button class="btn-clay-primary" onclick="fetchTransaksi()">
+                        <i class="ph ph-arrows-clockwise"></i> 
+                        <span>Segarkan</span>
+                    </button>
+                </div>
+
                 <div class="table-wrapper" style="width: 100%;">
                     <div class="table-top">
                         <div>
                             <div class="table-top-title">Riwayat Pembayaran Sewa</div>
                             <div class="table-top-sub">Pantau pendapatan dan verifikasi bukti transfer dari penghuni</div>
                         </div>
-                        <button class="btn btn-ghost btn-sm" onclick="fetchTransaksi()">
-                            <i class="ph ph-arrows-clockwise" style="font-size: 18px;"></i> Segarkan
-                        </button>
                     </div>
                     <table>
                         <thead>
