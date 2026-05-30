@@ -1,0 +1,81 @@
+
+.admin-header-actions {
+  margin-bottom: 32px;
+}
+
+.admin-form-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.admin-form-card {
+  width: 100%;
+  max-width: 500px;
+  padding: 40px 32px;
+}
+
+.admin-form-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.admin-form-icon {
+  font-size: 32px;
+  color: var(--pink-500);
+  margin-bottom: 8px;
+}
+
+.admin-error-box {
+  background: #fff5f5;
+  color: #e53e3e;
+  padding: 12px 16px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid #fed7d7;
+}
+
+.admin-error-icon {
+  font-size: 18px;
+}
+
+.form-group-spacing {
+  margin-bottom: 20px;
+}
+
+.form-group-spacing-lg {
+  margin-bottom: 32px;
+}
+
+.form-label-bold {
+  font-weight: 700;
+}
+
+.input-wrap-relative {
+  position: relative;
+}
+
+.btn-toggle-pw {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--n500);
+}
+
+.pw-icon {
+  font-size: 20px;
+}
+
+.btn-submit-admin {
+  justify-content: center;
+  padding: 14px;
+  font-size: 14px;
+}

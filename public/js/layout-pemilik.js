@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
           </a>
 
           <div class="sidebar-section-title">Sistem</div>
-          <a href="#" class="sidebar-link" onclick="openAdminModal()">
+          <a href="/pages/pemilik/kelola-admin.html" class="sidebar-link">
             <i class="ph ph-user-plus sidebar-link-icon"></i>
             <span>Tambah Admin Baru</span>
           </a>
