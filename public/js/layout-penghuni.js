@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="sidebar-brand">
           <div class="sidebar-brand-logo">KS</div>
           <div>
-            <div class="sidebar-brand-name">Kos Siyani</div>
+            <div class="sidebar-brand-name">Sleepyani?</div>
             <div class="sidebar-brand-sub">Portal Penghuni</div>
           </div>
         </div>
@@ -134,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (footerContainer) {
     footerContainer.innerHTML = `
       <footer style="margin-top: 40px; padding: 20px 10px; border-top: 1px dashed rgba(93,68,78,0.1); display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #8c737d;">
-        <div>&copy; 2026 <span style="font-weight: 700; color: var(--text-cozy);">Kos Siyani</span>. Hak Cipta Dilindungi Undang-Undang.</div>
+        <div>&copy; 2026 <span style="font-weight: 700; color: var(--text-cozy);">Sleepyani?</span>. Hak Cipta Dilindungi Undang-Undang.</div>
         <div style="display: flex; gap: 16px;">
           <a href="#" style="color: #8c737d; text-decoration: none;" onmouseover="this.style.color='var(--text-cozy)'" onmouseout="this.style.color='#8c737d'">Bantuan</a>
           <a href="#" style="color: #8c737d; text-decoration: none;" onmouseover="this.style.color='var(--text-cozy)'" onmouseout="this.style.color='#8c737d'">Hubungi Pengelola</a>

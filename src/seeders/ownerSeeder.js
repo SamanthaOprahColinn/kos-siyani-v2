@@ -14,7 +14,7 @@ const seedAccounts = async () => {
     // OWNER
     const defaultOwnerEmail = process.env.DEFAULT_OWNER_EMAIL || 'pemilik@kosiyani.com';
     const defaultOwnerPassword = process.env.DEFAULT_OWNER_PASSWORD || 'Admin@123456';
-    const defaultOwnerName = process.env.DEFAULT_OWNER_NAME || 'Pemilik Kos Siyani';
+    const defaultOwnerName = process.env.DEFAULT_OWNER_NAME || 'Pemilik Sleepyani?';
 
     const existingOwner = await User.findOne({ email: defaultOwnerEmail.toLowerCase() });
 
@@ -34,7 +34,7 @@ const seedAccounts = async () => {
     // ADMIN
     const defaultAdminEmail = process.env.DEFAULT_ADMIN_EMAIL || 'admin@kosiyani.com';
     const defaultAdminPassword = process.env.DEFAULT_ADMIN_PASSWORD || 'Admin@123456';
-    const defaultAdminName = process.env.DEFAULT_ADMIN_NAME || 'Admin Kos Siyani';
+    const defaultAdminName = process.env.DEFAULT_ADMIN_NAME || 'Admin Sleepyani?';
 
     const existingAdmin = await User.findOne({ email: defaultAdminEmail.toLowerCase() });
 

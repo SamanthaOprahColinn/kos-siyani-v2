@@ -14,6 +14,7 @@ const __dirname = path.dirname(__filename);
 
 // Routes
 import authRoutes from './routes/authRoutes.js';
+import publicRoutes from './routes/publicRoutes.js';
 import penghuniRoutes from './routes/penghuniRoutes.js';
 import kamarRoutes from './routes/kamarRoutes.js';          
 import pembayaranRoutes from './routes/pembayaranRoutes.js'; 
@@ -51,6 +52,7 @@ app.get('/api/health', (req, res) => {
 
 // API Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/public', publicRoutes);
 app.use('/api/penghuni', penghuniRoutes);
 app.use('/api/kamar', kamarRoutes);           
 app.use('/api/pembayaran', pembayaranRoutes); 
@@ -58,7 +60,7 @@ app.use('/api/pembayaran', pembayaranRoutes);
 // Documentation endpoint
 app.get('/api', (req, res) => {
   res.json({
-    name: 'Kos Siyani Backend API',
+    name: 'Sleepyani? Backend API',
     version: '1.0.0',
     description: 'Backend API untuk sistem manajemen kos',
     endpoints: {
@@ -118,7 +120,7 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`
 ═════════════════════════════════════════════════════════
-            🏘️  Kos Siyani Backend Server        
+            🏘️  Sleepyani? Backend Server        
 ═════════════════════════════════════════════════════════
    Server running on: http://localhost:${PORT}
    Environment: ${process.env.NODE_ENV || 'development'}

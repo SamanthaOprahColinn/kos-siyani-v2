@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="sidebar-brand">
           <div class="sidebar-brand-logo bg-pink-light text-pink-dark font-black">KS</div>
           <div>
-            <div class="sidebar-brand-name font-extrabold text-cozy">Kos Siyani</div>
+            <div class="sidebar-brand-name font-extrabold text-cozy">Sleepyani?</div>
             <div class="sidebar-brand-sub font-semibold text-muted">Admin Panel v2</div>
           </div>
         </div>
@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
     footerContainer.innerHTML = `
       <footer class="main-footer" style="margin-top: 40px; padding: 20px 10px; border-top: 1px dashed rgba(93, 68, 78, 0.1); display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #8c737d;">
         <div class="footer-text">
-          &copy; 2026 <span style="font-weight: 700; color: var(--text-cozy, #5d444e);">Kos Siyani</span>. Hak Cipta Dilindungi Undang-Undang.
+          &copy; 2026 <span style="font-weight: 700; color: var(--text-cozy, #5d444e);">Sleepyani?</span>. Hak Cipta Dilindungi Undang-Undang.
         </div>
         <div class="footer-links" style="display: flex; gap: 16px;">
           <a href="#" style="color: #8c737d; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='var(--text-cozy)'" onmouseout="this.style.color='#8c737d'">Bantuan Operasional</a>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Login — Kos Siyani</title>
+<title>Login — Sleepyani?</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css"/>
 <link rel="stylesheet" href="../css/login.css"/>
 </head>
@@ -20,7 +20,7 @@
 <div class="page">
   <div class="deco">
     <div class="deco-pill"><i class="ph ph-house-line"></i> Manajemen Kos</div>
-    <div class="deco-heading">Selamat datang di <span>Kos Siyani</span></div>
+    <div class="deco-heading">Selamat datang di <span>Sleepyani?</span></div>
     <div class="deco-sub">Kelola penghuni, kamar, dan pembayaran kos kamu secara digital dalam satu pintu.</div>
     <div class="deco-stats">
       <div class="deco-stat">
@@ -38,8 +38,8 @@
     <div class="logo-wrap">
       <div class="logo-box">KS</div>
       <div>
-        <div class="logo-text">Kos Siyani</div>
-        <div class="logo-sub">Admin Panel v2</div>
+        <div class="logo-text">Sleepyani?</div>
+        <div class="logo-sub">Admin Sleepyani?</div>
       </div>
     </div>
     <div class="card-title">Masuk ke Akun</div>
@@ -96,27 +96,27 @@ function fetchPublicStats() {
   const elKamar = document.getElementById('statLoginKamar');
   const elPenghuni = document.getElementById('statLoginPenghuni');
 
-  fetch('http://localhost:5000/api/kamar/stats/summary')
-    .then(res => res.json())
-    .then(data => {
-      if (data.success && data.data) {
-        elKamar.textContent = data.data.tersedia || '0';
-      } else {
-        elKamar.textContent = '-';
-      }
-    })
-    .catch(() => { elKamar.textContent = '-'; });
+  let totalKamar = 0;
+  let aktifPenghuni = 0;
 
-  fetch('http://localhost:5000/api/penghuni/stats/summary')
-    .then(res => res.json())
-    .then(data => {
-      if (data.success && data.data) {
-        elPenghuni.textContent = data.data.aktif || '0';
-      } else {
-        elPenghuni.textContent = '-';
-      }
-    })
-    .catch(() => { elPenghuni.textContent = '-'; });
+  Promise.all([
+    fetch('http://localhost:5000/api/public/stats/kamar').then(r => r.json()),
+    fetch('http://localhost:5000/api/public/stats/penghuni').then(r => r.json())
+  ])
+  .then(([kamarData, penghuniData]) => {
+    if (kamarData.success && kamarData.data) {
+      totalKamar = kamarData.data.total ?? 0;
+    }
+    if (penghuniData.success && penghuniData.data) {
+      aktifPenghuni = penghuniData.data.aktif ?? 0;
+    }
+    elPenghuni.textContent = aktifPenghuni;
+    elKamar.textContent = Math.max(0, totalKamar - aktifPenghuni);
+  })
+  .catch(() => {
+    elKamar.textContent = '-';
+    elPenghuni.textContent = '-';
+  });
 }
 
 function setRole(r){
