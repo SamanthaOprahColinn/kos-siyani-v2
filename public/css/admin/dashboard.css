@@ -1,9 +1,5 @@
-/* ============================================================
-   ADMIN DASHBOARD — Kos Siyani (Cozy Clay Edition)
-   Inherits: global.css
-   ============================================================ */
+/* public/css/admin/dashboard.css */
 
-/* ── Layout Utama Dashboard ── */
 .admin-stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -100,6 +96,8 @@
   font-weight: 700;
   color: var(--text-cozy, #5d444e);
   width: 100%;
+  text-align: left; 
+  line-height: 1.4;
   text-decoration: none;
   box-shadow: inset 2px 2px 4px rgba(255,255,255,0.7), 0 4px 10px rgba(0,0,0,0.02);
   transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);

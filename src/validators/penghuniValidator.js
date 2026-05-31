@@ -21,26 +21,20 @@ export const createPenghuniSchema = Joi.object({
   no_ktp: Joi.string()
     .required()
     .trim()
-    .length(16)
     .pattern(/^\d{16}$/)
     .messages({
       'string.empty': 'Nomor KTP tidak boleh kosong',
-      'string.length': 'Nomor KTP harus 16 digit',
-      'string.pattern.base': 'Nomor KTP harus 16 digit',
+      'string.pattern.base': 'Nomor KTP harus 16 digit angka',
       'any.required': 'Nomor KTP wajib diisi',
     }),
 
   no_hp: Joi.string()
     .required()
     .trim()
-    .min(10)
-    .max(13)
     .pattern(/^\d{10,13}$/)
     .messages({
       'string.empty': 'Nomor HP tidak boleh kosong',
-      'string.min': 'Nomor HP minimal 10 digit',
-      'string.max': 'Nomor HP maksimal 13 digit',
-      'string.pattern.base': 'Format nomor HP tidak valid',
+      'string.pattern.base': 'Nomor HP harus 10-13 digit angka',
       'any.required': 'Nomor HP wajib diisi',
     }),
 
@@ -108,23 +102,17 @@ export const updatePenghuniSchema = Joi.object({
   no_ktp: Joi.string()
     .optional()
     .trim()
-    .length(16)
     .pattern(/^\d{16}$/)
     .messages({
-      'string.length': 'Nomor KTP harus 16 digit',
-      'string.pattern.base': 'Nomor KTP harus 16 digit',
+      'string.pattern.base': 'Nomor KTP harus 16 digit angka',
     }),
 
   no_hp: Joi.string()
     .optional()
     .trim()
-    .min(10)
-    .max(13)
     .pattern(/^\d{10,13}$/)
     .messages({
-      'string.min': 'Nomor HP minimal 10 digit',
-      'string.max': 'Nomor HP maksimal 13 digit',
-      'string.pattern.base': 'Format nomor HP tidak valid',
+      'string.pattern.base': 'Nomor HP harus 10-13 digit angka',
     }),
 
   email: Joi.string()

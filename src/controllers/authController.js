@@ -3,6 +3,7 @@ import { asyncHandler } from '../middlewares/errorHandler.js';
 import { loginUser, createUser } from '../services/authService.js';
 import { successResponse } from '../utils/ApiResponse.js';
 import User from '../models/User.js';
+import Penghuni from '../models/Penghuni.js';
 
 /**
  * Login endpoint
@@ -214,6 +215,34 @@ export const changePasswordController = asyncHandler(async (req, res) => {
     },
     'Password berhasil diubah. Silakan login kembali dengan password baru'
   );
+});
+
+/**
+ * PATCH /api/auth/profile
+ * Penghuni update nama mereka sendiri
+ */
+export const updateProfile = asyncHandler(async (req, res) => {
+  const { nama_lengkap } = req.body;
+
+  if (!nama_lengkap || nama_lengkap.trim().length < 3) {
+    return res.status(400).json({ success: false, message: 'Nama minimal 3 karakter' });
+  }
+
+  const trimmed = nama_lengkap.trim();
+
+  const user = await User.findById(req.user._id);
+  if (!user) {
+    return res.status(404).json({ success: false, message: 'User tidak ditemukan' });
+  }
+
+  user.nama_lengkap = trimmed;
+  await user.save();
+
+  if (user.role === 'penghuni') {
+    await Penghuni.findOneAndUpdate({ user_id: req.user._id }, { nama_lengkap: trimmed });
+  }
+
+  return successResponse(res, 200, { nama_lengkap: trimmed }, 'Nama berhasil diperbarui');
 });
 
 /**

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Status Tagihan — Sleepyani?</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+  <link rel="stylesheet" href="../../css/global.css" />
+  <link rel="stylesheet" href="../../css/penghuni/status-tagihan.css" />
+</head>
+<body>
+
+  <div class="layout">
+    <div id="sidebar-container"></div>
+
+    <div class="main">
+      <header class="topbar">
+        <h1 class="topbar-title">Status Tagihan</h1>
+        <div id="topbar-container"></div>
+      </header>
+
+      <main class="content page-enter">
+
+        <div class="mb-6">
+          <p class="stat-sub">Riwayat dan status pembayaran sewa kamar kamu.</p>
+        </div>
+
+        <div class="table-wrapper">
+          <div class="table-header">
+            <div class="font-bold" style="font-size: 16px; color: var(--n900);">Daftar Tagihan Bulanan</div>
+            <button class="btn btn-ghost btn-sm" onclick="fetchTagihan()">
+              <i class="ph ph-arrows-clockwise"></i> Segarkan
+            </button>
+          </div>
+          <div style="overflow-x: auto;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nama Penghuni</th>
+                  <th>Nomor Kamar</th>
+                  <th>Periode Tagihan</th>
+                  <th>Nominal</th>
+                  <th>Jatuh Tempo</th>
+                  <th>Status Bayar</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="tagihanBody">
+                <tr>
+                  <td colspan="7" class="text-center" style="color: var(--n400); padding: 30px;">Memuat data tagihan...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </main>
+
+      <div id="footer-container"></div>
+    </div>
+  </div>
+
+  <div id="toast-container" class="toast-container"></div>
+
+  <script src="../../js/layout-penghuni.js"></script>
+  <script src="../../js/penghuni/status-tagihan.js"></script>
+</body>
+</html>

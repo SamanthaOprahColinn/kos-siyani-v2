@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buat Pembayaran - Sleepyani?</title>
+  <link rel="stylesheet" href="../../css/global.css">
+  <link rel="stylesheet" href="../../css/admin/pembayaran.css">
+
+  <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
+
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+
+<body>
+
+  <div class="layout">
+
+    <div id="sidebar-container"></div>
+
+    <div class="main">
+      <header class="topbar">
+        <h1 class="topbar-title">Manajemen Pembayaran</h1>
+        <div id="topbar-container"></div>
+      </header>
+
+      <main class="content page-enter">
+
+        <div class="flex justify-between items-center mb-6">
+          <div>
+            <h1 class="topbar-title pembayaran-title">Buat Tagihan Baru</h1>
+            <p class="stat-sub">Daftarkan tagihan bulanan baru ke panel penghuni.</p>
+          </div>
+
+          <a href="riwayat-pembayaran.html" class="btn-clay-yellow">
+            <i class="ph ph-list-bullets"></i> Lihat Riwayat Tagihan
+          </a>
+        </div>
+
+        <div class="grid-3 mb-6">
+
+          <div class="card">
+            <h2 class="font-bold mb-4 card-title">Form Buat Tagihan Baru</h2>
+
+            <form id="formPembayaran">
+              <div class="grid-2 mb-4">
+                <div class="form-group">
+                  <label class="form-label" for="cari_penghuni">Cari Penghuni <span class="req">*</span></label>
+                  <input list="list_penghuni" id="cari_penghuni" class="form-input" placeholder="Ketik nama penghuni..." autocomplete="off" required>
+                  
+                  <datalist id="list_penghuni"></datalist>
+                  
+                  <input type="hidden" id="id_penghuni" required>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="kamar_display">Kamar Kos</label>
+                  <input type="text" id="kamar_display" class="form-input" placeholder="-- Menunggu Penghuni --" readonly>
+                  <input type="hidden" id="id_kamar" required>
+                </div>
+              </div>
+
+              <div class="grid-3 mb-4">
+                <div class="form-group">
+                  <label class="form-label" for="bulan_tagihan">Bulan <span class="req">*</span></label>
+                  <select id="bulan_tagihan" class="form-input" required>
+                    <option value="1">Januari</option>
+                    <option value="2">Februari</option>
+                    <option value="3">Maret</option>
+                    <option value="4">April</option>
+                    <option value="5">Mei</option>
+                    <option value="6">Juni</option>
+                    <option value="7">Juli</option>
+                    <option value="8">Agustus</option>
+                    <option value="9">September</option>
+                    <option value="10">Oktober</option>
+                    <option value="11">November</option>
+                    <option value="12">Desember</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="tahun_tagihan">Tahun <span class="req">*</span></label>
+                  <input type="number" id="tahun_tagihan" class="form-input-clay" required>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="jumlah_tagihan">Jumlah Tagihan (Rp) <span class="req">*</span></label>
+                  <input type="number" id="jumlah_tagihan" min="0" placeholder="Otomatis terisi..." class="form-input-clay" required>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between mt-6">
+                <div class="form-group mb-3 form-group-date">
+                  <label class="form-label" for="tgl_jatuh_tempo">Jatuh Tempo <span class="req">*</span></label>
+                  <input type="date" id="tgl_jatuh_tempo" class="form-input-clay" required>
+                </div>
+
+                <button type="submit" class="btn-clay-primary">
+                  <i class="ph ph-paper-plane-launch"></i> Terbitkan Tagihan
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <div class="card flex flex-col justify-center">
+            <div class="text-center">
+              <div class="stat-icon stat-icon-pink mb-3">
+                <i class="ph ph-receipt"></i>
+              </div>
+              <div class="stat-label">Sistem Otomasi</div>
+              <div class="font-bold scheme-title">Skema Pembayaran v2</div>
+              <p class="stat-sub scheme-desc">Tagihan yang dibuat akan langsung muncul di panel aplikasi milik penghuni kos yang bersangkutan secara *real-time*.</p>
+            </div>
+          </div>
+
+        </div>
+
+      </main>
+
+      <div id="footer-container"></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+
+  <script src="../../js/layout-admin.js"></script>
+  <script src="../../js/admin/pembayaran.js"></script>
+</body>
+
+</html>

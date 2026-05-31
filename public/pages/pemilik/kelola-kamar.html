@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Kelola Kamar — Kos Siyani</title>
+    <title>Kelola Kamar — Sleepyani?</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css" />
     <link rel="stylesheet" href="../../css/global.css" />
     <link rel="stylesheet" href="../../css/pemilik/dashboard.css" />
@@ -21,29 +21,38 @@
             </header>
 
             <main class="content page-enter">
-                <div class="table-wrapper" style="width: 100%;">
+                <div class="kamar-top-action-bar">
+                    <div class="filter-action-header-clay">
+                        <div class="search-wrapper-clay">
+                            <i class="ph ph-magnifying-glass search-icon-clay"></i>
+                            <input type="text" id="searchKamar" class="form-input-clay" placeholder="Cari nomor kamar, tipe, atau harga..." onkeyup="filterTabelKamar()">
+                        </div>
+                        <button class="btn-icon-clay edit" onclick="fetchKamar()" title="Segarkan Data">
+                            <i class="ph ph-arrows-clockwise"></i>
+                        </button>
+                    </div>
+                    
+                    <button class="btn-clay-primary" onclick="openModal()">
+                        <i class="ph ph-plus-circle" style="font-size: 20px;"></i>
+                        <span>Tambah Kamar</span>
+                    </button>
+                </div>
+
+                <div class="table-wrapper">
                     <div class="table-top">
                         <div>
                             <div class="table-top-title">Daftar Kamar Kos</div>
                             <div class="table-top-sub">Monitoring status ketersediaan & fasilitas</div>
                         </div>
-                        <div style="display: flex; gap: 10px;">
-                            <button class="btn btn-primary btn-sm" onclick="openModal()">+ Tambah Kamar</button>
-                            <button class="btn btn-ghost btn-sm" onclick="fetchKamar()"><i class="ph ph-arrows-clockwise"></i></button>
-                        </div>
                     </div>
                     <table>
                         <thead>
                             <tr>
-<<<<<<< Updated upstream
                                 <th>No. Kamar</th>
                                 <th>Tipe / Lantai</th>
-=======
                                 <th>No. Kamar / Lantai</th>
                                 <th>Tipe</th>
                                 <th>Fasilitas</th>
-                                <th>Catatan</th>
->>>>>>> Stashed changes
                                 <th>Harga</th>
                                 <th>Status</th>
                             </tr>
@@ -82,7 +91,7 @@
                 
                 <div class="modal-actions">
                     <button type="button" class="btn btn-ghost" onclick="closeModal()">Batal</button>
-                    <button type="submit" class="btn btn-primary" id="btnSaveKamar">Simpan Kamar</button>
+                    <button type="submit" class="btn-clay-primary" id="btnSaveKamar">Simpan Kamar</button>
                 </div>
             </form>
         </div>

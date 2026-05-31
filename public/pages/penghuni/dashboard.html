@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard Penghuni — Sleepyani?</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+  <link rel="stylesheet" href="../../css/global.css" />
+  <link rel="stylesheet" href="../../css/penghuni/dashboard.css" />
+</head>
+<body>
+
+  <div class="layout">
+    <div id="sidebar-container"></div>
+
+    <div class="main">
+      <header class="topbar">
+        <h1 class="topbar-title">Portal Penghuni</h1>
+        <div id="topbar-container"></div>
+      </header>
+
+      <main class="content page-enter">
+
+        <div class="penghuni-stats">
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-pink"><i class="ph ph-door"></i></div>
+            <div>
+              <div class="stat-label">Nomor Kamar</div>
+              <div class="stat-value" id="statNomorKamar">-</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-cream"><i class="ph ph-receipt"></i></div>
+            <div>
+              <div class="stat-label">Tagihan Bulan Ini</div>
+              <div class="stat-value" id="statTagihan">-</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-green"><i class="ph ph-check-circle"></i></div>
+            <div>
+              <div class="stat-label">Status Bayar</div>
+              <div class="stat-value" id="statStatusBayar">-</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="penghuni-grid-layout">
+
+          <div class="table-wrapper">
+            <div class="table-top">
+              <div>
+                <div class="table-top-title">Riwayat Tagihan</div>
+                <div class="table-top-sub">3 tagihan terbaru kamu</div>
+              </div>
+              <button class="btn btn-ghost btn-sm" onclick="fetchTagihanSingkat()">
+                <i class="ph ph-arrows-clockwise"></i> Segarkan
+              </button>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Periode</th>
+                  <th>Nominal</th>
+                  <th>Jatuh Tempo</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="tagihanTableBody">
+                <tr>
+                  <td colspan="4">
+                    <div class="table-empty">
+                      <i class="ph ph-receipt"></i>
+                      <div class="table-empty-title">Belum ada tagihan</div>
+                      <div class="table-empty-sub">Tagihan akan muncul setelah diterbitkan oleh pengelola</div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="table-wrapper quick-action-card">
+            <div class="card-section-title">Aksi Cepat</div>
+            <div class="quick-action-list">
+              <button class="quick-action-btn qab-green" onclick="window.location.href='/pages/penghuni/status-tagihan.html'">
+                <div class="qab-icon"><i class="ph ph-receipt"></i></div>
+                Lihat Status Tagihan
+              </button>
+              <button class="quick-action-btn qab-pink" onclick="window.location.href='/pages/penghuni/upload-bukti.html'">
+                <div class="qab-icon"><i class="ph ph-upload-simple"></i></div>
+                Upload Bukti Bayar
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+      </main>
+
+      <div id="footer-container"></div>
+    </div>
+  </div>
+
+  <div id="toast-container" class="toast-container"></div>
+
+  <script src="../../js/layout-penghuni.js"></script>
+  <script src="../../js/penghuni/dashboard.js"></script>
+</body>
+</html>

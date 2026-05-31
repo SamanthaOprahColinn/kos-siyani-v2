@@ -1,7 +1,4 @@
-/* ============================================================
-   KELOLA KAMAR VIEW — Kos Siyani
-   Inherits: global.css (Buttons, Inputs, Modals, Badges are Globalized)
-   ============================================================ */
+/* public/css/admin/kelola.kamar.css */
 
 /* Skin khusus halaman kamar */
 .content {
@@ -102,4 +99,339 @@
 /* Micro-interaction khusus tombol aksi kartu kamar */
 .btn-icon-clay:hover { 
     transform: scale(1.15) rotate(5deg); 
+}
+
+/* ==========================================
+   CLASS PINDAHAN DARI INLINE STYLE KELOLA KAMAR 
+   ========================================== */
+
+/* Wrapper Utama: Memaksa Box Filter dan Tombol MUTLAK Samping-Sampingan */
+.kamar-top-action-bar {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 24px;
+    flex-wrap: nowrap; /* Mengunci baris agar tidak ada elemen yang mental ke bawah */
+}
+
+/* Container Box Putih */
+.filter-action-header-clay {
+    display: flex; 
+    gap: 15px; 
+    flex: 1; /* Menghabiskan sisa ruang kosong di sebelah kiri */
+    background: #ffffff; 
+    padding: 12px 16px; 
+    border-radius: 20px; 
+    box-shadow: 6px 6px 12px rgba(165, 215, 210, 0.2), inset -2px -2px 6px rgba(0,0,0,0.02), inset 2px 2px 5px #ffffff; 
+    box-sizing: border-box;
+}
+
+/* Wrapper Grid Input di Dalam Box Putih */
+.search-wrapper-clay {
+    flex: 1.5; 
+    min-width: 150px;
+}
+
+.sort-wrapper-clay {
+    flex: 1; 
+    min-width: 150px;
+}
+
+/* Tombol Tambah Kamar Baru (Kokoh di Samping Box) */
+.btn-kamar-standalone {
+    white-space: nowrap;      /* Mengunci teks dalam satu baris, anti-pecah/turun */
+    height: 48px;             /* Menyamakan tinggi tombol agar presisi dengan box filter */
+    padding: 0 24px;
+    flex-shrink: 0;           /* Melarang keras tombol mengkerut / gepeng */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+/* Base Form Input & Select Claymorphism */
+.form-input-clay {
+    width: 100%; 
+    padding: 10px 16px; 
+    border-radius: 14px; 
+    border: 1px solid #e2e8f0; 
+    background: #f7fafc; 
+    box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05); 
+    font-family: inherit; 
+    font-size: 13.5px; 
+    color: var(--text-cozy, #5d444e); 
+    outline: none;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+}
+
+/* Interaksi Efek Hover & Focus */
+select.form-input-clay {
+    cursor: pointer;
+}
+
+.form-input-clay:focus {
+    border-color: #ffccd5;
+    background: #ffffff;
+    box-shadow: inset 2px 2px 5px rgba(0,0,0,0.02), 0 0 0 3px rgba(255, 204, 213, 0.4);
+}
+
+/* Sisa kode di bawahnya (.icon-btn ke bawah) tetap utuh */
+.icon-btn {
+    font-size: 20px;
+}
+
+.grid-status-message {
+    text-align: center; 
+    width: 100%; 
+    grid-column: 1 / -1; 
+    padding: 40px;
+}
+
+.error-msg {
+    color: var(--text-pink, #c77d90);
+}
+
+.no-notes {
+    color: #bbb; 
+    font-style: italic;
+}
+
+.room-meta-container {
+    display: flex; 
+    gap: 15px; 
+    margin-left: 5px;
+}
+
+.room-meta-label {
+    font-size: 11px; 
+    opacity: 0.7; 
+    font-weight: 700;
+}
+
+.room-meta-value {
+    font-weight: 800; 
+    font-size: 15px;
+}
+
+.room-price-value {
+    color: #c77d90; 
+    font-weight: 800;
+}
+
+/* --- SISTEM MODAL BARU --- */
+.modal-backdrop {
+    display: none; 
+    justify-content: center; 
+    align-items: center; 
+    position: fixed; 
+    inset: 0; 
+    background: rgba(93, 68, 78, 0.2); 
+    backdrop-filter: blur(5px); 
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.modal-backdrop.active {
+    display: flex;
+    opacity: 1;
+}
+
+.modal-header {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 20px;
+}
+
+.modal-title {
+    font-weight: 800; 
+    color: var(--text-cozy);
+}
+
+.btn-close-modal {
+    background: none; 
+    border: none; 
+    cursor: pointer; 
+    font-size: 22px; 
+    color: var(--text-cozy);
+}
+
+.form-row-2col {
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 12px;
+}
+
+.form-label-bold {
+    font-weight: 700;
+}
+
+.form-hint {
+    color: #c77d90; 
+    font-size: 11px; 
+    margin-top: 5px; 
+    display: block;
+}
+
+.textarea-no-resize {
+    resize: none;
+}
+
+.btn-submit-full {
+    width: 100%; 
+    justify-content: center;
+}
+
+/* =========================================
+   STYLE UNTUK TONG SAMPAH (GLASS + CLAY)
+========================================= */
+
+.trash-action-container {
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: flex-start;
+}
+
+/* Tombol buka tutup tong sampah ala Claymorphism */
+.trash-toggle-btn {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    color: var(--text-cozy);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    padding: 12px 24px;
+    border-radius: 20px;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 4px 4px 15px rgba(223, 168, 185, 0.2), 
+                inset 2px 2px 5px rgba(255, 255, 255, 0.9), 
+                inset -2px -2px 5px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.trash-toggle-btn:hover {
+    transform: translateY(-3px) scale(1.02);
+    background: rgba(255, 255, 255, 0.8);
+}
+
+/* Area Tong Sampah dengan Glassmorphism sedikit kemerahan */
+.trash-section {
+    padding: 30px;
+    background: rgba(255, 240, 243, 0.5); /* Kaca transparan agak pink */
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 180, 195, 0.4);
+    border-radius: 30px;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 30px rgba(223, 168, 185, 0.15), 
+                inset 2px 2px 10px rgba(255, 255, 255, 0.7), 
+                inset -2px -2px 10px rgba(200, 100, 120, 0.05);
+    animation: fadeIn 0.4s ease-out;
+}
+
+.trash-title {
+    color: #c77d90;
+    font-size: 1.2rem;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+/* Tabel melayang (Floating table rows) */
+.trash-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 12px; /* Jarak antar baris */
+}
+
+.trash-table th {
+    padding: 0 15px 10px 15px;
+    text-align: left;
+    color: #c77d90;
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 1px;
+}
+
+.trash-table td {
+    padding: 16px 15px;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(8px);
+    border-top: 1px solid rgba(255, 255, 255, 0.8);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+    color: var(--text-cozy);
+    font-weight: 600;
+    transition: background 0.3s ease;
+}
+
+/* Sudut membulat untuk awal tabel */
+.trash-table td:first-child {
+    border-left: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 18px 0 0 18px;
+    box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.8);
+}
+
+/* Sudut membulat untuk akhir tabel */
+.trash-table td:last-child {
+    border-right: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 0 18px 18px 0;
+    box-shadow: inset -2px -2px 5px rgba(0, 0, 0, 0.03);
+}
+
+/* Animasi hover untuk baris tabel */
+.trash-table tbody tr {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.trash-table tbody tr:hover td {
+    background: rgba(255, 255, 255, 0.9);
+}
+.trash-table tbody tr:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(223, 168, 185, 0.2);
+}
+
+/* Tombol Restore 3D (Warna hijau pastel) */
+.btn-restore {
+    background: #a8e6cf;
+    color: #2d6a4f;
+    padding: 8px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.05), 
+                inset 2px 2px 5px rgba(255, 255, 255, 0.8), 
+                inset -2px -2px 5px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+}
+
+.btn-restore:hover {
+    transform: scale(1.05);
+    background: #94d8bf;
+}
+
+/* Helper Class */
+.hidden {
+    display: none !important;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
 }

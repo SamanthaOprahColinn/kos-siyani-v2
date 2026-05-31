@@ -1,4 +1,5 @@
 // File: public/js/pemilik/layout-pemilik.js
+
 window.API_URL = 'http://localhost:5000/api';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -12,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="sidebar-brand">
           <div class="sidebar-brand-logo">KS</div>
           <div>
-            <div class="sidebar-brand-name">Kos Siyani</div>
+            <div class="sidebar-brand-name">Sleepyani?</div>
             <div class="sidebar-brand-sub">Admin Panel v2</div>
           </div>
         </div>
@@ -33,13 +34,13 @@ document.addEventListener('DOMContentLoaded', () => {
             <i class="ph ph-users sidebar-link-icon"></i>
             <span>Kelola Penghuni</span>
           </a>
-          <a href="/pages/pemilik/transaksi.html" class="sidebar-link" onclick="alert('Modul Transaksi segera hadir')">
+          <a href="/pages/pemilik/transaksi.html" class="sidebar-link">
             <i class="ph ph-receipt sidebar-link-icon"></i>
             <span>Transaksi</span>
           </a>
 
           <div class="sidebar-section-title">Sistem</div>
-          <a href="#" class="sidebar-link" onclick="openAdminModal()">
+          <a href="/pages/pemilik/kelola-admin.html" class="sidebar-link">
             <i class="ph ph-user-plus sidebar-link-icon"></i>
             <span>Tambah Admin Baru</span>
           </a>
@@ -53,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
       </aside>
     `;
 
-    // Fitur Deteksi Halaman Aktif (Auto-Highlight Sidebar)
+    // Fitur Deteksi Halaman Aktif 
     const currentPath = window.location.pathname;
     const sidebarLinks = sidebarContainer.querySelectorAll('.sidebar-link');
     
@@ -89,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
     footerContainer.innerHTML = `
       <footer class="main-footer" style="margin-top: 40px; padding: 20px 10px; border-top: 1px dashed rgba(93, 68, 78, 0.1); display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #8c737d;">
         <div class="footer-text">
-          &copy; 2026 <span style="font-weight: 700; color: var(--text-cozy, #5d444e);">Kos Siyani</span>. Hak Cipta Dilindungi Undang-Undang.
+          &copy; 2026 <span style="font-weight: 700; color: var(--text-cozy, #5d444e);">Sleepyani?</span>. Hak Cipta Dilindungi Undang-Undang.
         </div>
         <div class="footer-links" style="display: flex; gap: 16px;">
           <a href="#" style="color: #8c737d; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='var(--text-cozy)'" onmouseout="this.style.color='#8c737d'">Bantuan Operasional</a>
@@ -110,8 +111,8 @@ document.addEventListener('DOMContentLoaded', () => {
   .then(resData => {
     const user = resData.data; 
     if (user) {
-      document.getElementById('profileName').textContent = user.nama || 'Pemilik Kos';
-      document.getElementById('avatarInitial').textContent = (user.nama || 'P').charAt(0).toUpperCase();
+      document.getElementById('profileName').textContent = user.nama_lengkap || user.nama || 'Pemilik Kos';
+      document.getElementById('avatarInitial').textContent = (user.nama_lengkap || user.nama || 'P').charAt(0).toUpperCase();
     }
   })
   .catch(() => {
@@ -123,4 +124,8 @@ document.addEventListener('DOMContentLoaded', () => {
 function handleLogout() {
   localStorage.removeItem('token');
   window.location.href = '../login.html';
+}
+
+function openAdminModal() {
+  window.location.href = '/pages/pemilik/kelola-admin.html';
 }

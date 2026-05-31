@@ -5,48 +5,84 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Transaksi — Kos Siyani</title>
+    <title>Transaksi — Sleepyani?</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css" />
     <link rel="stylesheet" href="../../css/global.css" />
     <link rel="stylesheet" href="../../css/pemilik/dashboard.css" />
+    <link rel="stylesheet" href="../../css/pemilik/transaksi.css" />
 </head>
 <body>
     <div class="layout">
         <div id="sidebar-container"></div>
         <div class="main">
             <header class="topbar">
-                <h1 class="topbar-title">Data Transaksi</h1>
+                <h1 class="topbar-title">Data Transaksi & Tagihan</h1>
                 <div id="topbar-container"></div>
             </header>
 
             <main class="content page-enter">
+
+                <div class="kamar-top-action-bar">
+                    <div class="filter-action-header-clay">
+                        <div class="search-wrapper-clay">
+                            <i class="ph ph-magnifying-glass search-icon-clay"></i>
+                            <input type="text" id="searchTransaksi" class="form-input-clay" placeholder="Cari nama penghuni, no. kamar, atau status..." oninput="filterTransaksi()">
+                        </div>
+                    </div>
+
+                    <button class="btn-clay-primary" onclick="fetchTransaksi()">
+                        <i class="ph ph-arrows-clockwise"></i> 
+                        <span>Segarkan</span>
+                    </button>
+                </div>
+
                 <div class="table-wrapper" style="width: 100%;">
                     <div class="table-top">
                         <div>
-                            <div class="table-top-title">Riwayat Transaksi</div>
-                            <div class="table-top-sub">Monitoring pembayaran sewa bulanan</div>
+                            <div class="table-top-title">Riwayat Pembayaran Sewa</div>
+                            <div class="table-top-sub">Pantau pendapatan dan verifikasi bukti transfer dari penghuni</div>
                         </div>
-                        <button class="btn btn-ghost btn-sm" onclick="fetchTransaksi()">
-                            <i class="ph ph-arrows-clockwise"></i>
-                        </button>
                     </div>
                     <table>
                         <thead>
                             <tr>
-                                <th>Tanggal</th>
-                                <th>Nama Penghuni</th>
-                                <th>No. Kamar</th>
-                                <th>Jumlah</th>
+                                <th>Penghuni</th>
+                                <th>Kamar</th>
+                                <th>Periode</th>
+                                <th>Total Tagihan</th>
                                 <th>Status</th>
+                                <th style="text-align: center;">Aksi</th>
                             </tr>
                         </thead>
                         <tbody id="transaksiTableBody">
-                            <tr><td colspan="5" style="text-align: center; padding: 20px;">Memuat data...</td></tr>
+                            <tr><td colspan="6" style="text-align: center; padding: 20px;">Memuat data transaksi...</td></tr>
                         </tbody>
                     </table>
                 </div>
             </main>
             <div id="footer-container"></div>
+        </div>
+    </div>
+
+    <div id="verifikasiModal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 class="modal-title">Verifikasi Pembayaran</h3>
+            
+            <div class="image-preview-container">
+                <p class="image-preview-label">Gambar Bukti Transfer:</p>
+                
+                <div id="loadingBukti" class="loading-text">
+                    <i class="ph ph-spinner-gap spin-icon"></i> Memuat bukti...
+                </div>
+                
+                <img id="previewBukti" class="preview-img" src="" alt="Bukti Transfer">
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn-batal" onclick="closeVerifikasiModal()">Batal</button>
+                <button type="button" id="btnTolak" class="btn-tolak" onclick="prosesVerifikasi('ditolak')">Tolak</button>
+                <button type="button" id="btnSetuju" class="btn-setuju" onclick="prosesVerifikasi('lunas')">Valid (Lunas)</button>
+            </div>
         </div>
     </div>
 

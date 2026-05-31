@@ -181,10 +181,6 @@
   text-align: center;
 }
 
-/* =========================================
-   MODAL / POP-UP RIWAYAT ADMIN NONAKTIF
-   ========================================= */
-
 .modal-overlay {
   display: none; 
   position: fixed;
