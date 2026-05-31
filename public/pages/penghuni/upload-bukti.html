@@ -41,10 +41,10 @@
               <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileBukti').click()">
                 <i class="ph ph-upload-simple upload-zone-icon"></i>
                 <div class="upload-zone-text">Klik atau seret file ke sini</div>
-                <div class="upload-zone-hint">Format: JPG, PNG, PDF — Maks. 5 MB</div>
+                <div class="upload-zone-hint">Format: JPG atau PNG - Maks. 5 MB</div>
                 <div id="uploadFileName" class="upload-file-name"></div>
               </div>
-              <input type="file" id="fileBukti" accept=".jpg,.jpeg,.png,.pdf" style="display:none" onchange="handleFileChange(this)" />
+              <input type="file" id="fileBukti" accept=".jpg,.jpeg,.png" style="display:none" onchange="handleFileChange(this)" />
             </div>
 
             <div class="error-box" id="errorBox">
@@ -66,7 +66,6 @@
               <div class="font-bold" style="font-size: 15px; color: var(--text-cozy);">Format yang Diterima</div>
               <ul class="upload-rules-list">
                 <li><i class="ph ph-check"></i> JPG / JPEG / PNG</li>
-                <li><i class="ph ph-check"></i> PDF</li>
                 <li><i class="ph ph-check"></i> Maksimal ukuran 5 MB</li>
                 <li><i class="ph ph-check"></i> Pastikan gambar jelas &amp; terbaca</li>
               </ul>

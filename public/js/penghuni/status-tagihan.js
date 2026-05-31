@@ -61,10 +61,16 @@ function fetchTagihan() {
       if (status === 'lunas') { badgeClass = 'badge-success'; badgeLabel = 'Lunas'; }
       else if (status === 'terlambat') { badgeClass = 'badge-danger'; badgeLabel = 'Terlambat'; }
       else if (status.includes('menunggu')) { badgeClass = 'badge-info'; badgeLabel = 'Menunggu Verifikasi'; }
+      else if (status === 'ditolak') { badgeClass = 'badge-danger'; badgeLabel = 'Ditolak'; }
 
-      const aksi = status !== 'lunas'
-        ? `<button class="btn btn-ghost btn-sm" onclick="window.location.href='/pages/penghuni/upload-bukti.html'"><i class="ph ph-upload-simple"></i> Bayar</button>`
-        : `<span style="color:var(--green-500);font-size:13px;font-weight:700;">&#10003; Lunas</span>`;
+      let aksi;
+      if (status === 'lunas') {
+        aksi = `<span style="color:var(--green-500);font-size:13px;font-weight:700;">&#10003; Lunas</span>`;
+      } else if (status === 'menunggu konfirmasi') {
+        aksi = `<span style="color:var(--blue-500);font-size:13px;font-weight:600;"><i class="ph ph-hourglass"></i> Menunggu Verifikasi</span>`;
+      } else {
+        aksi = `<button class="btn btn-ghost btn-sm" onclick="window.location.href='/pages/penghuni/upload-bukti.html'"><i class="ph ph-upload-simple"></i> Bayar</button>`;
+      }
 
       const tr = document.createElement('tr');
       tr.innerHTML = `

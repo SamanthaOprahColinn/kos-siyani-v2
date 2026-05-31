@@ -51,7 +51,7 @@ function fetchTagihanBelumBayar() {
     const belumBayar = Array.isArray(list)
       ? list.filter(t => {
           const s = (t.status_bayar || '').toLowerCase();
-          return s !== 'lunas';
+          return s === 'belum bayar' || s === 'ditolak';
         })
       : [];
 

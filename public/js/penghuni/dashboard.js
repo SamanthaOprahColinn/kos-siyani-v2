@@ -67,9 +67,10 @@ function fetchTagihanSingkat() {
     const statusRaw = (latest.status_bayar || '').toLowerCase();
     let statusLabel = '-';
     if (statusRaw === 'lunas') statusLabel = 'Lunas';
-    else if (statusRaw === 'belum bayar' || statusRaw === 'belum_bayar') statusLabel = 'Belum Bayar';
+    else if (statusRaw === 'belum bayar') statusLabel = 'Belum Bayar';
+    else if (statusRaw === 'menunggu konfirmasi') statusLabel = 'Menunggu Verifikasi';
+    else if (statusRaw === 'ditolak') statusLabel = 'Ditolak';
     else if (statusRaw === 'terlambat') statusLabel = 'Terlambat';
-    else if (statusRaw === 'menunggu verifikasi' || statusRaw === 'menunggu_verifikasi') statusLabel = 'Menunggu Verifikasi';
     document.getElementById('statStatusBayar').textContent = statusLabel;
 
     const bulanMap = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags','Sep','Okt','Nov','Des'];

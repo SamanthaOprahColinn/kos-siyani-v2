@@ -264,9 +264,13 @@ export const uploadBukti = async (id, penghuniId, buktiBase64, namaFile) => {
     throw new ApiError(403, 'Anda tidak berhak mengakses pembayaran ini');
   }
 
-  // Cek status - hanya bisa upload jika belum bayar atau ditolak
+  // Cek status - hanya bisa upload jika belum bayar atau ditolak (re-upload)
   if (pembayaran.status_bayar === 'lunas') {
     throw new ApiError(400, 'Tidak dapat submit bukti untuk pembayaran yang sudah lunas');
+  }
+
+  if (pembayaran.status_bayar === 'menunggu konfirmasi') {
+    throw new ApiError(400, 'Bukti pembayaran sudah diupload sebelumnya. Harap tunggu verifikasi dari pengelola.');
   }
 
   // Verify data ada
