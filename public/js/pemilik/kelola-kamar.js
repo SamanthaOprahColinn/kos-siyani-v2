@@ -20,7 +20,13 @@ function fetchKamar() {
     const token = localStorage.getItem('token');
     const tbody = document.getElementById('kamarTableBody');
     
+<<<<<<< Updated upstream
     fetch(`${API_URL}/kamar`, { 
+=======
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px;">Memuat data...</td></tr>';
+
+    fetch(`${window.API_URL || 'http://localhost:5000/api'}/kamar`, { 
+>>>>>>> Stashed changes
         headers: { 'Authorization': `Bearer ${token}` } 
     })
     .then(res => res.json())
@@ -48,10 +54,73 @@ function fetchKamar() {
     })
     .catch(err => {
         console.error("Error:", err);
-        tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: red;">Gagal memuat data. Cek Console.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: red;">Gagal memuat data. Cek Console.</td></tr>';
     });
 }
 
+<<<<<<< Updated upstream
+=======
+function renderTabelKamar(data) {
+    const tbody = document.getElementById('kamarTableBody');
+    tbody.innerHTML = '';
+
+    if (data.length === 0) {
+        // Colspan diubah menjadi 6 karena ada tambahan kolom Fasilitas & Catatan
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px;">Belum ada data kamar atau pencarian tidak ditemukan.</td></tr>';
+        return;
+    }
+
+    data.forEach(k => {
+        const tr = document.createElement('tr');
+        const status = (k.status_kamar || 'tersedia').toLowerCase();
+        
+        let badgeClass = 'badge-kosong';
+        let statusText = 'TERSEDIA';
+
+        if (status === 'terisi' || status === 'tidak tersedia') {
+            badgeClass = 'badge-terisi';
+            statusText = 'TERISI';
+        }
+
+        const fasilitasStr = (Array.isArray(k.fasilitas) && k.fasilitas.length > 0) 
+            ? k.fasilitas.join(', ') 
+            : (k.fasilitas || '-');
+
+        // Menarik data deskripsi dari backend sebagai Catatan
+        const catatanStr = k.deskripsi ? k.deskripsi : '-';
+
+        tr.innerHTML = `
+            <td class="font-bold">No. ${k.nomor_kamar || '-'} / Lt. ${k.lantai || '-'}</td>
+            <td>Tipe ${k.tipe_kamar || '-'}</td>
+            <td style="font-size: 13px; color: var(--n500); max-width: 220px; white-space: normal; line-height: 1.4;">
+                ${fasilitasStr}
+            </td>
+            <td style="font-size: 13px; color: var(--n500); max-width: 220px; white-space: normal; line-height: 1.4; font-style: italic;">
+                ${catatanStr}
+            </td>
+            <td style="color: var(--pink-600); font-weight: 600;">Rp ${Number(k.harga_sewa || 0).toLocaleString('id-ID')}</td>
+            <td><span class="badge ${badgeClass}">${statusText}</span></td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+// Fungsi Pencarian / Filter 
+function filterTabelKamar() {
+    const keyword = document.getElementById('searchKamar').value.toLowerCase();
+    
+    const filteredData = dataKamarGlobal.filter(k => {
+        const noKamar = (k.nomor_kamar || '').toString().toLowerCase();
+        const tipe = (k.tipe_kamar || '').toLowerCase();
+        const harga = (k.harga_sewa || '').toString().toLowerCase();
+        
+        return noKamar.includes(keyword) || tipe.includes(keyword) || harga.includes(keyword);
+    });
+
+    renderTabelKamar(filteredData);
+}
+
+>>>>>>> Stashed changes
 function addKamar(event) {
     event.preventDefault();
     const token = localStorage.getItem('token');

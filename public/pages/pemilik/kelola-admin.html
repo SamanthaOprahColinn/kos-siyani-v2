@@ -1,0 +1,183 @@
+<!-- public\pages\pemilik\kelola-admin.html -->
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kelola Admin - Sleepyani?</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css"/>
+  <link rel="stylesheet" href="../../css/global.css"/>
+  <link rel="stylesheet" href="../../css/pemilik/dashboard.css"/>
+  <link rel="stylesheet" href="../../css/pemilik/kelola-admin.css"/>
+</head>
+<body>
+
+  <div class="layout">
+    <div id="sidebar-container"></div>
+
+    <div class="main">
+      <header class="topbar">
+        <h1 class="topbar-title">Kelola Admin</h1>
+        <div id="topbar-container"></div>
+      </header>
+
+      <main class="content page-enter">
+        
+        <div class="mb-6 page-header-actions admin-header-actions">
+          <div>
+            <h1 class="topbar-title title-no-pad">Manajemen Akun Admin</h1>
+            <p class="stat-sub">Daftarkan dan pantau akun operasional yang mengelola Kos Siyani.</p>
+          </div>
+        </div>
+
+        <div class="admin-page-grid">
+          <div class="table-wrapper widget-box admin-form-card">
+            <div class="table-top-title admin-form-header">
+              <i class="ph ph-user-plus admin-form-icon"></i>
+              <br>Formulir Pendaftaran
+            </div>
+
+            <div class="error-box admin-error-box" id="adminErrorBox">
+              <i class="ph ph-warning-circle admin-error-icon"></i>
+              <span id="adminErrorMsg"></span>
+            </div>
+
+            <form id="formTambahAdmin" onsubmit="saveAdmin(event)">
+              <div class="form-group form-group-spacing">
+                <label class="form-label form-label-bold">Nama</label>
+                <input type="text" class="form-input-clay w-full" id="adminName" placeholder="Masukkan nama admin" required/>
+              </div>
+
+              <div class="form-group form-group-spacing">
+                <label class="form-label form-label-bold">Email Admin</label>
+                <input type="email" class="form-input-clay w-full" id="adminEmail" placeholder="admin@kossiyani.com" required/>
+              </div>
+
+              <div class="form-group form-group-spacing-lg">
+                <label class="form-label form-label-bold">Password (Kata Sandi)</label>
+                <div class="input-wrap input-wrap-relative">
+                  <input type="password" class="form-input-clay w-full" id="adminPassword" placeholder="Minimal 8 karakter" required/>
+                  <button type="button" onclick="toggleAdminPw()" class="btn-toggle-pw">
+                    <i class="ph ph-eye pw-icon" id="adminPwIcon"></i>
+                  </button>
+                </div>
+              </div>
+
+              <button type="submit" class="btn-clay-primary w-full btn-submit-admin" id="btnSaveAdmin">
+                Daftarkan Admin
+              </button>
+            </form>
+          </div>
+
+          <div class="table-wrapper widget-box table-wrapper-full">
+            
+            <div class="table-top table-top-stacked">
+              <div>
+                <div class="table-top-title">Daftar Admin Aktif</div>
+                <div class="table-top-sub">Akun yang memiliki akses ke panel operasional</div>
+              </div>
+              
+              <div class="table-action-group">
+                <button class="btn btn-outline btn-sm btn-riwayat" onclick="openRiwayatModal()">
+                  <i class="ph ph-clock-counter-clockwise"></i> Riwayat
+                </button>
+                
+                <select id="sortAdminAktif" class="form-input-clay search-input sort-dropdown sm" onchange="filterTabelAdmin()">
+                  <option value="oldest">Terlama ke Terbaru</option>
+                  <option value="newest">Terbaru ke Terlama</option>
+                </select>
+                
+                <div class="input-wrap-relative">
+                  <input type="text" id="searchAdmin" class="form-input-clay search-input search-input-with-icon sm" placeholder="Cari admin..." oninput="handleSearchInput()" onkeyup="filterTabelAdmin()" />
+                  <i class="ph ph-magnifying-glass search-icon"></i>
+                  <button type="button" id="btnClearSearch" class="btn-clear-search" onclick="clearSearch()">
+                    <i class="ph ph-x-circle"></i>
+                  </button>
+                </div>
+                
+                <button class="btn btn-ghost btn-sm" onclick="fetchAdmins()">
+                  <i class="ph ph-arrows-clockwise"></i> Segarkan
+                </button>
+              </div>
+            </div>
+            
+            <table>
+              <thead>
+                <tr>
+                  <th>NO</th>
+                  <th>NAMA</th>
+                  <th>EMAIL</th>
+                  <th>STATUS</th>
+                  <th class="th-aksi">AKSI</th>
+                </tr>
+              </thead>
+              <tbody id="adminTableBody">
+                <tr>
+                  <td colspan="5" class="widget-loading td-loading">Memuat data dari database...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </main>
+      
+      <div id="footer-container"></div>
+    </div>
+  </div>
+
+  <div id="riwayatModal" class="modal-overlay">
+    <div class="widget-box modal-container">
+      
+      <div class="modal-header">
+        <div>
+          <h2 class="table-top-title">Riwayat Admin Nonaktif</h2>
+          <p class="stat-sub">Daftar akun operasional yang aksesnya telah dicabut.</p>
+        </div>
+        <button onclick="closeRiwayatModal()" class="btn-modal-close">
+          <i class="ph ph-x"></i>
+        </button>
+      </div>
+
+      <div class="modal-toolbar">
+        <select id="sortAdmin" class="form-input-clay search-input sort-dropdown" onchange="filterSortTabelRiwayat()">
+          <option value="newest">Terbaru ke Terlama</option>
+          <option value="oldest">Terlama ke Terbaru</option>
+        </select>
+        
+        <div class="input-wrap-relative">
+            <input type="text" id="searchRiwayat" class="form-input-clay search-input search-input-with-icon md" placeholder="Cari arsip nama / email..." oninput="handleSearchRiwayatInput()" onkeyup="filterSortTabelRiwayat()" />
+            <i class="ph ph-magnifying-glass search-icon"></i>
+            <button type="button" id="btnClearSearchRiwayat" class="btn-clear-search" onclick="clearSearchRiwayat()">
+                <i class="ph ph-x-circle"></i>
+            </button>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <table>
+          <thead>
+            <tr>
+              <th>NO</th>
+              <th>NAMA</th>
+              <th>EMAIL</th>
+              <th>STATUS</th>
+              <th class="th-pulihkan">PULIHKAN</th>
+            </tr>
+          </thead>
+          <tbody id="riwayatTableBody">
+            <tr>
+              <td colspan="5" class="widget-loading td-loading">Memuat riwayat...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="../../js/layout-pemilik.js"></script>
+  <script src="../../js/pemilik/kelola-admin.js"></script>
+</body>
+</html>
