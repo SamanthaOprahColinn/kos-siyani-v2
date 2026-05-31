@@ -201,7 +201,7 @@ function saveTenant(event) {
     const token = localStorage.getItem('token');
     const roomId = document.getElementById('tenantRoom').value;
 
-    if (!roomId) return alert('Pilih kamar terlebih dahulu!');
+    if (!roomId) return showToast('Pilih kamar terlebih dahulu!', 'warning');
 
     const payload = {
         nama_lengkap: document.getElementById('tenantName').value.trim(),
@@ -224,20 +224,20 @@ function saveTenant(event) {
     })
         .then(res => res.json())
         .then(data => {
-            if (!data.success) throw new Error(data.message || 'Gagal mendaftar penghuni.');
+            if (!data.success) throw new Error(formatApiError(data, 'Gagal mendaftar penghuni.'));
 
             btn.innerHTML = '<i class="ph ph-floppy-disk"></i> Simpan Data Penghuni';
             btn.style.pointerEvents = 'auto';
 
             document.getElementById('formPenghuni').reset();
-            alert('Penghuni sukses terdaftar & Kamar otomatis dikunci!');
+            showToast('Penghuni sukses terdaftar & Kamar otomatis dikunci!', 'success');
             fetchPenghuni();
             fetchKamarPilihan();
         })
         .catch(err => {
             btn.innerHTML = '<i class="ph ph-floppy-disk"></i> Simpan Data Penghuni';
             btn.style.pointerEvents = 'auto';
-            alert('Gagal: ' + err.message);
+            showToast('Gagal: ' + err.message, 'error');
         });
 }
 
@@ -247,7 +247,7 @@ function checkoutTenant(id) {
 
     const token = localStorage.getItem('token');
     const target = window.currentPenghuni.find(p => p._id === id);
-    if (!target) return alert('Data tidak ditemukan!');
+    if (!target) return showToast('Data tidak ditemukan!', 'error');
 
     let roomId = target.id_kamar?._id || target.id_kamar || target.kamar_id?._id || target.kamar_id;
 
@@ -268,7 +268,7 @@ function checkoutTenant(id) {
     })
         .then(res => res.json())
         .then(data => {
-            if (!data.success) throw new Error(data.message || 'Gagal mengubah status.');
+            if (!data.success) throw new Error(formatApiError(data, 'Gagal mengubah status.'));
 
             if (roomId) {
                 return fetch(`${API_URL}/kamar/${roomId}`, {
@@ -282,17 +282,17 @@ function checkoutTenant(id) {
             }
         })
         .then(() => {
-            alert('Penghuni sukses dinonaktifkan!');
+            showToast('Penghuni sukses dinonaktifkan!', 'success');
             fetchPenghuni();
             fetchKamarPilihan();
         })
-        .catch(err => alert('Masalah: ' + err.message));
+        .catch(err => showToast('Masalah: ' + err.message, 'error'));
 }
 
 // 5. MODAL EDIT PENGHUNI
 function openEditModal(id) {
     const target = window.currentPenghuni.find(p => p._id === id);
-    if (!target) return alert('Data tidak ditemukan!');
+    if (!target) return showToast('Data tidak ditemukan!', 'error');
 
     const kamarData = target.id_kamar || target.kamar_id || {};
     const roomId = kamarData._id || '';
@@ -352,7 +352,7 @@ function updateTenant(event) {
     })
         .then(res => res.json())
         .then(data => {
-            if (!data.success) throw new Error(data.message);
+            if (!data.success) throw new Error(formatApiError(data, 'Gagal update data.'));
 
             if (oldRoomId && newRoomId && oldRoomId !== newRoomId) {
                 const releaseOld = fetch(`${API_URL}/kamar/${oldRoomId}`, {
@@ -373,7 +373,7 @@ function updateTenant(event) {
         .then(() => {
             btn.innerHTML = '<i class="ph ph-check"></i> Simpan Perubahan Data';
             btn.style.pointerEvents = 'auto';
-            alert('Perubahan berhasil disimpan!');
+            showToast('Perubahan berhasil disimpan!', 'success');
             closeEditModal();
             fetchPenghuni();
             fetchKamarPilihan();
@@ -381,7 +381,7 @@ function updateTenant(event) {
         .catch(err => {
             btn.innerHTML = '<i class="ph ph-check"></i> Simpan Perubahan Data';
             btn.style.pointerEvents = 'auto';
-            alert('Gagal update: ' + err.message);
+            showToast('Gagal update: ' + err.message, 'error');
         });
 }
 
@@ -396,6 +396,39 @@ function openRestoreModal(id, name) {
     document.getElementById('restoreTenantModal').style.display = 'flex';
 }
 
+function formatApiError(data, fallback = 'Terjadi kesalahan') {
+    if (data.errors && data.errors.length > 0) {
+        const unique = [...new Map(data.errors.map(e => [e.message, e])).values()];
+        if (unique.length === 1) return unique[0].message;
+        const list = unique.map(e => `• ${e.message}`).join('<br>');
+        return `Validasi gagal:<br>${list}`;
+    }
+    return data.message || fallback;
+}
+
+// Toast notification
+function showToast(message, type = 'info') {
+    let container = document.querySelector('.toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.className = 'toast-container';
+        document.body.appendChild(container);
+    }
+
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    const icons = { success: 'ph-check-circle', warning: 'ph-warning', error: 'ph-x-circle', info: 'ph-info' };
+    toast.innerHTML = `<i class="ph ${icons[type] || icons.info}" style="font-size:18px;flex-shrink:0;"></i><span>${message}</span>`;
+    container.appendChild(toast);
+
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(20px)';
+        toast.style.transition = 'all 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+    }, 4000);
+}
+
 function closeRestoreModal() {
     document.getElementById('restoreTenantModal').style.display = 'none';
 }
@@ -406,10 +439,10 @@ function submitRestoreTenant(event) {
     const id = document.getElementById('restoreTenantId').value;
     const newRoomId = document.getElementById('restoreTenantRoom').value;
 
-    if (!newRoomId) return alert('Wajib memilih kamar baru untuk memulihkan!');
+    if (!newRoomId) return showToast('Wajib memilih kamar baru untuk memulihkan!', 'warning');
 
     const target = window.currentPenghuni.find(p => p._id === id);
-    if (!target) return alert('Data internal tidak terbaca.');
+    if (!target) return showToast('Data internal tidak terbaca.', 'error');
 
     const payload = {
         nama_lengkap: target.nama_lengkap,
@@ -432,7 +465,7 @@ function submitRestoreTenant(event) {
     })
         .then(res => res.json())
         .then(data => {
-            if (!data.success) throw new Error(data.message || 'Gagal aktivasi data penghuni.');
+            if (!data.success) throw new Error(formatApiError(data, 'Gagal aktivasi data penghuni.'));
 
             return fetch(`${API_URL}/kamar/${newRoomId}`, {
                 method: 'PATCH',
@@ -446,7 +479,7 @@ function submitRestoreTenant(event) {
         .then(() => {
             btn.innerHTML = '<i class="ph ph-check"></i> Aktifkan & Simpan';
             btn.style.pointerEvents = 'auto';
-            alert('Penghuni berhasil dipulihkan!');
+            showToast('Penghuni berhasil dipulihkan!', 'success');
             closeRestoreModal();
             fetchPenghuni();
             fetchKamarPilihan();
@@ -454,6 +487,6 @@ function submitRestoreTenant(event) {
         .catch(err => {
             btn.innerHTML = '<i class="ph ph-check"></i> Aktifkan & Simpan';
             btn.style.pointerEvents = 'auto';
-            alert('Gagal memulihkan: ' + err.message);
+            showToast('Gagal memulihkan: ' + err.message, 'error');
         });
 }
