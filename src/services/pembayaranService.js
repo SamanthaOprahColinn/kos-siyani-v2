@@ -255,8 +255,12 @@ export const uploadBukti = async (id, penghuniId, buktiBase64, namaFile) => {
     throw new ApiError(404, 'Pembayaran tidak ditemukan');
   }
 
-  // Explicit ownership verification
-  if (!pembayaran.id_penghuni || pembayaran.id_penghuni.toString() !== penghuniId.toString()) {
+  // Explicit ownership verification (handle auto-populated id_penghuni)
+  const storedPenghuniId = pembayaran.id_penghuni?._id
+    ? pembayaran.id_penghuni._id.toString()
+    : pembayaran.id_penghuni?.toString();
+
+  if (!storedPenghuniId || storedPenghuniId !== penghuniId.toString()) {
     throw new ApiError(403, 'Anda tidak berhak mengakses pembayaran ini');
   }
 
@@ -291,8 +295,12 @@ export const deleteBukti = async (id, penghuniId) => {
     throw new ApiError(404, 'Pembayaran tidak ditemukan');
   }
 
-  // Explicit ownership verification
-  if (!pembayaran.id_penghuni || pembayaran.id_penghuni.toString() !== penghuniId.toString()) {
+  // Explicit ownership verification (handle auto-populated id_penghuni)
+  const storedPenghuniIdDel = pembayaran.id_penghuni?._id
+    ? pembayaran.id_penghuni._id.toString()
+    : pembayaran.id_penghuni?.toString();
+
+  if (!storedPenghuniIdDel || storedPenghuniIdDel !== penghuniId.toString()) {
     throw new ApiError(403, 'Anda tidak berhak mengakses pembayaran ini');
   }
 

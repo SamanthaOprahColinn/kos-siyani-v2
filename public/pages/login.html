@@ -183,8 +183,10 @@ function handleLogin(){
         window.location.href = 'pemilik/dashboard.html';
       } else if (userRole === 'admin') {
         window.location.href = 'admin/dashboard.html';
+      } else if (userRole === 'penghuni') {
+        window.location.href = 'penghuni/dashboard.html';
       } else {
-        alert('Akses panel ditolak untuk role penghuni.');
+        alert('Akses tidak diizinkan untuk role ini.');
       }
     } else {
       msg.textContent = data.message || 'Email atau password salah.';

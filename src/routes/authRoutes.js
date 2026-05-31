@@ -8,6 +8,7 @@ import {
   deactivateUser,
   activateUser,
   deleteUser,
+  updateProfile,
 } from '../controllers/authController.js';
 import { protect } from '../middlewares/authentication.js';
 import { authorizeRoles } from '../middlewares/authorization.js';
@@ -25,6 +26,7 @@ router.post('/login', validateRequest(loginSchema), login);
  * Protected routes
  */
 router.get('/me', protect, getCurrentUser);
+router.patch('/profile', protect, updateProfile);
 
 /**
  * PATCH /api/auth/change-password ⭐ NEW

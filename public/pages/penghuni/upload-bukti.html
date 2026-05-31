@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Upload Bukti Bayar — Kos Siyani</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css" />
+  <link rel="stylesheet" href="../../css/global.css" />
+  <link rel="stylesheet" href="../../css/penghuni/upload-bukti.css" />
+</head>
+<body>
+
+  <div class="layout">
+    <div id="sidebar-container"></div>
+
+    <div class="main">
+      <header class="topbar">
+        <h1 class="topbar-title">Upload Bukti Bayar</h1>
+        <div id="topbar-container"></div>
+      </header>
+
+      <main class="content page-enter">
+
+        <div class="mb-6">
+          <p class="stat-sub">Upload foto atau file bukti transfer pembayaran kamu untuk diverifikasi oleh pengelola kos.</p>
+        </div>
+
+        <div class="grid-3">
+          <div class="card">
+            <h2 class="font-bold mb-4" style="font-size: 16px;">Form Upload Bukti Pembayaran</h2>
+
+            <div class="form-group">
+              <label class="form-label">Pilih Tagihan <span class="req">*</span></label>
+              <select id="selectTagihan" class="form-input" required>
+                <option value="">-- Memuat tagihan... --</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Bukti Transfer <span class="req">*</span></label>
+              <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileBukti').click()">
+                <i class="ph ph-upload-simple upload-zone-icon"></i>
+                <div class="upload-zone-text">Klik atau seret file ke sini</div>
+                <div class="upload-zone-hint">Format: JPG, PNG, PDF — Maks. 5 MB</div>
+                <div id="uploadFileName" class="upload-file-name"></div>
+              </div>
+              <input type="file" id="fileBukti" accept=".jpg,.jpeg,.png,.pdf" style="display:none" onchange="handleFileChange(this)" />
+            </div>
+
+            <div class="error-box" id="errorBox">
+              <i class="ph ph-warning-circle"></i>
+              <span id="errorMsg"></span>
+            </div>
+
+            <button class="btn-clay-primary w-full" onclick="handleUpload()">
+              <i class="ph ph-paper-plane-launch"></i> Kirim Bukti Pembayaran
+            </button>
+          </div>
+
+          <div class="card flex flex-col justify-center">
+            <div class="text-center">
+              <div class="stat-icon stat-icon-green mb-3" style="margin: 0 auto 12px;">
+                <i class="ph ph-shield-check"></i>
+              </div>
+              <div class="stat-label">Ketentuan Upload</div>
+              <div class="font-bold" style="font-size: 15px; color: var(--text-cozy);">Format yang Diterima</div>
+              <ul class="upload-rules-list">
+                <li><i class="ph ph-check"></i> JPG / JPEG / PNG</li>
+                <li><i class="ph ph-check"></i> PDF</li>
+                <li><i class="ph ph-check"></i> Maksimal ukuran 5 MB</li>
+                <li><i class="ph ph-check"></i> Pastikan gambar jelas &amp; terbaca</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </main>
+
+      <div id="footer-container"></div>
+    </div>
+  </div>
+
+  <div id="toast-container" class="toast-container"></div>
+
+  <div id="modal-sukses" class="modal-backdrop" style="display:none;">
+    <div class="modal-clay text-center">
+      <div class="stat-icon stat-icon-green" style="margin: 0 auto 16px; width: 64px; height: 64px; font-size: 32px;">
+        <i class="ph ph-check-circle"></i>
+      </div>
+      <div class="font-bold" style="font-size: 18px; margin-bottom: 8px;">Bukti Berhasil Dikirim!</div>
+      <p class="stat-sub" style="margin-bottom: 24px;">Bukti pembayaran kamu sedang diverifikasi oleh pengelola. Notifikasi akan dikirim setelah proses selesai.</p>
+      <button class="btn-clay-primary w-full" onclick="tutupModalSukses()">
+        <i class="ph ph-arrow-left"></i> Kembali ke Dashboard
+      </button>
+    </div>
+  </div>
+
+  <script src="../../js/layout-penghuni.js"></script>
+  <script src="../../js/penghuni/upload-bukti.js"></script>
+</body>
+</html>
