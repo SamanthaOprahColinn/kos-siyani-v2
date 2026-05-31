@@ -24,24 +24,24 @@
             </header>
 
             <main class="content page-enter">
-                <div class="filter-action-header">
-                    <div class="search-wrapper">
-                        <input type="text" id="searchKamar" class="form-input-clay" placeholder="🔍 Cari nomor kamar..."
-                            oninput="debounceSearchKamar()" />
+                <div class="kamar-top-action-bar">
+
+                    <div class="filter-action-header-clay">
+                        <div class="search-wrapper-clay">
+                            <input type="text" id="searchKamar" class="form-input-clay"
+                                placeholder="🔍 Cari nomor kamar..." oninput="debounceSearchKamar()" />
+                        </div>
+
+                        <div class="sort-wrapper-clay">
+                            <select id="sortKamar" class="form-input-clay" onchange="fetchKamar()">
+                                <option value="num_asc">🔢 Nomor Kamar (Kecil → Besar)</option>
+                                <option value="num_desc">🔢 Nomor Kamar (Besar → Kecil)</option>
+                                <option value="newest">✨ Terbaru Ditambahkan</option>
+                                <option value="oldest">⏳ Terlama Ditambahkan</option>
+                            </select>
+                        </div>
                     </div>
 
-                    <div class="sort-wrapper" style="min-width: 220px;">
-                        <select id="sortKamar" class="form-input-clay" onchange="fetchKamar()">
-                            <option value="num_asc">🔢 Nomor Kamar (Kecil → Besar)</option>
-                            <option value="num_desc">🔢 Nomor Kamar (Besar → Kecil)</option>
-                            <option value="newest">✨ Terbaru Ditambahkan</option>
-                            <option value="oldest">⏳ Terlama Ditambahkan</option>
-                        </select>
-                    </div>
-
-                    <button class="btn-clay-primary" onclick="openKamarModal()">
-                        <i class="ph ph-plus-circle icon-btn"></i> Tambah Kamar Baru
-                    </button>
                 </div>
 
                 <div class="room-grid" id="kamarGridContainer">

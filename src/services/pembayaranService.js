@@ -329,37 +329,44 @@ export const deleteBukti = async (id, penghuniId) => {
 };
 
 /**
- * VALIDATE PEMBAYARAN - Admin/Pemilik validasi dan terima/tolak pembayaran
+ * VALIDATE PEMBAYARAN - Admin/Pemilik validasi dan terima/tolak/batal pembayaran
  */
 export const validatePembayaran = async (id, validationData, verifierId) => {
-  const pembayaran = await Pembayaran.findById(id);
+  const { status_bayar, catatan_admin } = validationData;
 
-  if (!pembayaran) {
+  // 1. TAMBAH 'belum_bayar' ke dalam list izin agar bisa di-undo
+  if (!['lunas', 'ditolak', 'belum_bayar'].includes(status_bayar)) {
+    throw new ApiError(400, 'Status harus "lunas", "ditolak", atau "belum_bayar"');
+  }
+
+  const cekPembayaran = await Pembayaran.findById(id);
+  if (!cekPembayaran) {
     throw new ApiError(404, 'Pembayaran tidak ditemukan');
   }
 
-  const { status_bayar, catatan_admin } = validationData;
-
-  // FIXED: Validate status - hanya boleh lunas atau ditolak
-  if (!['lunas', 'ditolak'].includes(status_bayar)) {
-    throw new ApiError(400, 'Status harus "lunas" atau "ditolak"');
-  }
-
-  // FIXED: Verify status is not already validated
-  if (pembayaran.status_bayar === 'lunas') {
+  // 2. PERBAIKAN: Kunci ini hanya berlaku jika status LAMA lunas DAN status BARU juga lunas (mencegah double-click konfirmasi)
+  if (cekPembayaran.status_bayar === 'lunas' && status_bayar === 'lunas') {
     throw new ApiError(400, 'Pembayaran sudah diluluskan sebelumnya');
   }
 
-  // Update pembayaran
-  pembayaran.status_bayar = status_bayar;
-  pembayaran.catatan_admin = catatan_admin || '';
-  pembayaran.verified_by = verifierId;
+  const updateData = {
+    status_bayar: status_bayar,
+    catatan_admin: catatan_admin || '',
+    verified_by: verifierId
+  };
 
+  // 3. Jika statusnya lunas, catat tanggalnya. Jika dibatalkan (belum_bayar), hapus tanggal bayarnya.
   if (status_bayar === 'lunas') {
-    pembayaran.tanggal_bayar = new Date();
+    updateData.tanggal_bayar = new Date();
+  } else if (status_bayar === 'belum_bayar') {
+    updateData.tanggal_bayar = null; 
   }
 
-  await pembayaran.save();
+  const pembayaran = await Pembayaran.findByIdAndUpdate(
+    id,
+    { $set: updateData },
+    { new: true, runValidators: true }
+  );
 
   return pembayaran;
 };

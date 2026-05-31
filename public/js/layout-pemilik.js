@@ -1,4 +1,5 @@
 // File: public/js/pemilik/layout-pemilik.js
+
 window.API_URL = 'http://localhost:5000/api';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -33,13 +34,13 @@ document.addEventListener('DOMContentLoaded', () => {
             <i class="ph ph-users sidebar-link-icon"></i>
             <span>Kelola Penghuni</span>
           </a>
-          <a href="/pages/pemilik/transaksi.html" class="sidebar-link" onclick="alert('Modul Transaksi segera hadir')">
+          <a href="/pages/pemilik/transaksi.html" class="sidebar-link">
             <i class="ph ph-receipt sidebar-link-icon"></i>
             <span>Transaksi</span>
           </a>
 
           <div class="sidebar-section-title">Sistem</div>
-          <a href="#" class="sidebar-link" onclick="openAdminModal()">
+          <a href="/pages/pemilik/kelola-admin.html" class="sidebar-link">
             <i class="ph ph-user-plus sidebar-link-icon"></i>
             <span>Tambah Admin Baru</span>
           </a>
@@ -53,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
       </aside>
     `;
 
-    // Fitur Deteksi Halaman Aktif (Auto-Highlight Sidebar)
+    // Fitur Deteksi Halaman Aktif 
     const currentPath = window.location.pathname;
     const sidebarLinks = sidebarContainer.querySelectorAll('.sidebar-link');
     
@@ -110,8 +111,8 @@ document.addEventListener('DOMContentLoaded', () => {
   .then(resData => {
     const user = resData.data; 
     if (user) {
-      document.getElementById('profileName').textContent = user.nama || 'Pemilik Kos';
-      document.getElementById('avatarInitial').textContent = (user.nama || 'P').charAt(0).toUpperCase();
+      document.getElementById('profileName').textContent = user.nama_lengkap || user.nama || 'Pemilik Kos';
+      document.getElementById('avatarInitial').textContent = (user.nama_lengkap || user.nama || 'P').charAt(0).toUpperCase();
     }
   })
   .catch(() => {
@@ -123,4 +124,8 @@ document.addEventListener('DOMContentLoaded', () => {
 function handleLogout() {
   localStorage.removeItem('token');
   window.location.href = '../login.html';
+}
+
+function openAdminModal() {
+  window.location.href = '/pages/pemilik/kelola-admin.html';
 }

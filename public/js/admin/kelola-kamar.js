@@ -262,8 +262,12 @@ function saveKamar(event) {
     btn.style.pointerEvents = 'none';
     btn.textContent = isEdit ? 'Updating...' : 'Menyimpan...';
 
-    const url = isEdit ? `${API_URL}/kamar/${kamarId}` : `${API_URL}/kamar`;
-    const method = isEdit ? 'PATCH' : 'POST';
+    if (!isEdit) {
+        alert("Admin hanya berhak mengubah data kamar yang sudah ada.");
+        return;
+    }
+    const url = `${API_URL}/kamar/${kamarId}`;
+    const method = 'PATCH';
 
     fetch(url, {
         method: method,
@@ -328,14 +332,6 @@ function deleteKamar(id) {
             console.error(err);
             alert('Terjadi kesalahan jaringan.');
         });
-}
-
-function openKamarModal() {
-    document.getElementById('modalTitle').textContent = 'Tambah Kamar Baru';
-    document.getElementById('btnSubmitKamar').textContent = 'Simpan Kamar';
-    document.getElementById('kamarId').value = '';
-    document.getElementById('formKamar').reset();
-    document.getElementById('kamarModal').classList.add('active');
 }
 
 function closeKamarModal() {

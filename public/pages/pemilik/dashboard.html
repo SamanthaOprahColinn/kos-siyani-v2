@@ -1,5 +1,5 @@
 <!-- public\pages\pemilik\dashboard.html -->
- 
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -9,23 +9,20 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css"/>
   <link rel="stylesheet" href="../../css/global.css"/>
   <link rel="stylesheet" href="../../css/pemilik/dashboard.css"/>
-
 </head>
 <body>
 
 <div class="layout">
-  
   <div id="sidebar-container"></div>
 
   <div class="main">
     <header class="topbar">
       <h1 class="topbar-title">Dashboard Pemilik</h1>
-      
       <div id="topbar-container"></div>
     </header>
 
     <main class="content page-enter">
-      <div class="admin-stats" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 24px;">
+      <div class="stat-cards-grid">
         <div class="stat-card">
           <div class="stat-icon stat-icon-pink"><i class="ph ph-house-line"></i></div>
           <div>
@@ -47,6 +44,7 @@
           <div>
             <div class="stat-label">Kamar Tersedia</div>
             <div class="stat-value" id="statKamarTersedia">-</div>
+            <div id="statOkupansi" class="okupansi-label">Okupansi: -%</div>
           </div>
         </div>
 
@@ -59,71 +57,60 @@
         </div>
       </div>
 
-      <div class="table-wrapper">
-        <div class="table-top">
-          <div>
-            <div class="table-top-title">Ikhtisar Pembayaran Kamar</div>
-            <div class="table-top-sub">Data real-time dari database</div>
-          </div>
-          <button class="btn btn-ghost btn-sm" onclick="fetchPembayaran()">
-            <i class="ph ph-arrows-clockwise"></i> Segarkan
-          </button>
+      <div id="alertKonfirmasi" class="alert-konfirmasi">
+        <div class="alert-konfirmasi-left">
+          <i class="ph ph-warning-circle alert-konfirmasi-icon"></i>
+          <span>Terdapat <b id="countKonfirmasi">0</b> pembayaran baru yang menunggu verifikasi Anda!</span>
         </div>
-        <table>
-          <thead>
-            <tr>
-              <th>No. Kamar</th>
-              <th>Nama Penghuni</th>
-              <th>Status Pembayaran</th>
-            </tr>
-          </thead>
-          <tbody id="paymentTableBody">
-            <tr>
-              <td colspan="3" style="text-align: center; padding: 20px;">Menghubungkan ke database...</td>
-            </tr>
-          </tbody>
-        </table>
+        <button onclick="window.location.href='transaksi.html'" class="btn-clay-primary btn-sm">
+          Tinjau Sekarang
+        </button>
+      </div>
+
+      <div class="dashboard-grid">
+        
+        <div class="table-wrapper" style="width: 100%;">
+          <div class="table-top">
+            <div>
+              <div class="table-top-title">Summary Pembayaran Kamar</div>
+              <div class="table-top-sub">Data real-time dari database</div>
+            </div>
+            <button class="btn btn-ghost btn-sm" onclick="fetchPembayaran()">
+              <i class="ph ph-arrows-clockwise"></i> Segarkan
+            </button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Kamar & Lantai</th>
+                <th>Nama Penghuni</th>
+                <th>Status Pembayaran</th>
+              </tr>
+            </thead>
+            <tbody id="paymentTableBody">
+              <tr>
+                <td colspan="3" class="widget-loading" style="padding: 20px;">Menghubungkan ke database...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="widget-container">
+          
+          <div class="table-wrapper widget-box">
+            <div class="table-top-title">Daftar Tunggakan</div>
+            <div class="table-top-sub" style="margin-bottom: 16px;">Prioritas penagihan bulan ini</div>
+            
+            <div id="tunggakanList" class="widget-list">
+              <div class="widget-loading">Memuat data...</div>
+            </div>
+          </div>
+
+        </div>
       </div>
     </main>
     
     <div id="footer-container"></div>
-  </div>
-</div>
-
-<div class="modal-backdrop" id="adminModal" style="display: none;">
-  <div class="modal">
-    <div class="modal-header">
-      <h3 class="modal-title">Tambah Akun Admin Baru</h3>
-      <button onclick="closeAdminModal()" style="font-size: 20px; background: none; border: none; cursor: pointer;">
-        <i class="ph ph-x"></i>
-      </button>
-    </div>
-    
-    <div class="error-box" id="adminErrorBox" style="margin-bottom: 12px; display: none;">
-      <i class="ph ph-warning-circle"></i>
-      <span id="adminErrorMsg"></span>
-    </div>
-    
-    <div class="flex flex-col gap-4">
-      <div class="form-group">
-        <label class="form-label">Nama Lengkap</label>
-        <input type="text" class="form-input" id="adminName" placeholder="Masukkan nama lengkap admin"/>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Email Admin</label>
-        <input type="email" class="form-input" id="adminEmail" placeholder="contoh: admin2@kosiyani.com"/>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Password</label>
-        <div class="input-wrap" style="position: relative;">
-          <input type="password" class="form-input has-toggle" id="adminPassword" placeholder="Minimal 8 karakter kombinasi"/>
-          <button type="button" class="pw-toggle" onclick="toggleAdminPw()" style="position: absolute; right: 10px; top: 10px; background: none; border: none; cursor: pointer;">
-            <i class="ph ph-eye" id="adminPwIcon"></i>
-          </button>
-        </div>
-      </div>
-      <button class="btn btn-primary w-full" id="btnSaveAdmin" onclick="saveAdmin()">Daftarkan Admin</button>
-    </div>
   </div>
 </div>
 

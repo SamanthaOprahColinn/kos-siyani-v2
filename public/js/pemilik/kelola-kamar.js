@@ -1,7 +1,8 @@
 // public/js/pemilik/kelola-kamar.js
 
+let dataKamarGlobal = [];
+
 document.addEventListener('DOMContentLoaded', () => {
-    // Pengecekan token tetap di sini agar halaman tetap aman
     if (!localStorage.getItem('token')) { 
         window.location.href = '../login.html'; 
         return; 
@@ -20,36 +21,77 @@ function fetchKamar() {
     const token = localStorage.getItem('token');
     const tbody = document.getElementById('kamarTableBody');
     
-    fetch(`${API_URL}/kamar`, { 
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px;">Memuat data...</td></tr>';
+
+    fetch(`${window.API_URL || 'http://localhost:5000/api'}/kamar`, { 
         headers: { 'Authorization': `Bearer ${token}` } 
     })
     .then(res => res.json())
     .then(resData => {
-        tbody.innerHTML = '';
+        // Simpan data ke variabel global
+        dataKamarGlobal = resData.data?.data || resData.data || [];
         
-        const list = resData.data?.data || resData.data || [];
-
-        if (list.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">Belum ada data kamar.</td></tr>';
-            return;
-        }
-
-        list.forEach(k => {
-            const tr = document.createElement('tr');
-            const status = (k.status_kamar || 'tersedia').toLowerCase();
-            tr.innerHTML = `
-                <td class="font-bold">Kamar ${k.nomor_kamar || '-'}</td>
-                <td>${k.tipe_kamar || '-'} / Lt. ${k.lantai || '-'}</td>
-                <td>Rp ${Number(k.harga_sewa || 0).toLocaleString('id-ID')}</td>
-                <td><span class="badge badge-${status === 'tersedia' ? 'success' : 'warning'}">${status.toUpperCase()}</span></td>
-            `;
-            tbody.appendChild(tr);
-        });
+        // Render tabel menggunakan semua data saat pertama dimuat
+        renderTabelKamar(dataKamarGlobal);
     })
     .catch(err => {
         console.error("Error:", err);
         tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: red;">Gagal memuat data. Cek Console.</td></tr>';
     });
+}
+
+function renderTabelKamar(data) {
+    const tbody = document.getElementById('kamarTableBody');
+    tbody.innerHTML = '';
+
+    if (data.length === 0) {
+        // Colspan diubah menjadi 5 karena ada tambahan kolom Fasilitas
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 20px;">Belum ada data kamar atau pencarian tidak ditemukan.</td></tr>';
+        return;
+    }
+
+    data.forEach(k => {
+        const tr = document.createElement('tr');
+        const status = (k.status_kamar || 'tersedia').toLowerCase();
+        
+        let badgeClass = 'badge-kosong';
+        let statusText = 'TERSEDIA';
+
+        if (status === 'terisi' || status === 'tidak tersedia') {
+            badgeClass = 'badge-terisi';
+            statusText = 'TERISI';
+        }
+
+        const fasilitasStr = (Array.isArray(k.fasilitas) && k.fasilitas.length > 0) 
+            ? k.fasilitas.join(', ') 
+            : (k.fasilitas || '-');
+
+        tr.innerHTML = `
+            <td class="font-bold">No. ${k.nomor_kamar || '-'} / Lt. ${k.lantai || '-'}</td>
+            <td>Tipe ${k.tipe_kamar || '-'}</td>
+            <td style="font-size: 13px; color: var(--n500); max-width: 220px; white-space: normal; line-height: 1.4;">
+                ${fasilitasStr}
+            </td>
+            <td style="color: var(--pink-600); font-weight: 600;">Rp ${Number(k.harga_sewa || 0).toLocaleString('id-ID')}</td>
+            <td><span class="badge ${badgeClass}">${statusText}</span></td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+// Fungsi Pencarian / Filter 
+function filterTabelKamar() {
+    const keyword = document.getElementById('searchKamar').value.toLowerCase();
+    
+    const filteredData = dataKamarGlobal.filter(k => {
+        const noKamar = (k.nomor_kamar || '').toString().toLowerCase();
+        const tipe = (k.tipe_kamar || '').toLowerCase();
+        const harga = (k.harga_sewa || '').toString().toLowerCase();
+        
+        return noKamar.includes(keyword) || tipe.includes(keyword) || harga.includes(keyword);
+    });
+
+    renderTabelKamar(filteredData);
 }
 
 function addKamar(event) {
@@ -68,7 +110,7 @@ function addKamar(event) {
         status_kamar: 'tersedia'
     };
 
-    fetch(`${API_URL}/kamar`, { 
+    fetch(`${window.API_URL || 'http://localhost:5000/api'}/kamar`, { 
         method: 'POST',
         headers: { 
             'Content-Type': 'application/json', 
@@ -81,7 +123,7 @@ function addKamar(event) {
         if (data.success) {
             alert('Kamar berhasil ditambahkan!');
             closeModal();
-            fetchKamar();
+            fetchKamar(); // Memanggil data terbaru dari server setelah berhasil ditambah
         } else {
             alert('Gagal: ' + (data.message || 'Cek kembali input Anda'));
         }

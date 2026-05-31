@@ -1,0 +1,84 @@
+<!-- public\pages\pemilik\kelola-admin.html -->
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tambah Admin Baru - Kos Siyani</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css"/>
+  <link rel="stylesheet" href="../../css/global.css"/>
+  <link rel="stylesheet" href="../../css/pemilik/dashboard.css"/>
+  <link rel="stylesheet" href="../../css/pemilik/kelola-admin.css"/>
+</head>
+<body>
+
+  <div class="layout">
+    <div id="sidebar-container"></div>
+
+    <div class="main">
+      <header class="topbar">
+        <h1 class="topbar-title">Tambah Admin</h1>
+        <div id="topbar-container"></div>
+      </header>
+
+      <main class="content page-enter">
+        
+        <div class="mb-6 page-header-actions admin-header-actions">
+          <div>
+            <p class="stat-sub">Daftarkan akun operasional baru untuk membantu mengelola Kos Siyani.</p>
+          </div>
+        </div>
+
+        <div class="admin-form-container">
+          <div class="table-wrapper widget-box admin-form-card">
+            
+            <div class="table-top-title admin-form-header">
+              <i class="ph ph-user-plus admin-form-icon"></i>
+              <br>Formulir Pendaftaran
+            </div>
+
+            <div class="error-box admin-error-box" id="adminErrorBox" style="display: none;">
+              <i class="ph ph-warning-circle admin-error-icon"></i>
+              <span id="adminErrorMsg"></span>
+            </div>
+
+            <form id="formTambahAdmin" onsubmit="saveAdmin(event)">
+              <div class="form-group form-group-spacing">
+                <label class="form-label form-label-bold">Nama Lengkap</label>
+                <input type="text" class="form-input-clay w-full" id="adminName" placeholder="Masukkan nama lengkap admin" required/>
+              </div>
+
+              <div class="form-group form-group-spacing">
+                <label class="form-label form-label-bold">Email Admin</label>
+                <input type="email" class="form-input-clay w-full" id="adminEmail" placeholder="contoh: admin2@kosiyani.com" required/>
+              </div>
+
+              <div class="form-group form-group-spacing-lg">
+                <label class="form-label form-label-bold">Password (Kata Sandi)</label>
+                <div class="input-wrap input-wrap-relative">
+                  <input type="password" class="form-input-clay w-full" id="adminPassword" placeholder="Minimal 8 karakter kombinasi" required/>
+                  <button type="button" onclick="toggleAdminPw()" class="btn-toggle-pw">
+                    <i class="ph ph-eye pw-icon" id="adminPwIcon"></i>
+                  </button>
+                </div>
+              </div>
+
+              <button type="submit" class="btn-clay-primary w-full btn-submit-admin" id="btnSaveAdmin">
+                Daftarkan Admin
+              </button>
+            </form>
+
+          </div>
+        </div>
+
+      </main>
+      
+      <div id="footer-container"></div>
+    </div>
+  </div>
+
+  <script src="../../js/layout-pemilik.js"></script>
+  <script src="../../js/pemilik/kelola-admin.js"></script>
+</body>
+</html>

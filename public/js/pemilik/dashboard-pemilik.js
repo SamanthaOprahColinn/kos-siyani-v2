@@ -1,4 +1,4 @@
-// public\js\pemilik\dashboard-pemilik.js
+// public/js/pemilik/dashboard-pemilik.js
 
 window.API_URL = 'http://localhost:5000/api';
 
@@ -23,7 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = '../admin/dashboard.html';
         return;
       }
-      // Pastikan elemen ID ada sebelum diisi untuk menghindari error script
       const nameEl = document.getElementById('profileName');
       if(nameEl) nameEl.textContent = data.data.nama_lengkap;
       
@@ -33,8 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
   })
   .catch((err) => {
     console.error("Gagal memuat profil:", err);
-    // HANYA hapus token jika error benar-benar karena otorisasi (401/403)
-    // Jika karena server mati atau internet, jangan langsung logout!
   });
 
   fetchDashboardStats();
@@ -49,8 +46,18 @@ function fetchDashboardStats() {
     .then(res => res.json())
     .then(data => {
       if(data.success && data.data) {
-        document.getElementById('statTotalKamar').textContent = data.data.total || '0';
-        document.getElementById('statKamarTersedia').textContent = data.data.tersedia || '0';
+        const total = data.data.total || 0;
+        const tersedia = data.data.tersedia || 0;
+        
+        document.getElementById('statTotalKamar').textContent = total;
+        document.getElementById('statKamarTersedia').textContent = tersedia;
+
+        // Kalkulasi Okupansi
+        const terisi = total - tersedia;
+        const persentase = total > 0 ? Math.round((terisi / total) * 100) : 0;
+        const elOkupansi = document.getElementById('statOkupansi');
+        elOkupansi.textContent = `Okupansi: ${persentase}%`;
+        elOkupansi.className = 'okupansi-label ' + (persentase >= 80 ? 'okupansi-high' : (persentase >= 50 ? 'okupansi-med' : 'okupansi-low'));
       }
     }).catch(() => {
       document.getElementById('statTotalKamar').textContent = 'Error';
@@ -75,130 +82,115 @@ function fetchDashboardStats() {
     }).catch(() => document.getElementById('statPemasukan').textContent = '-');
 }
 
-function fetchPembayaran() {
+async function fetchPembayaran() {
   const token = localStorage.getItem('token');
   const tbody = document.getElementById('paymentTableBody');
-  if(!tbody) return; 
-  
-  tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 20px;">Menarik ringkasan transaksi...</td></tr>';
+  if (!tbody) return;
 
-  fetch(`${API_URL}/pembayaran`, {
-    method: 'GET',
-    headers: { 'Authorization': `Bearer ${token}` }
-  })
-  .then(res => res.json())
-  .then(data => {
+  tbody.innerHTML = '<tr><td colspan="3" class="widget-loading" style="padding: 20px;">Menyelaraskan data...</td></tr>';
+
+  try {
+    const headers = { 'Authorization': `Bearer ${token}` };
+
+    const [resP, resB] = await Promise.all([
+      fetch(`${window.API_URL || 'http://localhost:5000/api'}/penghuni?limit=100`, { headers }),
+      fetch(`${window.API_URL || 'http://localhost:5000/api'}/pembayaran?limit=100`, { headers })
+    ]);
+
+    const jsonP = await resP.json();
+    const jsonB = await resB.json();
+
+    const arrPenghuni = jsonP.data?.data || [];
+    const arrBayar = jsonB.data?.data || [];
+
+    const activeIds = new Set();
+    arrPenghuni.forEach(p => {
+      if (p.status_penghuni === 'aktif') {
+        activeIds.add(p._id.toString());
+      }
+    });
+
+    let validList = arrBayar.filter(item => {
+      if (!item.id_kamar || !item.id_penghuni) return false;
+      const penghuniId = item.id_penghuni._id.toString();
+      return activeIds.has(penghuniId);
+    });
+
+    validList.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    const finalTagihan = [];
+    const kamarTerpakai = new Set();
+
+    for (const item of validList) {
+      const kamarId = item.id_kamar._id.toString();
+      if (!kamarTerpakai.has(kamarId)) {
+        kamarTerpakai.add(kamarId);
+        finalTagihan.push(item);
+      }
+    }
+
+    const antreanKonfirmasi = finalTagihan.filter(t => t.status_bayar === 'menunggu konfirmasi').length;
+    const alertBox = document.getElementById('alertKonfirmasi');
+    if (antreanKonfirmasi > 0) {
+      document.getElementById('countKonfirmasi').textContent = antreanKonfirmasi;
+      alertBox.style.display = 'flex';
+    } else {
+      alertBox.style.display = 'none';
+    }
+
+    const listTunggakan = document.getElementById('tunggakanList');
+    const dataTunggakan = finalTagihan.filter(t => t.status_bayar === 'belum bayar');
+    
+    if (dataTunggakan.length > 0) {
+      listTunggakan.innerHTML = '';
+      dataTunggakan.slice(0, 5).forEach(t => {
+        const nama = t.id_penghuni.nama_lengkap || '-';
+        const kamar = t.id_kamar.nomor_kamar || '-';
+        listTunggakan.innerHTML += `
+          <div class="widget-item tunggakan">
+            <div class="widget-item-title">${nama}</div>
+            <div class="widget-item-sub">Km. ${kamar}</div>
+          </div>
+        `;
+      });
+    } else {
+      listTunggakan.innerHTML = '<div class="widget-empty">Semua penghuni lunas bulan ini! 🎉</div>';
+    }
+
     tbody.innerHTML = '';
-    if (data.success && data.data && data.data.length > 0) {
-      data.data.forEach(item => {
+    const recentList = finalTagihan.slice(0, 5);
+
+    if (recentList.length > 0) {
+      recentList.forEach(item => {
         const tr = document.createElement('tr');
         
-        let statusBadge = '';
-        const status = (item.status_pembayaran || '').toLowerCase();
-        if(status === 'lunas') {
-          statusBadge = '<span class="badge badge-success">Lunas</span>';
-        } else if(status === 'tenggat waktu' || status === 'pending') {
-          statusBadge = '<span class="badge badge-warning">Tenggat Waktu</span>';
-        } else {
-          statusBadge = '<span class="badge badge-danger">Belum Bayar</span>';
-        }
+        const nomor = item.id_kamar.nomor_kamar || '-';
+        const lantai = item.id_kamar.lantai ? ` / Lt. ${item.id_kamar.lantai}` : '';
+        const nama = item.id_penghuni.nama_lengkap || '-';
+        
+        const statusStr = (item.status_bayar || 'belum bayar').toLowerCase();
+        let badgeClass = 'warning';
+        let statusLabel = statusStr.replace(/_/g, ' ').toUpperCase();
+
+        if (statusStr === 'lunas') badgeClass = 'success';
+        else if (statusStr === 'ditolak') badgeClass = 'danger';
+        else if (statusStr === 'menunggu konfirmasi') badgeClass = 'info';
 
         tr.innerHTML = `
-          <td class="font-bold">Kamar ${item.nomor_kamar || '-'}</td>
-          <td>${item.nama_penghuni || '-'}</td>
-          <td>${statusBadge}</td>
+          <td class="font-bold">No. ${nomor}${lantai}</td>
+          <td style="color: var(--text-cozy); font-weight: 600;">${nama}</td>
+          <td><span class="badge badge-${badgeClass} badge-kapsul">${statusLabel}</span></td>
         `;
         tbody.appendChild(tr);
       });
     } else {
-      tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 20px; color: var(--n500);">Belum ada riwayat pembayaran.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="3" class="widget-loading" style="padding: 20px;">Belum ada riwayat pembayaran dari penghuni aktif.</td></tr>';
     }
-  })
-  .catch(err => {
-    console.error(err);
-    tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 20px; color: #dc2626;">Gagal memuat data transaksi.</td></tr>';
-  });
-}
 
-// FUNGSI MODAL ADMIN
-function openAdminModal() {
-  document.getElementById('adminErrorBox').classList.remove('show');
-  document.getElementById('adminModal').style.display = 'flex';
-  document.getElementById('adminName').value = '';
-  document.getElementById('adminEmail').value = '';
-  const pwInput = document.getElementById('adminPassword');
-  pwInput.value = '';
-  pwInput.type = 'password';
-  document.getElementById('adminPwIcon').className = 'ph ph-eye';
-}
-
-function closeAdminModal() {
-  document.getElementById('adminModal').style.display = 'none';
-}
-
-function toggleAdminPw() {
-  const inp = document.getElementById('adminPassword');
-  const ico = document.getElementById('adminPwIcon');
-  if (inp.type === 'password') {
-    inp.type = 'text';
-    ico.className = 'ph ph-eye-slash';
-  } else {
-    inp.type = 'password';
-    ico.className = 'ph ph-eye';
+  } catch (err) {
+    console.error("Kesalahan Sistem Dashboard:", err);
+    tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 20px; color: #dc2626;">Gagal memuat data transaksi dari server.</td></tr>';
   }
-}
-
-function saveAdmin() {
-  const nama_lengkap = document.getElementById('adminName').value.trim();
-  const email = document.getElementById('adminEmail').value.trim();
-  const password = document.getElementById('adminPassword').value;
-  const errorBox = document.getElementById('adminErrorBox');
-  const errorMsg = document.getElementById('adminErrorMsg');
-  const token = localStorage.getItem('token');
-
-  errorBox.classList.remove('show');
-
-  if(!nama_lengkap || !email || !password) {
-    errorMsg.textContent = 'Semua kolom formulir wajib diisi.';
-    errorBox.classList.add('show');
-    return;
-  }
-
-  const btn = document.getElementById('btnSaveAdmin');
-  btn.style.pointerEvents = 'none';
-  btn.textContent = 'Mendaftarkan...';
-
-  fetch(`${API_URL}/auth/create-admin`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    },
-    body: JSON.stringify({ nama_lengkap, email, password, role: 'admin' })
-  })
-  .then(res => res.json())
-  .then(data => {
-    btn.style.pointerEvents = 'auto';
-    btn.textContent = 'Daftarkan Admin';
-
-    if(data.success) {
-      alert('Akun Admin operasional baru berhasil didaftarkan!');
-      closeAdminModal();
-    } else {
-      if (data.errors && Array.isArray(data.errors) && data.errors.length > 0) {
-        errorMsg.textContent = data.errors[0].message || data.errors[0];
-      } else {
-        errorMsg.textContent = data.message || 'Gagal mendaftarkan akun admin.';
-      }
-      errorBox.classList.add('show');
-    }
-  })
-  .catch(err => {
-    btn.style.pointerEvents = 'auto';
-    btn.textContent = 'Daftarkan Admin';
-    errorMsg.textContent = 'Gangguan koneksi jaringan menuju server.';
-    errorBox.classList.add('show');
-  });
 }
 
 function handleLogout() {
