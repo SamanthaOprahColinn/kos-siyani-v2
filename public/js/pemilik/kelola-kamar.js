@@ -21,6 +21,7 @@ function fetchKamar() {
     const token = localStorage.getItem('token');
     const tbody = document.getElementById('kamarTableBody');
     
+    fetch(`${API_URL}/kamar`, { 
     tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 20px;">Memuat data...</td></tr>';
 
     fetch(`${window.API_URL || 'http://localhost:5000/api'}/kamar`, { 
@@ -36,7 +37,7 @@ function fetchKamar() {
     })
     .catch(err => {
         console.error("Error:", err);
-        tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: red;">Gagal memuat data. Cek Console.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: red;">Gagal memuat data. Cek Console.</td></tr>';
     });
 }
 
