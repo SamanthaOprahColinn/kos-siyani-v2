@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
         <div class="footer-links" style="display: flex; gap: 16px;">
           <a href="#" style="color: #8c737d; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='var(--text-cozy)'" onmouseout="this.style.color='#8c737d'">Bantuan Operasional</a>
-          <a href="#" style="color: #8c737d; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='var(--text-cozy)'" onmouseout="this.style.color='#8c737d'">Hubungi Developer</a>
+          <a href="/pages/tim-developer.html" style="color: #8c737d; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='var(--text-cozy)'" onmouseout="this.style.color='#8c737d'">Hubungi Developer</a>
         </div>
       </footer>
     `;

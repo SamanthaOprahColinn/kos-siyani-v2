@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
           </a>
           
           <div class="sidebar-section-title">Akun</div>
-          <a href="#" class="sidebar-link" onclick="handleLogout()">
+          <a href="/pages/login.html" class="sidebar-link" onclick="handleLogout()">
             <i class="ph ph-sign-out sidebar-link-icon"></i>
             <span>Keluar</span>
           </a>
@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
         <div class="footer-links" style="display: flex; gap: 16px;">
           <a href="#" style="color: #8c737d; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='var(--text-cozy)'" onmouseout="this.style.color='#8c737d'">Bantuan Operasional</a>
-          <a href="#" style="color: #8c737d; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='var(--text-cozy)'" onmouseout="this.style.color='#8c737d'">Hubungi Developer</a>
+          <a href="/pages/tim-developer.html" style="color: #8c737d; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='var(--text-cozy)'" onmouseout="this.style.color='#8c737d'">Hubungi Developer</a>
         </div>
       </footer>
     `;
