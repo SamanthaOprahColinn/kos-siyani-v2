@@ -1,3 +1,5 @@
+<!-- public\pages\login.html -->
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -20,6 +22,11 @@
 <div class="page">
   <div class="deco">
     <div class="deco-pill"><i class="ph ph-house-line"></i> Manajemen Kos</div>
+    
+    <div class="deco-identity-wrap">
+      <img src="../assets/images/SLEEPYANI.png" alt="Identitas Siyani" class="deco-identity-img">
+    </div>
+
     <div class="deco-heading">Selamat datang di <span>Sleepyani?</span></div>
     <div class="deco-sub">Kelola penghuni, kamar, dan pembayaran kos kamu secara digital dalam satu pintu.</div>
     <div class="deco-stats">
@@ -39,7 +46,7 @@
       <div class="logo-box">KS</div>
       <div>
         <div class="logo-text">Sleepyani?</div>
-        <div class="logo-sub">Admin Sleepyani?</div>
+        <div class="logo-sub">Portal Manajemen Kos Siyani</div>
       </div>
     </div>
     <div class="card-title">Masuk ke Akun</div>
@@ -73,134 +80,13 @@
         <button class="pw-toggle" type="button" onclick="togglePw()"><i class="ph ph-eye" id="pwIcon"></i></button>
       </div>
     </div>
-    <div class="row-between">
-      <label class="check-label">
-        <input type="checkbox" id="rememberMe"/>
-        <div class="check-box"></div>
-        <span class="check-text">Ingat saya</span>
-      </label>
-      <a href="#" class="forgot">Lupa password?</a>
-    </div>
     <button class="btn-submit" id="loginBtn" onclick="handleLogin()">
       <i class="ph ph-sign-in"></i> Masuk Sekarang
     </button>
   </div>
 </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  fetchPublicStats();
-});
+<script src="../js/login.js"></script>
 
-function fetchPublicStats() {
-  const elKamar = document.getElementById('statLoginKamar');
-  const elPenghuni = document.getElementById('statLoginPenghuni');
-
-  let totalKamar = 0;
-  let aktifPenghuni = 0;
-
-  Promise.all([
-    fetch('http://localhost:5000/api/public/stats/kamar').then(r => r.json()),
-    fetch('http://localhost:5000/api/public/stats/penghuni').then(r => r.json())
-  ])
-  .then(([kamarData, penghuniData]) => {
-    if (kamarData.success && kamarData.data) {
-      totalKamar = kamarData.data.total ?? 0;
-    }
-    if (penghuniData.success && penghuniData.data) {
-      aktifPenghuni = penghuniData.data.aktif ?? 0;
-    }
-    elPenghuni.textContent = aktifPenghuni;
-    elKamar.textContent = Math.max(0, totalKamar - aktifPenghuni);
-  })
-  .catch(() => {
-    elKamar.textContent = '-';
-    elPenghuni.textContent = '-';
-  });
-}
-
-function setRole(r){
-  document.getElementById('roleOwner').classList.toggle('active', r === 'owner');
-  document.getElementById('rolePenghuni').classList.toggle('active', r === 'penghuni');
-  document.getElementById('emailInput').placeholder = (r === 'owner') ? 'nama@email.com' : 'penghuni@email.com';
-}
-
-function togglePw(){
-  const inp = document.getElementById('pwInput');
-  const ico = document.getElementById('pwIcon');
-  if(inp.type === 'password'){
-    inp.type = 'text';
-    ico.className = 'ph ph-eye-slash';
-  } else {
-    inp.type = 'password';
-    ico.className = 'ph ph-eye';
-  }
-}
-
-function handleLogin(){
-  const email = document.getElementById('emailInput').value.trim();
-  const pw = document.getElementById('pwInput').value;
-  const box = document.getElementById('errorBox');
-  const msg = document.getElementById('errorMsg');
-  
-  box.classList.remove('show');
-  
-  if(!email){
-    msg.textContent = 'Email tidak boleh kosong.';
-    box.classList.add('show');
-    return;
-  }
-  
-  if(!pw){
-    msg.textContent = 'Password tidak boleh kosong.';
-    box.classList.add('show');
-    return;
-  }
-  
-  const btn = document.getElementById('loginBtn');
-  btn.innerHTML = '<div style="width:18px;height:18px;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;"></div> Memproses...';
-  btn.style.pointerEvents = 'none';
-
-  // Request ke API Backend
-  fetch('http://localhost:5000/api/auth/login', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ email: email, password: pw })
-  })
-  .then(response => response.json())
-  .then(data => {
-    btn.innerHTML = '<i class="ph ph-sign-in"></i> Masuk Sekarang';
-    btn.style.pointerEvents = '';
-
-    if(data.success) {
-      localStorage.setItem('token', data.data.token);
-      
-      const userRole = data.data.user.role;
-      // REVISI PADA PENGALIHAN PATH BARU: Menghilangkan nama file redundan
-      if (userRole === 'pemilik') {
-        window.location.href = 'pemilik/dashboard.html';
-      } else if (userRole === 'admin') {
-        window.location.href = 'admin/dashboard.html';
-      } else if (userRole === 'penghuni') {
-        window.location.href = 'penghuni/dashboard.html';
-      } else {
-        alert('Akses tidak diizinkan untuk role ini.');
-      }
-    } else {
-      msg.textContent = data.message || 'Email atau password salah.';
-      box.classList.add('show');
-    }
-  })
-  .catch(error => {
-    btn.innerHTML = '<i class="ph ph-sign-in"></i> Masuk Sekarang';
-    btn.style.pointerEvents = '';
-    msg.textContent = 'Terjadi kesalahan koneksi ke server.';
-    box.classList.add('show');
-    console.error('Error:', error);
-  });
-}
-</script>
 </body>
 </html>
