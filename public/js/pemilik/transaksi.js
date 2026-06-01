@@ -170,8 +170,11 @@ function prosesVerifikasi(keputusan) {
     
     const payload = {
         status_bayar: keputusan,
-        catatan_admin: keputusan === 'ditolak' ? 'Bukti transfer tidak valid/buram. Harap unggah ulang yang benar.' : ''
     };
+
+    if (keputusan === 'ditolak') {
+        payload.catatan_admin = 'Bukti transfer tidak valid/buram. Harap unggah ulang yang benar.';
+    }
 
     fetch(`${window.API_URL || 'http://localhost:5000/api'}/pembayaran/${idTagihanTerpilih}/validate`, {
         method: 'PATCH',
