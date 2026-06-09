@@ -55,16 +55,15 @@ function fetchTransaksi() {
                 
                 // Pewarnaan Badge Status
                 let badgeClass = 'warning';
-                let statusLabel = statusStr.replace('_', ' ').toUpperCase();
-                
+                let statusLabel = statusStr.toUpperCase(); 
+
                 if (statusStr === 'lunas') badgeClass = 'success';
                 else if (statusStr === 'ditolak') badgeClass = 'danger';
-                else if (statusStr === 'menunggu_konfirmasi') badgeClass = 'info';
+                else if (statusStr === 'menunggu konfirmasi') badgeClass = 'info'; 
 
-                // Kolom Aksi (Tombol hanya muncul saat status = menunggu_konfirmasi)
                 let aksiHtml = `<span style="color: var(--n400); font-size: 13px;">-</span>`;
-                
-                if (statusStr === 'menunggu_konfirmasi') {
+
+                if (statusStr === 'menunggu konfirmasi') { 
                     aksiHtml = `
                         <button class="btn btn-sm" onclick="openVerifikasiModal('${t._id}')" style="background: #3b82f6; color: white; border: none; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 600; transition: transform 0.2s;">
                             <i class="ph ph-shield-check"></i> Periksa Bukti
@@ -121,10 +120,23 @@ function openVerifikasiModal(id) {
     })
     .then(res => res.json())
     .then(resData => {
-        if (resData.success && resData.data?.bukti_bayar) {
-            imgElement.src = resData.data.bukti_bayar; 
-            loadingText.style.display = 'none';
-            imgElement.style.display = 'block';
+        console.log("Respon Bukti Bayar:", resData);
+
+        if (resData.success || resData.statusCode === 200) {
+            
+            let buktiBase64 = resData.data ? resData.data.bukti_bayar : resData.bukti_bayar;
+            
+            if (buktiBase64) {
+                if (!buktiBase64.startsWith('data:image')) {
+                    buktiBase64 = 'data:image/jpeg;base64,' + buktiBase64;
+                }
+
+                imgElement.src = buktiBase64; 
+                loadingText.style.display = 'none';
+                imgElement.style.display = 'block';
+            } else {
+                loadingText.innerHTML = '<span style="color: #ef4444;">Penghuni belum mengunggah gambar bukti.</span>';
+            }
         } else {
             loadingText.innerHTML = '<span style="color: #ef4444;">Bukti transfer rusak atau tidak ditemukan.</span>';
         }
@@ -158,8 +170,11 @@ function prosesVerifikasi(keputusan) {
     
     const payload = {
         status_bayar: keputusan,
-        catatan_admin: keputusan === 'ditolak' ? 'Bukti transfer tidak valid/buram. Harap unggah ulang yang benar.' : ''
     };
+
+    if (keputusan === 'ditolak') {
+        payload.catatan_admin = 'Bukti transfer tidak valid/buram. Harap unggah ulang yang benar.';
+    }
 
     fetch(`${window.API_URL || 'http://localhost:5000/api'}/pembayaran/${idTagihanTerpilih}/validate`, {
         method: 'PATCH',

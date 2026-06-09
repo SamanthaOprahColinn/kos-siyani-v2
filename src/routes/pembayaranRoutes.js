@@ -8,6 +8,7 @@ import {
   update,
   uploadPaymentProof,
   deletePaymentProof,
+  getBuktiImage,
   validate,
   delete_,
   restore,
@@ -136,6 +137,16 @@ router.post(
  * ROUTES DENGAN ID - HARUS PALING BAWAH!
  * ========================================
  */
+
+/**
+ * GET /api/pembayaran/:id/bukti
+ * Ambil gambar bukti pembayaran
+ */
+router.get(
+  '/:id/bukti',
+  authorizeRoles('pemilik', 'admin', 'penghuni'),
+  getBuktiImage
+);
 
 /**
  * GET /api/pembayaran/:id

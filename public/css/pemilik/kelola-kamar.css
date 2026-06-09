@@ -11,3 +11,103 @@
     color: #9b2c2c !important;
     border: 1px solid #feb2b2 !important;
 }
+
+/* public/css/pemilik/kelola-kamar.css */
+
+.badge-kosong {
+    background: #e6fffa !important; 
+    color: #234e52 !important;
+    border: 1px solid #b2f5ea !important;
+}
+
+.badge-terisi {
+    background: #fff5f5 !important; 
+    color: #9b2c2c !important;
+    border: 1px solid #feb2b2 !important;
+}
+
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(15, 23, 42, 0.4); 
+    backdrop-filter: blur(4px); 
+    display: none; 
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 0;
+    animation: fadeIn 0.2s forwards ease-out;
+}
+
+/* Kotak utama Modal */
+.modal-content {
+    background: #ffffff;
+    width: 100%;
+    max-width: 420px;
+    padding: 28px 24px;
+    border-radius: 16px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    transform: translateY(20px) scale(0.95);
+    animation: slideUp 0.3s forwards ease-out;
+}
+
+.modal-content h3 {
+    margin-top: 0;
+    margin-bottom: 24px;
+    font-size: 1.25rem;
+    color: #1e293b;
+    font-weight: 700;
+    text-align: center;
+}
+
+.modal-content input,
+.modal-content select {
+    width: 100%;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #334155;
+    background-color: #f8fafc;
+    transition: all 0.2s ease;
+    box-sizing: border-box; 
+    font-family: inherit;
+}
+
+.modal-content input:focus,
+.modal-content select:focus {
+    outline: none;
+    border-color: #3b82f6; 
+    background-color: #ffffff;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+/* Area tombol Batal & Simpan */
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.modal-actions button {
+    padding: 10px 20px;
+    font-size: 14px;
+    border-radius: 10px;
+}
+
+
+@keyframes fadeIn {
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    to {
+        transform: translateY(0) scale(1);
+    }
+}

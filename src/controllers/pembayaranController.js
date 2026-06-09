@@ -129,15 +129,16 @@ export const getBuktiImage = asyncHandler(async (req, res) => {
       id_penghuni: penghuni._id,
     });
   } else {
-    pembayaran = await Pembayaran.findById(id);
+    // Jika admin/pemilik, mereka bebas melihat bukti pembayaran berdasarkan ID
+    pembayaran = await Pembayaran.findById(id).select('bukti_bayar nama_file_bukti tanggal_bayar');
   }
 
   if (!pembayaran) {
-    throw new ApiError(404, 'Pembayaran tidak ditemukan');
+    throw new ApiError(404, 'Data pembayaran tidak ditemukan');
   }
 
   if (!pembayaran.bukti_bayar) {
-    throw new ApiError(404, 'Bukti pembayaran tidak ditemukan');
+    throw new ApiError(404, 'Bukti pembayaran belum diunggah oleh penghuni');
   }
 
   return successResponse(

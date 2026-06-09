@@ -137,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div>&copy; 2026 <span style="font-weight: 700; color: var(--text-cozy);">Sleepyani?</span>. Hak Cipta Dilindungi Undang-Undang.</div>
         <div style="display: flex; gap: 16px;">
           <a href="#" style="color: #8c737d; text-decoration: none;" onmouseover="this.style.color='var(--text-cozy)'" onmouseout="this.style.color='#8c737d'">Bantuan</a>
-          <a href="#" style="color: #8c737d; text-decoration: none;" onmouseover="this.style.color='var(--text-cozy)'" onmouseout="this.style.color='#8c737d'">Hubungi Pengelola</a>
+          <a href="/pages/tim-developer.html" style="color: #8c737d; text-decoration: none;" onmouseover="this.style.color='var(--text-cozy)'" onmouseout="this.style.color='#8c737d'">Hubungi Pengelola</a>
         </div>
       </footer>
     `;
